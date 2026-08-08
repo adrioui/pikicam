@@ -1,0 +1,66 @@
+# pikicam — XcodeGen project definition
+#
+# Faithful model of the hand-written pikicam.xcodeproj (single app target +
+# unit-test target, shared scheme). Regenerate with:
+#
+#   xcodegen generate        # overwrites pikicam.xcodeproj deterministically
+#
+# NOTE (2026-08): xcodegen is NOT installed on this machine (no Homebrew).
+# The generated project must therefore be produced on a machine that has
+# xcodegen, or after `brew install xcodegen`. Until then the checked-in
+# project.pbxproj remains hand-maintained; keep project.yml in sync with it.
+
+name: pikicam
+options:
+  bundleIdPrefix: piki
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "26.5"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    GENERATE_INFOPLIST_FILE: YES
+
+targets:
+  pikicam:
+    type: application
+    platform: iOS
+    sources:
+      - path: pikicam
+        excludes:
+          - "Resources/Info.plist"   # redundant: GENERATE_INFOPLIST_FILE=YES
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicam
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1,2"
+    scheme:
+      testTargets:
+        - pikicamTests
+
+  pikicamTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: pikicamTests
+    resources:
+      - path: pikicamTests/Fixtures
+    dependencies:
+      - target: pikicam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamTests
+
+schemes:
+  pikicam:
+    build:
+      targets:
+        pikicam: all
+        pikicamTests: [test]
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - pikicamTests
