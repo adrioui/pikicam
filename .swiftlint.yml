@@ -1,0 +1,43 @@
+# pikicam SwiftLint configuration
+#
+# Install with:  brew install swiftlint   (or: mise use -g swiftlint)
+# Run:           swiftlint lint --strict
+#
+# Style baseline matches the conventions in AGENTS.md (typed errors, parse
+# don't validate, MainActor/Metal boundary rules) as much as a rule set can.
+
+included:
+  - pikicam
+excluded:
+  - pikicamTests   # fixtures + probe tests are intentionally exploratory
+  - .git
+  - .pi-glla
+
+opt_in_rules:
+  - sorted_imports
+  - empty_string
+  - empty_count
+  - closure_end_placement
+  - unneeded_parentheses_in_closure_argument
+  - redundant_type_annotation
+  - ibinspectable_in_extension
+  - private_action
+  - private_outlet
+  - overridden_super_call
+  - unused_declaration
+  - unused_import
+  - no_extension_access_modifier
+
+disabled_rules:
+  - line_length          # keep <120 enforcement to .swift-format (swift-format lint)
+  - type_body_length
+  - function_body_length
+  - file_length
+  - identifier_name      # leads to noise in UI/"RAW"-heavy code
+  - type_name
+  - trailing_whitespace
+  - force_cast
+
+warning_threshold: 0
+
+reporter: "xcode"
