@@ -1,4 +1,3 @@
-#if canImport(UIKit)
 import AVFoundation
 import UIKit
 
@@ -64,4 +63,3 @@ final class PreviewView: UIView {
         previewLayer.videoGravity = .resizeAspectFill
     }
 }
-#endif

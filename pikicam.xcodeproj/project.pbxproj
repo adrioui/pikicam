@@ -9,12 +9,6 @@
 /* Begin PBXBuildFile section */
 		E718886C3007CACA00C573A7 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718882C3007CACA00C573A7 /* PikicamApp.swift */; };
 		E718886D3007CACA00C573A7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718882D3007CACA00C573A7 /* RootView.swift */; };
-		E718886E3007CACA00C573A7 /* AVCaptureDevice+Raw.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718882F3007CACA00C573A7 /* AVCaptureDevice+Raw.swift */; };
-		E718886F3007CACA00C573A7 /* CIImage+Raw.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888303007CACA00C573A7 /* CIImage+Raw.swift */; };
-		E71888703007CACA00C573A7 /* DNG+Raw.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888313007CACA00C573A7 /* DNG+Raw.swift */; };
-		E71888713007CACA00C573A7 /* DNGTagParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888323007CACA00C573A7 /* DNGTagParser.swift */; };
-		E71888723007CACA00C573A7 /* debayer.metal in Sources */ = {isa = PBXBuildFile; fileRef = E71888343007CACA00C573A7 /* debayer.metal */; };
-		E71888753007CACA00C573A7 /* MetalPipelineRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888383007CACA00C573A7 /* MetalPipelineRunner.swift */; };
 		E71888773007CACA00C573A7 /* PhotoLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718883B3007CACA00C573A7 /* PhotoLibraryManager.swift */; };
 		E718887C3007CACA00C573A7 /* ShutterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888423007CACA00C573A7 /* ShutterButton.swift */; };
 		E718887E3007CACA00C573A7 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888453007CACA00C573A7 /* CameraPreview.swift */; };
@@ -25,26 +19,17 @@
 		E71888833007CACA00C573A7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884A3007CACA00C573A7 /* PreviewView.swift */; };
 		E71888843007CACA00C573A7 /* CIRAWZeroProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884C3007CACA00C573A7 /* CIRAWZeroProcessor.swift */; };
 		E71888853007CACA00C573A7 /* DevelopService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884D3007CACA00C573A7 /* DevelopService.swift */; };
-		E71888973007CACA00C573A7 /* DemosaicAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888983007CACA00C573A7 /* DemosaicAlgorithm.swift */; };
-		E71888863007CACA00C573A7 /* LibRawProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884E3007CACA00C573A7 /* LibRawProcessor.swift */; };
-		E71888883007CACA00C573A7 /* MetalDebayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888503007CACA00C573A7 /* MetalDebayer.swift */; };
-		E71888893007CACA00C573A7 /* PipelineManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888513007CACA00C573A7 /* PipelineManager.swift */; };
-		E718888A3007CACA00C573A7 /* RAWDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888523007CACA00C573A7 /* RAWDecoder.swift */; };
 		E718888B3007CACA00C573A7 /* RAWProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888533007CACA00C573A7 /* RAWProcessor.swift */; };
 		E718889A3007CACA00C573A7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E71888663007CACA00C573A7 /* PrivacyInfo.xcprivacy */; };
 		E718889B3007CACA00C573A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E71888683007CACA00C573A7 /* Assets.xcassets */; };
+		5A5A11013007CACA00C573A7 /* PikicamPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A11033007CACA00C573A7 /* PikicamPipelineTests.swift */; };
+		5A5A11023007CACA00C573A7 /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 5A5A11053007CACA00C573A7 /* IMG_1361.DNG */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E71887A23007C45400C573A7 /* pikicam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E718882C3007CACA00C573A7 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
 		E718882D3007CACA00C573A7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		E718882F3007CACA00C573A7 /* AVCaptureDevice+Raw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Raw.swift"; sourceTree = "<group>"; };
-		E71888303007CACA00C573A7 /* CIImage+Raw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+Raw.swift"; sourceTree = "<group>"; };
-		E71888313007CACA00C573A7 /* DNG+Raw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DNG+Raw.swift"; sourceTree = "<group>"; };
-		E71888323007CACA00C573A7 /* DNGTagParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNGTagParser.swift; sourceTree = "<group>"; };
-		E71888343007CACA00C573A7 /* debayer.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = debayer.metal; sourceTree = "<group>"; };
-		E71888383007CACA00C573A7 /* MetalPipelineRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPipelineRunner.swift; sourceTree = "<group>"; };
 		E718883B3007CACA00C573A7 /* PhotoLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryManager.swift; sourceTree = "<group>"; };
 		E71888423007CACA00C573A7 /* ShutterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterButton.swift; sourceTree = "<group>"; };
 		E71888453007CACA00C573A7 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
@@ -55,18 +40,23 @@
 		E718884A3007CACA00C573A7 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		E718884C3007CACA00C573A7 /* CIRAWZeroProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRAWZeroProcessor.swift; sourceTree = "<group>"; };
 		E718884D3007CACA00C573A7 /* DevelopService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopService.swift; sourceTree = "<group>"; };
-		E71888983007CACA00C573A7 /* DemosaicAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemosaicAlgorithm.swift; sourceTree = "<group>"; };
-		E718884E3007CACA00C573A7 /* LibRawProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibRawProcessor.swift; sourceTree = "<group>"; };
-		E71888503007CACA00C573A7 /* MetalDebayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalDebayer.swift; sourceTree = "<group>"; };
-		E71888513007CACA00C573A7 /* PipelineManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineManager.swift; sourceTree = "<group>"; };
-		E71888523007CACA00C573A7 /* RAWDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAWDecoder.swift; sourceTree = "<group>"; };
 		E71888533007CACA00C573A7 /* RAWProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAWProcessor.swift; sourceTree = "<group>"; };
 		E71888663007CACA00C573A7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E71888683007CACA00C573A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5A5A11033007CACA00C573A7 /* PikicamPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamPipelineTests.swift; sourceTree = "<group>"; };
+		5A5A11043007CACA00C573A7 /* pikicamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A5A11053007CACA00C573A7 /* IMG_1361.DNG */ = {isa = PBXFileReference; lastKnownFileType = image.dng; path = Fixtures/IMG_1361.DNG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E718879F3007C45400C573A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A5A11093007CACA00C573A7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -81,6 +71,7 @@
 			children = (
 				E718886B3007CACA00C573A7 /* pikicam */,
 				E71887A33007C45400C573A7 /* Products */,
+				5A5A11063007CACA00C573A7 /* pikicamTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				E71887A23007C45400C573A7 /* pikicam.app */,
+				5A5A11043007CACA00C573A7 /* pikicamTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,34 +93,6 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		E71888333007CACA00C573A7 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				E718882F3007CACA00C573A7 /* AVCaptureDevice+Raw.swift */,
-				E71888303007CACA00C573A7 /* CIImage+Raw.swift */,
-				E71888313007CACA00C573A7 /* DNG+Raw.swift */,
-				E71888323007CACA00C573A7 /* DNGTagParser.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		E71888373007CACA00C573A7 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				E71888343007CACA00C573A7 /* debayer.metal */,
-			);
-			path = shaders;
-			sourceTree = "<group>";
-		};
-		E71888393007CACA00C573A7 /* Metal */ = {
-			isa = PBXGroup;
-			children = (
-				E71888373007CACA00C573A7 /* shaders */,
-				E71888383007CACA00C573A7 /* MetalPipelineRunner.swift */,
-			);
-			path = Metal;
-			sourceTree = "<group>";
-		};
 		E718883C3007CACA00C573A7 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,8 +104,6 @@
 		E718883D3007CACA00C573A7 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				E71888333007CACA00C573A7 /* Extensions */,
-				E71888393007CACA00C573A7 /* Metal */,
 				E718883C3007CACA00C573A7 /* Storage */,
 			);
 			path = Core;
@@ -174,11 +136,6 @@
 			children = (
 				E718884C3007CACA00C573A7 /* CIRAWZeroProcessor.swift */,
 				E718884D3007CACA00C573A7 /* DevelopService.swift */,
-				E71888983007CACA00C573A7 /* DemosaicAlgorithm.swift */,
-				E718884E3007CACA00C573A7 /* LibRawProcessor.swift */,
-				E71888503007CACA00C573A7 /* MetalDebayer.swift */,
-				E71888513007CACA00C573A7 /* PipelineManager.swift */,
-				E71888523007CACA00C573A7 /* RAWDecoder.swift */,
 				E71888533007CACA00C573A7 /* RAWProcessor.swift */,
 			);
 			path = Develop;
@@ -213,6 +170,15 @@
 			path = pikicam;
 			sourceTree = "<group>";
 		};
+		5A5A11063007CACA00C573A7 /* pikicamTests */ = {
+			isa = PBXGroup;
+			children = (
+				5A5A11033007CACA00C573A7 /* PikicamPipelineTests.swift */,
+				5A5A11053007CACA00C573A7 /* IMG_1361.DNG */,
+			);
+			path = pikicamTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -235,6 +201,26 @@
 			productReference = E71887A23007C45400C573A7 /* pikicam.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5A5A11073007CACA00C573A7 /* pikicamTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A5A110D3007CACA00C573A7 /* Build configuration list for PBXNativeTarget "pikicamTests" */;
+			buildPhases = (
+				5A5A11083007CACA00C573A7 /* Sources */,
+				5A5A11093007CACA00C573A7 /* Frameworks */,
+				5A5A110A3007CACA00C573A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5A5A110F3007CACA00C573A7 /* PBXTargetDependency */,
+			);
+			name = pikicamTests;
+			packageProductDependencies = (
+			);
+			productName = pikicamTests;
+			productReference = 5A5A11043007CACA00C573A7 /* pikicamTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -247,6 +233,10 @@
 				TargetAttributes = {
 					E71887A13007C45400C573A7 = {
 						CreatedOnToolsVersion = 26.6;
+					};
+					5A5A11073007CACA00C573A7 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = E71887A13007C45400C573A7;
 					};
 				};
 			};
@@ -265,9 +255,28 @@
 			projectRoot = "";
 			targets = (
 				E71887A13007C45400C573A7 /* pikicam */,
+				5A5A11073007CACA00C573A7 /* pikicamTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXContainerItemProxy section */
+		5A5A110E3007CACA00C573A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E718879A3007C45400C573A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E71887A13007C45400C573A7;
+			remoteInfo = pikicam;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		5A5A110F3007CACA00C573A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E71887A13007C45400C573A7 /* pikicam */;
+			targetProxy = 5A5A110E3007CACA00C573A7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E71887A03007C45400C573A7 /* Resources */ = {
@@ -276,6 +285,14 @@
 			files = (
 				E718889A3007CACA00C573A7 /* PrivacyInfo.xcprivacy in Resources */,
 				E718889B3007CACA00C573A7 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A5A110A3007CACA00C573A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5A11023007CACA00C573A7 /* IMG_1361.DNG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,12 +305,6 @@
 			files = (
 				E718886C3007CACA00C573A7 /* PikicamApp.swift in Sources */,
 				E718886D3007CACA00C573A7 /* RootView.swift in Sources */,
-				E718886E3007CACA00C573A7 /* AVCaptureDevice+Raw.swift in Sources */,
-				E718886F3007CACA00C573A7 /* CIImage+Raw.swift in Sources */,
-				E71888703007CACA00C573A7 /* DNG+Raw.swift in Sources */,
-				E71888713007CACA00C573A7 /* DNGTagParser.swift in Sources */,
-				E71888723007CACA00C573A7 /* debayer.metal in Sources */,
-				E71888753007CACA00C573A7 /* MetalPipelineRunner.swift in Sources */,
 				E71888773007CACA00C573A7 /* PhotoLibraryManager.swift in Sources */,
 				E718887C3007CACA00C573A7 /* ShutterButton.swift in Sources */,
 				E718887E3007CACA00C573A7 /* CameraPreview.swift in Sources */,
@@ -304,12 +315,15 @@
 				E71888833007CACA00C573A7 /* PreviewView.swift in Sources */,
 				E71888843007CACA00C573A7 /* CIRAWZeroProcessor.swift in Sources */,
 				E71888853007CACA00C573A7 /* DevelopService.swift in Sources */,
-				E71888973007CACA00C573A7 /* DemosaicAlgorithm.swift in Sources */,
-				E71888863007CACA00C573A7 /* LibRawProcessor.swift in Sources */,
-				E71888883007CACA00C573A7 /* MetalDebayer.swift in Sources */,
-				E71888893007CACA00C573A7 /* PipelineManager.swift in Sources */,
-				E718888A3007CACA00C573A7 /* RAWDecoder.swift in Sources */,
 				E718888B3007CACA00C573A7 /* RAWProcessor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A5A11083007CACA00C573A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5A11013007CACA00C573A7 /* PikicamPipelineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +521,61 @@
 			};
 			name = Release;
 		};
+		5A5A110B3007CACA00C573A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pikicam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)pikicam";
+			};
+			name = Debug;
+		};
+		5A5A110C3007CACA00C573A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pikicam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)pikicam";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -524,6 +593,15 @@
 			buildConfigurations = (
 				E71887AE3007C45600C573A7 /* Debug */,
 				E71887AF3007C45600C573A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A5A110D3007CACA00C573A7 /* Build configuration list for PBXNativeTarget "pikicamTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A5A110B3007CACA00C573A7 /* Debug */,
+				5A5A110C3007CACA00C573A7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

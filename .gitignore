@@ -9,5 +9,8 @@ DerivedData/
 build/
 *.xcuserstate
 
+# Large test fixtures (real camera DNG files — keep out of VCS)
+pikicamTests/Fixtures/*.DNG
+
 # Agent runtime session state
 .pi-glla/

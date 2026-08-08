@@ -1,6 +1,7 @@
 import Foundation
 @preconcurrency import AVFoundation
 import CoreImage
+import CoreVideo
 
 // MARK: - CaptureService
 
@@ -161,8 +162,23 @@ actor CaptureService {
         // (trivial) query runs on the main actor and returns the result.
         await MainActor.run {
             photoOutput.availableRawPhotoPixelFormatTypes.filter { format in
-                AVCapturePhotoOutput.isBayerRAWPixelFormat(format)
+                Self.isBayerRawPixelFormat(format)
             }
+        }
+    }
+
+    /// Returns `true` if the pixel format is a pure Bayer raw format
+    /// (not ProRAW or processed). Pure Bayer disables all multi-frame
+    /// computation (Smart HDR, Deep Fusion, Night Mode) by construction.
+    private static func isBayerRawPixelFormat(_ format: OSType) -> Bool {
+        switch format {
+        case kCVPixelFormatType_14Bayer_RGGB,
+             kCVPixelFormatType_14Bayer_GRBG,
+             kCVPixelFormatType_14Bayer_GBRG,
+             kCVPixelFormatType_14Bayer_BGGR:
+            return true
+        default:
+            return false
         }
     }
 
@@ -242,7 +258,7 @@ struct CaptureSessionBox: @unchecked Sendable {
 
 // MARK: - Errors
 
-enum CaptureError: LocalizedError {
+enum CaptureError: LocalizedError, Equatable {
     case cameraUnavailable
     case cannotAddInput
     case inputCreationFailed(underlying: Error)
@@ -251,6 +267,25 @@ enum CaptureError: LocalizedError {
     case noProcessedCodecAvailable
     case missingImageData
     case unsupportedPlatform
+
+    static func == (lhs: CaptureError, rhs: CaptureError) -> Bool {
+        switch (lhs, rhs) {
+        case (.cameraUnavailable, .cameraUnavailable),
+             (.cannotAddInput, .cannotAddInput),
+             (.cannotAddOutput, .cannotAddOutput),
+             (.noBayerFormatAvailable, .noBayerFormatAvailable),
+             (.noProcessedCodecAvailable, .noProcessedCodecAvailable),
+             (.missingImageData, .missingImageData),
+             (.unsupportedPlatform, .unsupportedPlatform):
+            return true
+        case let (.inputCreationFailed(l), .inputCreationFailed(r)):
+            let lhsError = l as NSError
+            let rhsError = r as NSError
+            return lhsError.domain == rhsError.domain && lhsError.code == rhsError.code
+        default:
+            return false
+        }
+    }
 
     var errorDescription: String? {
         switch self {

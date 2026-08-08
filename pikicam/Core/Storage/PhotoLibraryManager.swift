@@ -46,28 +46,28 @@ actor StorageService {
             let placeholderStore = AssetPlaceholderStore()
 
             PHPhotoLibrary.shared().performChanges {
-                // Create the asset creation request.
                 let creationRequest = PHAssetCreationRequest.forAsset()
 
-                // Add the raw DNG as the primary resource, then attach the
-                // processed image as its alternate representation. Photos
-                // expects RAW+processed pairs in this order.
-                let rawOptions = PHAssetResourceCreationOptions()
-                rawOptions.originalFilename = "\(identifier).dng"
-                rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier ?? "com.adobe.raw-image"
-                creationRequest.addResource(
-                    with: .photo,
-                    data: rawData,
-                    options: rawOptions
-                )
-
+                // Per Apple's RAW+processed convention, the developed print is the
+                // PRIMARY `.photo` resource and the DNG is stored as its
+                // `.alternatePhoto` raw companion. (Assigning the DNG as the primary
+                // resource is rejected by Photos with PHPhotosErrorChangeNotSupported.)
                 let processedOptions = PHAssetResourceCreationOptions()
                 processedOptions.originalFilename = "\(identifier).\(Self.fileExtension(for: codec))"
                 processedOptions.uniformTypeIdentifier = codec.identifier
                 creationRequest.addResource(
-                    with: .alternatePhoto,
+                    with: .photo,
                     data: processedData,
                     options: processedOptions
+                )
+
+                let rawOptions = PHAssetResourceCreationOptions()
+                rawOptions.originalFilename = "\(identifier).dng"
+                rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier ?? "com.adobe.raw-image"
+                creationRequest.addResource(
+                    with: .alternatePhoto,
+                    data: rawData,
+                    options: rawOptions
                 )
 
                 placeholderStore.localIdentifier = creationRequest.placeholderForCreatedAsset?.localIdentifier
@@ -82,14 +82,6 @@ actor StorageService {
                 }
             }
         }
-    }
-
-    // MARK: - Save Status Check
-
-    /// Returns `true` if the app has at least add-only photo library access.
-    func hasPermissions() async -> Bool {
-        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
-        return status == .authorized || status == .limited
     }
 
     // MARK: - Helpers

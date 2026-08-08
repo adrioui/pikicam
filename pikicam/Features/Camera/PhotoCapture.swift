@@ -38,16 +38,10 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
                                   error: Error?) {
         if let error = error {
             processingError = error
+        } else if photo.isRawPhoto {
+            rawPhoto = photo
         } else {
-            #if os(iOS)
-            if photo.isRawPhoto {
-                rawPhoto = photo
-            } else {
-                processedPhoto = photo
-            }
-            #else
             processedPhoto = photo
-            #endif
         }
     }
 
@@ -105,21 +99,12 @@ extension AVCapturePhotoOutput {
     func capturePhotoPair(with settings: AVCapturePhotoSettings) async throws -> PhotoCapturePair {
         return try await withCheckedThrowingContinuation { continuation in
             let captureDelegate = PhotoCapture(continuation: continuation)
-            // Store delegate association via objc_getAssociatedObject
-            // so it lives until the callback fires.
-            let wrapper = DelegateWrapper(delegate: captureDelegate)
-            objc_setAssociatedObject(self,
-                                     Unmanaged.passUnretained(captureDelegate).toOpaque(),
-                                     wrapper,
-                                     .OBJC_ASSOCIATION_RETAIN)
+            // Keep the delegate alive (keyed on its own address) until the
+            // capture callbacks fire; `didFinishCaptureFor` clears it.
+            let key = Unmanaged.passUnretained(captureDelegate).toOpaque()
+            objc_setAssociatedObject(self, key, captureDelegate, .OBJC_ASSOCIATION_RETAIN)
 
             self.capturePhoto(with: settings, delegate: captureDelegate)
         }
     }
-}
-
-/// Keeps a strong reference to the delegate until capture completes.
-private nonisolated final class DelegateWrapper {
-    let delegate: AnyObject
-    init(delegate: AnyObject) { self.delegate = delegate }
 }

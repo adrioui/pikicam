@@ -1,7 +1,6 @@
 import SwiftUI
 import AVFoundation
 
-#if canImport(UIKit)
 /// A SwiftUI `UIViewRepresentable` wrapping `PreviewView` for the live
 /// camera preview.
 ///
@@ -38,14 +37,3 @@ struct CameraPreview: UIViewRepresentable {
         uiView.session = nil
     }
 }
-#else
-/// Placeholder preview used when the package is type-checked on non-iOS platforms.
-struct CameraPreview: View {
-    /// The capture session to display in the preview.
-    let session: AVCaptureSession?
-
-    var body: some View {
-        Color.black
-    }
-}
-#endif
