@@ -1,7 +1,5 @@
 import SwiftUI
-#if canImport(UIKit)
 import UIKit
-#endif
 
 /// The root view of the pikicam application.
 ///
@@ -81,11 +79,9 @@ struct PermissionsDeniedView: View {
                 .foregroundStyle(.secondary)
 
             Button("Open Settings") {
-                #if canImport(UIKit)
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
-                #endif
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)

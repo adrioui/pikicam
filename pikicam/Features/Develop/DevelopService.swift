@@ -6,26 +6,29 @@ import Metal
 
 /// An actor managing the RAW image development pipeline.
 ///
-/// Uses a reused Metal-backed `CIContext` for performance and delegates actual
-/// processing to a `RAWProcessor` implementation (Phase 1: CIRAWZeroProcessor).
-///
-/// The actor isolation ensures thread-safe access to the CIContext and processor state.
+/// Delegates development to a `RAWProcessor` (a `CIRAWZeroProcessor` by
+/// default) and encodes the result as a JPEG with a reused Metal-backed
+/// `CIContext`. The actor keeps `CIContext` access thread-safe.
 actor DevelopService {
 
     // MARK: - Properties
 
-    /// The pipeline manager for selecting between processing backends.
-    private let pipelineManager: PipelineManager
+    /// The processor that turns DNG bytes into a developed image.
+    private let processor: RAWProcessor
 
     /// Reused CIContext for rendering (Metal-backed, cache disabled).
     private let ciContext: CIContext
 
+    /// Color space used for the final JPEG.
+    private let colorSpace: CGColorSpace
+
     // MARK: - Initialization
 
-    init(pipeline: PipelineManager.Pipeline = .ciRaw) {
-        self.pipelineManager = PipelineManager(preferredPipeline: pipeline)
+    init(processor: RAWProcessor? = nil) {
+        self.processor = processor ?? CIRAWZeroProcessor()
 
-        let displayP3 = CGColorSpace(name: CGColorSpace.displayP3) ?? CGColorSpaceCreateDeviceRGB()
+        let colorSpace = CGColorSpace(name: CGColorSpace.displayP3) ?? CGColorSpaceCreateDeviceRGB()
+        self.colorSpace = colorSpace
 
         // Metal-backed CIContext with no intermediates caching for minimal memory.
         if let device = MTLCreateSystemDefaultDevice() {
@@ -33,14 +36,14 @@ actor DevelopService {
                 mtlDevice: device,
                 options: [
                     .cacheIntermediates: false,
-                    .outputColorSpace: displayP3,
+                    .outputColorSpace: colorSpace,
                 ]
             )
         } else {
             self.ciContext = CIContext(
                 options: [
                     .cacheIntermediates: false,
-                    .outputColorSpace: displayP3,
+                    .outputColorSpace: colorSpace,
                 ]
             )
         }
@@ -48,7 +51,7 @@ actor DevelopService {
 
     // MARK: - Development
 
-    /// Develops a RAW DNG file into a viewable JPEG image with zero processing.
+    /// Develops a RAW DNG file into a viewable JPEG with zero processing.
     ///
     /// This is the core of pikicam's "zero-processing" philosophy. The DNG data
     /// is processed through the current RAW processor with all computational
@@ -58,7 +61,7 @@ actor DevelopService {
     /// - Returns: A `DevelopResult` containing JPEG data and the CIImage.
     /// - Throws: `DevelopError` if processing fails.
     func develop(dngData: Data, mode: CaptureMode = .zero) async throws -> DevelopResult {
-        let ciImage = try pipelineManager.develop(dngData: dngData, mode: mode)
+        let ciImage = try processor.develop(dngData: dngData, mode: mode)
         let jpegData = try encodeJPEG(ciImage)
         return DevelopResult(jpegData: jpegData, ciImage: ciImage)
     }
@@ -71,16 +74,9 @@ actor DevelopService {
     /// - Returns: JPEG-encoded data.
     /// - Throws: `DevelopError.jpegEncodingFailed` if encoding fails.
     private func encodeJPEG(_ ciImage: CIImage) throws -> Data {
-        let displayP3: CGColorSpace
-        if let space = CGColorSpace(name: CGColorSpace.displayP3) {
-            displayP3 = space
-        } else {
-            throw DevelopError.colorSpaceUnavailable
-        }
-
         guard let jpegData = ciContext.jpegRepresentation(
             of: ciImage,
-            colorSpace: displayP3,
+            colorSpace: colorSpace,
             options: [:]
         ) else {
             throw DevelopError.jpegEncodingFailed

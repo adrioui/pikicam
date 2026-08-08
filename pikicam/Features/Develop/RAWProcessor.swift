@@ -37,8 +37,8 @@ struct DevelopResult: Sendable {
 
 /// Defines the interface for RAW image processors.
 ///
-/// Phase 1 uses `CIRAWZeroProcessor` (Apple's CIRAWFilter with all enhancements disabled).
-/// Phase 2+ will implement custom Metal-based debayering and color processing.
+/// `CIRAWZeroProcessor` is the current (and only) implementation: Apple's
+/// `CIRAWFilter` with every enhancement knob explicitly disabled.
 ///
 /// Marked `nonisolated`: RAW development is pure computation with no UI state,
 /// and is invoked from background actors (`DevelopService`), never the main actor.
@@ -60,7 +60,6 @@ enum DevelopError: LocalizedError {
     case filterCreationFailed
     case renderingFailed
     case jpegEncodingFailed
-    case colorSpaceUnavailable
 
     var errorDescription: String? {
         switch self {
@@ -72,8 +71,6 @@ enum DevelopError: LocalizedError {
             return "Failed to render the developed image."
         case .jpegEncodingFailed:
             return "Failed to encode the developed image as JPEG."
-        case .colorSpaceUnavailable:
-            return "Required color space (Display P3) is unavailable."
         }
     }
 }

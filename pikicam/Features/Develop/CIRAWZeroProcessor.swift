@@ -58,20 +58,27 @@ nonisolated struct CIRAWZeroProcessor: RAWProcessor {
     /// In **Zero** mode, every enhancement knob is zeroed explicitly.
     /// In **Standard** mode, Apple's defaults are left as-is.
     /// In **RAW Only** mode, the zero recipe is used for preview.
+    ///
+    /// Each knob is applied through `apply(_:_:_:)`, which gates the setter on
+    /// `responds(to:)`: the iOS Simulator's `CIRAWFilterImpl` does not implement
+    /// most of these selectors (it raises `NSInvalidArgumentException` on
+    /// `setBaselineExposure:`, `setExposure:`, etc.). On runtimes that lack a
+    /// setter we skip it and keep the filter/`DNG` default, which is already the
+    /// closest honest "zero" behavior available there.
     private func applyZeroRecipe(_ filter: CIRAWFilter, mode: CaptureMode) {
         switch mode {
         case .zero, .rawOnly:
             // The defining recipe: every subjective knob at zero.
-            filter.baselineExposure = 0.0
-            filter.exposure = 0.0
-            filter.boostAmount = 0.0
-            filter.shadowBias = 0.0
-            filter.localToneMapAmount = 0.0
-            filter.luminanceNoiseReductionAmount = 0.0
-            filter.sharpnessAmount = 0.0
-            filter.contrastAmount = 0.0
-            filter.isLensCorrectionEnabled = false
-            filter.isGamutMappingEnabled = false
+            apply(filter, "baselineExposure", 0.0)
+            apply(filter, "exposure", 0.0)
+            apply(filter, "boostAmount", 0.0)
+            apply(filter, "shadowBias", 0.0)
+            apply(filter, "localToneMapAmount", 0.0)
+            apply(filter, "luminanceNoiseReductionAmount", 0.0)
+            apply(filter, "sharpnessAmount", 0.0)
+            apply(filter, "contrastAmount", 0.0)
+            apply(filter, "isLensCorrectionEnabled", false)
+            apply(filter, "isGamutMappingEnabled", false)
 
             // White balance: use AsShot neutral (the DNG's recommended values).
             // The filter defaults to AsShot, so we leave temperature/tint at defaults.
@@ -80,6 +87,16 @@ nonisolated struct CIRAWZeroProcessor: RAWProcessor {
             // Apple's default processing — leave everything at filter defaults.
             // This serves as a comparison baseline for the zero mode.
             break
+        }
+    }
+
+    /// Sets `value` for a `CIRAWFilter` readwrite property, skipping the call on
+    /// runtimes whose private `CIRAWFilter` implementation does not implement the
+    /// corresponding setter (notably the iOS Simulator).
+    private func apply(_ filter: CIRAWFilter, _ key: String, _ value: Any) {
+        let setter = "set" + key.prefix(1).uppercased() + key.dropFirst() + ":"
+        if filter.responds(to: Selector(setter)) {
+            filter.setValue(value, forKey: key)
         }
     }
 }
