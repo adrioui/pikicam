@@ -1,0 +1,168 @@
+import Foundation
+import SwiftUI
+import AVFoundation
+import Photos
+
+// MARK: - CameraViewModel
+
+/// The main view model for the camera screen.
+///
+/// Owned by the `@MainActor` and uses `@Observable` (iOS 17+) for fine-grained
+/// view updates. Bridges the `CaptureService` actor to the SwiftUI layer and
+/// orchestrates the capture → develop → save pipeline.
+///
+/// ## Pipeline Flow
+/// ```
+/// Permission → Configure Session → Start Preview
+///   → Shutter → CaptureService.capturePhoto()
+///   → DevelopService.develop(dngData)        // zero-process
+///   → StorageService.savePair(print, raw)
+/// ```
+@MainActor
+@Observable
+final class CameraViewModel {
+
+    // MARK: - Services
+
+    /// The actor managing the AVCaptureSession pipeline.
+    let captureService = CaptureService()
+
+    /// The actor managing zero-process RAW development.
+    let developService: DevelopService
+
+    /// The actor managing photo library saves.
+    let storageService = StorageService()
+
+    // MARK: - Authorization State
+
+    /// Whether the user has granted camera access.
+    private(set) var cameraAuthStatus: AVAuthorizationStatus = .notDetermined
+
+    /// Whether the user has granted photo library write access.
+    private(set) var photoAuthStatus: PHAuthorizationStatus = .notDetermined
+
+    /// Computed: true when both camera and photo library access are granted.
+    var hasRequiredAuth: Bool {
+        cameraAuthStatus == .authorized && photoAuthStatus == .authorized
+    }
+
+    // MARK: - Session State
+
+    /// Whether the capture session is running.
+    private(set) var isSessionRunning = false
+
+    /// Whether configuration is in progress or has completed.
+    private(set) var isConfigured = false
+
+    /// Configuration or capture error, if any.
+    private(set) var error: Error?
+
+    // MARK: - Capture State
+
+    /// Whether a photo capture is currently in flight.
+    private(set) var isCapturing = false
+
+    // MARK: - Initialization
+
+    init() {
+        self.developService = DevelopService()
+        cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+    }
+
+    // MARK: - Authorization
+
+    /// Requests camera access if not yet determined.
+    @discardableResult
+    func requestCameraAccess() async -> Bool {
+        let granted = await AVCaptureDevice.requestAccess(for: .video)
+        cameraAuthStatus = granted ? .authorized : .denied
+        return granted
+    }
+
+    /// Requests photo library add-only access if not yet determined.
+    @discardableResult
+    func requestPhotoLibraryAccess() async -> Bool {
+        let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+        photoAuthStatus = status
+        return status == .authorized
+    }
+
+    /// Requests all required permissions. Returns `true` once all are granted.
+    func requestAllPermissions() async -> Bool {
+        let camera = await requestCameraAccess()
+        let photos = await requestPhotoLibraryAccess()
+        return camera && photos
+    }
+
+    // MARK: - Session Lifecycle
+
+    /// Configures the capture session and starts it.
+    func start() async {
+        guard hasRequiredAuth else {
+            error = CameraViewModelError.missingPermissions
+            return
+        }
+
+        do {
+            try await captureService.startSession()
+            isConfigured = true
+            isSessionRunning = true
+        } catch {
+            self.error = error
+            isConfigured = false
+        }
+    }
+
+    /// Stops the capture session.
+    func stop() async {
+        await captureService.stopSession()
+        isSessionRunning = false
+    }
+
+    // MARK: - Capture Pipeline
+
+    /// Captures a single photo: capture → zero-develop → save.
+    ///
+    /// The pipeline runs across three actors, each on its own queue:
+    /// 1. `CaptureService` captures the Bayer RAW + processed preview.
+    /// 2. `DevelopService` zero-develops the DNG into a print.
+    /// 3. `StorageService` saves both the DNG and print to the Photos library.
+    func capture() async {
+        guard !isCapturing, isConfigured else { return }
+
+        isCapturing = true
+        defer { isCapturing = false }
+
+        do {
+            // Step 1: Capture pure Bayer RAW.
+            let photoResult = try await captureService.capturePhoto()
+
+            // Step 2: Zero-develop the DNG (all computational photography off).
+            let developResult = try await developService.develop(
+                dngData: photoResult.rawData
+            )
+
+            // Step 3: Save the print + DNG pair to the Photos library.
+            try await storageService.savePair(
+                processedData: developResult.jpegData,
+                rawData: photoResult.rawData
+            )
+        } catch {
+            self.error = error
+        }
+    }
+}
+
+// MARK: - Errors
+
+enum CameraViewModelError: LocalizedError {
+    case missingPermissions
+
+    var errorDescription: String? {
+        switch self {
+        case .missingPermissions:
+            return "Camera and photo library access are required."
+        }
+    }
+}
