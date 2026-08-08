@@ -6,17 +6,64 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E718886C3007CACA00C573A7 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718882C3007CACA00C573A7 /* PikicamApp.swift */; };
+		E718886D3007CACA00C573A7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718882D3007CACA00C573A7 /* RootView.swift */; };
+		E718886E3007CACA00C573A7 /* AVCaptureDevice+Raw.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718882F3007CACA00C573A7 /* AVCaptureDevice+Raw.swift */; };
+		E718886F3007CACA00C573A7 /* CIImage+Raw.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888303007CACA00C573A7 /* CIImage+Raw.swift */; };
+		E71888703007CACA00C573A7 /* DNG+Raw.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888313007CACA00C573A7 /* DNG+Raw.swift */; };
+		E71888713007CACA00C573A7 /* DNGTagParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888323007CACA00C573A7 /* DNGTagParser.swift */; };
+		E71888723007CACA00C573A7 /* debayer.metal in Sources */ = {isa = PBXBuildFile; fileRef = E71888343007CACA00C573A7 /* debayer.metal */; };
+		E71888753007CACA00C573A7 /* MetalPipelineRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888383007CACA00C573A7 /* MetalPipelineRunner.swift */; };
+		E71888773007CACA00C573A7 /* PhotoLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718883B3007CACA00C573A7 /* PhotoLibraryManager.swift */; };
+		E718887C3007CACA00C573A7 /* ShutterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888423007CACA00C573A7 /* ShutterButton.swift */; };
+		E718887E3007CACA00C573A7 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888453007CACA00C573A7 /* CameraPreview.swift */; };
+		E718887F3007CACA00C573A7 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888463007CACA00C573A7 /* CameraView.swift */; };
+		E71888803007CACA00C573A7 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888473007CACA00C573A7 /* CameraViewModel.swift */; };
+		E71888813007CACA00C573A7 /* CaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888483007CACA00C573A7 /* CaptureService.swift */; };
+		E71888823007CACA00C573A7 /* PhotoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888493007CACA00C573A7 /* PhotoCapture.swift */; };
+		E71888833007CACA00C573A7 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884A3007CACA00C573A7 /* PreviewView.swift */; };
+		E71888843007CACA00C573A7 /* CIRAWZeroProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884C3007CACA00C573A7 /* CIRAWZeroProcessor.swift */; };
+		E71888853007CACA00C573A7 /* DevelopService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884D3007CACA00C573A7 /* DevelopService.swift */; };
+		E71888973007CACA00C573A7 /* DemosaicAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888983007CACA00C573A7 /* DemosaicAlgorithm.swift */; };
+		E71888863007CACA00C573A7 /* LibRawProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E718884E3007CACA00C573A7 /* LibRawProcessor.swift */; };
+		E71888883007CACA00C573A7 /* MetalDebayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888503007CACA00C573A7 /* MetalDebayer.swift */; };
+		E71888893007CACA00C573A7 /* PipelineManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888513007CACA00C573A7 /* PipelineManager.swift */; };
+		E718888A3007CACA00C573A7 /* RAWDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888523007CACA00C573A7 /* RAWDecoder.swift */; };
+		E718888B3007CACA00C573A7 /* RAWProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71888533007CACA00C573A7 /* RAWProcessor.swift */; };
+		E718889A3007CACA00C573A7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E71888663007CACA00C573A7 /* PrivacyInfo.xcprivacy */; };
+		E718889B3007CACA00C573A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E71888683007CACA00C573A7 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		E71887A23007C45400C573A7 /* pikicam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E718882C3007CACA00C573A7 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
+		E718882D3007CACA00C573A7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		E718882F3007CACA00C573A7 /* AVCaptureDevice+Raw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Raw.swift"; sourceTree = "<group>"; };
+		E71888303007CACA00C573A7 /* CIImage+Raw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+Raw.swift"; sourceTree = "<group>"; };
+		E71888313007CACA00C573A7 /* DNG+Raw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DNG+Raw.swift"; sourceTree = "<group>"; };
+		E71888323007CACA00C573A7 /* DNGTagParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNGTagParser.swift; sourceTree = "<group>"; };
+		E71888343007CACA00C573A7 /* debayer.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = debayer.metal; sourceTree = "<group>"; };
+		E71888383007CACA00C573A7 /* MetalPipelineRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPipelineRunner.swift; sourceTree = "<group>"; };
+		E718883B3007CACA00C573A7 /* PhotoLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryManager.swift; sourceTree = "<group>"; };
+		E71888423007CACA00C573A7 /* ShutterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterButton.swift; sourceTree = "<group>"; };
+		E71888453007CACA00C573A7 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		E71888463007CACA00C573A7 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		E71888473007CACA00C573A7 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		E71888483007CACA00C573A7 /* CaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureService.swift; sourceTree = "<group>"; };
+		E71888493007CACA00C573A7 /* PhotoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCapture.swift; sourceTree = "<group>"; };
+		E718884A3007CACA00C573A7 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		E718884C3007CACA00C573A7 /* CIRAWZeroProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRAWZeroProcessor.swift; sourceTree = "<group>"; };
+		E718884D3007CACA00C573A7 /* DevelopService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopService.swift; sourceTree = "<group>"; };
+		E71888983007CACA00C573A7 /* DemosaicAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemosaicAlgorithm.swift; sourceTree = "<group>"; };
+		E718884E3007CACA00C573A7 /* LibRawProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibRawProcessor.swift; sourceTree = "<group>"; };
+		E71888503007CACA00C573A7 /* MetalDebayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalDebayer.swift; sourceTree = "<group>"; };
+		E71888513007CACA00C573A7 /* PipelineManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineManager.swift; sourceTree = "<group>"; };
+		E71888523007CACA00C573A7 /* RAWDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAWDecoder.swift; sourceTree = "<group>"; };
+		E71888533007CACA00C573A7 /* RAWProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAWProcessor.swift; sourceTree = "<group>"; };
+		E71888663007CACA00C573A7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E71888683007CACA00C573A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		E71887A43007C45400C573A7 /* pikicam */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = pikicam;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E718879F3007C45400C573A7 /* Frameworks */ = {
@@ -32,7 +79,7 @@
 		E71887993007C45300C573A7 = {
 			isa = PBXGroup;
 			children = (
-				E71887A43007C45400C573A7 /* pikicam */,
+				E718886B3007CACA00C573A7 /* pikicam */,
 				E71887A33007C45400C573A7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +90,127 @@
 				E71887A23007C45400C573A7 /* pikicam.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E718882E3007CACA00C573A7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E718882C3007CACA00C573A7 /* PikicamApp.swift */,
+				E718882D3007CACA00C573A7 /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E71888333007CACA00C573A7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E718882F3007CACA00C573A7 /* AVCaptureDevice+Raw.swift */,
+				E71888303007CACA00C573A7 /* CIImage+Raw.swift */,
+				E71888313007CACA00C573A7 /* DNG+Raw.swift */,
+				E71888323007CACA00C573A7 /* DNGTagParser.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E71888373007CACA00C573A7 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				E71888343007CACA00C573A7 /* debayer.metal */,
+			);
+			path = shaders;
+			sourceTree = "<group>";
+		};
+		E71888393007CACA00C573A7 /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				E71888373007CACA00C573A7 /* shaders */,
+				E71888383007CACA00C573A7 /* MetalPipelineRunner.swift */,
+			);
+			path = Metal;
+			sourceTree = "<group>";
+		};
+		E718883C3007CACA00C573A7 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				E718883B3007CACA00C573A7 /* PhotoLibraryManager.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		E718883D3007CACA00C573A7 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				E71888333007CACA00C573A7 /* Extensions */,
+				E71888393007CACA00C573A7 /* Metal */,
+				E718883C3007CACA00C573A7 /* Storage */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E71888443007CACA00C573A7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E71888423007CACA00C573A7 /* ShutterButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E718884B3007CACA00C573A7 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				E71888443007CACA00C573A7 /* Views */,
+				E71888453007CACA00C573A7 /* CameraPreview.swift */,
+				E71888463007CACA00C573A7 /* CameraView.swift */,
+				E71888473007CACA00C573A7 /* CameraViewModel.swift */,
+				E71888483007CACA00C573A7 /* CaptureService.swift */,
+				E71888493007CACA00C573A7 /* PhotoCapture.swift */,
+				E718884A3007CACA00C573A7 /* PreviewView.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		E71888543007CACA00C573A7 /* Develop */ = {
+			isa = PBXGroup;
+			children = (
+				E718884C3007CACA00C573A7 /* CIRAWZeroProcessor.swift */,
+				E718884D3007CACA00C573A7 /* DevelopService.swift */,
+				E71888983007CACA00C573A7 /* DemosaicAlgorithm.swift */,
+				E718884E3007CACA00C573A7 /* LibRawProcessor.swift */,
+				E71888503007CACA00C573A7 /* MetalDebayer.swift */,
+				E71888513007CACA00C573A7 /* PipelineManager.swift */,
+				E71888523007CACA00C573A7 /* RAWDecoder.swift */,
+				E71888533007CACA00C573A7 /* RAWProcessor.swift */,
+			);
+			path = Develop;
+			sourceTree = "<group>";
+		};
+		E71888643007CACA00C573A7 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				E718884B3007CACA00C573A7 /* Camera */,
+				E71888543007CACA00C573A7 /* Develop */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		E71888673007CACA00C573A7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E71888663007CACA00C573A7 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E718886B3007CACA00C573A7 /* pikicam */ = {
+			isa = PBXGroup;
+			children = (
+				E718882E3007CACA00C573A7 /* App */,
+				E718883D3007CACA00C573A7 /* Core */,
+				E71888643007CACA00C573A7 /* Features */,
+				E71888673007CACA00C573A7 /* Resources */,
+				E71888683007CACA00C573A7 /* Assets.xcassets */,
+			);
+			path = pikicam;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,9 +227,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				E71887A43007C45400C573A7 /* pikicam */,
 			);
 			name = pikicam;
 			packageProductDependencies = (
@@ -109,6 +274,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E718889A3007CACA00C573A7 /* PrivacyInfo.xcprivacy in Resources */,
+				E718889B3007CACA00C573A7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +286,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E718886C3007CACA00C573A7 /* PikicamApp.swift in Sources */,
+				E718886D3007CACA00C573A7 /* RootView.swift in Sources */,
+				E718886E3007CACA00C573A7 /* AVCaptureDevice+Raw.swift in Sources */,
+				E718886F3007CACA00C573A7 /* CIImage+Raw.swift in Sources */,
+				E71888703007CACA00C573A7 /* DNG+Raw.swift in Sources */,
+				E71888713007CACA00C573A7 /* DNGTagParser.swift in Sources */,
+				E71888723007CACA00C573A7 /* debayer.metal in Sources */,
+				E71888753007CACA00C573A7 /* MetalPipelineRunner.swift in Sources */,
+				E71888773007CACA00C573A7 /* PhotoLibraryManager.swift in Sources */,
+				E718887C3007CACA00C573A7 /* ShutterButton.swift in Sources */,
+				E718887E3007CACA00C573A7 /* CameraPreview.swift in Sources */,
+				E718887F3007CACA00C573A7 /* CameraView.swift in Sources */,
+				E71888803007CACA00C573A7 /* CameraViewModel.swift in Sources */,
+				E71888813007CACA00C573A7 /* CaptureService.swift in Sources */,
+				E71888823007CACA00C573A7 /* PhotoCapture.swift in Sources */,
+				E71888833007CACA00C573A7 /* PreviewView.swift in Sources */,
+				E71888843007CACA00C573A7 /* CIRAWZeroProcessor.swift in Sources */,
+				E71888853007CACA00C573A7 /* DevelopService.swift in Sources */,
+				E71888973007CACA00C573A7 /* DemosaicAlgorithm.swift in Sources */,
+				E71888863007CACA00C573A7 /* LibRawProcessor.swift in Sources */,
+				E71888883007CACA00C573A7 /* MetalDebayer.swift in Sources */,
+				E71888893007CACA00C573A7 /* PipelineManager.swift in Sources */,
+				E718888A3007CACA00C573A7 /* RAWDecoder.swift in Sources */,
+				E718888B3007CACA00C573A7 /* RAWProcessor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +447,9 @@
 				DEVELOPMENT_TEAM = V7BF8622ZR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "pikicam needs camera access to capture photos.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "pikicam saves captured photos to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "pikicam accesses your photo library for saved captures.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,6 +482,9 @@
 				DEVELOPMENT_TEAM = V7BF8622ZR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "pikicam needs camera access to capture photos.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "pikicam saves captured photos to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "pikicam accesses your photo library for saved captures.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
