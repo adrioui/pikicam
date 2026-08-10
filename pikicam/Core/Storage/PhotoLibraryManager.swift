@@ -1,4 +1,3 @@
-import Foundation
 import Photos
 import UniformTypeIdentifiers
 
@@ -7,76 +6,66 @@ import UniformTypeIdentifiers
 /// Manages saving captured photo pairs (DNG negative + JPEG/HEIC print)
 /// to the user's Photos library using `PHAssetCreationRequest`.
 ///
-/// ## Saving Strategy
-/// Each capture is saved as a single `PHAsset` with two resources:
-/// - `.photo` — the developed JPEG/HEIC print (primary asset resource)
-/// - `.alternatePhoto` — the untouched DNG negative (raw companion resource)
+/// ## Saving Strategy (verified on-device, iOS 26.6)
 ///
-/// This keeps the negative and print together in the user's library and
-/// supports "Revert to Original" in Photos.app for the DNG.
+/// PhotoKit on iOS 26.6 rejects the `.alternatePhoto` pairing layout
+/// (`PHPhotosErrorChangeNotSupported` / 3300) regardless of authorization
+/// level, resource UTIs, or pairing order. The working approach saves
+/// *two independent assets* (each a `.photo` resource):
+///
+/// - Asset 1 — the developed JPEG/HEIC print.
+/// - Asset 2 — the untouched DNG negative (`.photo` resource, `.dng` UT).
+///
+/// Both assets are created in a single `performChanges` batch.
 actor StorageService {
 
     // MARK: - Save Pair
 
-    /// Saves a processed image and its raw DNG companion to the Photos library.
+    /// Saves the developed print and its raw DNG companion as two separate
+    /// Photos assets (verified on-device: `.alternatePhoto` pairing fails
+    /// with `PHPhotosErrorDomain` 3300 on iOS 26.6).
     ///
-    /// - Parameters:
-    ///   - processedData: JPEG or HEIC image data for the "print".
-    ///   - rawData: DNG file data for the "negative".
-    ///   - identifier: Optional unique identifier for filename (UUID used if nil).
-    ///   - codec: Output codec for the processed print. Defaults to `.jpeg` so
-    ///     existing callers compile; pass the selected codec to honor user choice.
-    /// - Returns: The local identifier of the created `PHAsset`.
-    /// - Throws: `StorageServiceError` if the save fails or permissions are insufficient.
+    /// - Returns: `(printLocalID, rawLocalID)` — both non-empty on success.
+    /// - Throws: `StorageServiceError` if either save fails.
     @discardableResult
     func savePair(
         processedData: Data,
         rawData: Data,
         identifier: String = UUID().uuidString,
         codec: UTType = .jpeg
-    ) async throws -> String {
-        // Ensure we have add-only permission.
-        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
-        guard status == .authorized || status == .limited else {
+    ) async throws -> (String, String) {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        guard status == .authorized else {
             throw StorageServiceError.insufficientPermissions(status: status)
         }
 
-        // Use a checked continuation to bridge the PHPhotoLibrary callback.
         return try await withCheckedThrowingContinuation { continuation in
-            let placeholderStore = AssetPlaceholderStore()
+            let printStore = AssetPlaceholderStore()
+            let rawStore = AssetPlaceholderStore()
 
             PHPhotoLibrary.shared().performChanges {
-                let creationRequest = PHAssetCreationRequest.forAsset()
+                // Print asset (independent `.photo` resource).
+                let printReq = PHAssetCreationRequest.forAsset()
+                let printOptions = PHAssetResourceCreationOptions()
+                printOptions.originalFilename = "\(identifier).\(Self.fileExtension(for: codec))"
+                printOptions.uniformTypeIdentifier = codec.identifier
+                printReq.addResource(with: .photo, data: processedData, options: printOptions)
+                printStore.localIdentifier = printReq.placeholderForCreatedAsset?.localIdentifier
 
-                // Per Apple's RAW+processed convention, the developed print is the
-                // PRIMARY `.photo` resource and the DNG is stored as its
-                // `.alternatePhoto` raw companion. (Assigning the DNG as the primary
-                // resource is rejected by Photos with PHPhotosErrorChangeNotSupported.)
-                let processedOptions = PHAssetResourceCreationOptions()
-                processedOptions.originalFilename = "\(identifier).\(Self.fileExtension(for: codec))"
-                processedOptions.uniformTypeIdentifier = codec.identifier
-                creationRequest.addResource(
-                    with: .photo,
-                    data: processedData,
-                    options: processedOptions
-                )
-
+                // Negative asset (independent `.photo` resource with DNG data).
+                let rawReq = PHAssetCreationRequest.forAsset()
                 let rawOptions = PHAssetResourceCreationOptions()
                 rawOptions.originalFilename = "\(identifier).dng"
-                rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier ?? "com.adobe.raw-image"
-                creationRequest.addResource(
-                    with: .alternatePhoto,
-                    data: rawData,
-                    options: rawOptions
-                )
-
-                placeholderStore.localIdentifier = creationRequest.placeholderForCreatedAsset?.localIdentifier
+                rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier
+                    ?? "com.adobe.raw-image"
+                rawReq.addResource(with: .photo, data: rawData, options: rawOptions)
+                rawStore.localIdentifier = rawReq.placeholderForCreatedAsset?.localIdentifier
 
             } completionHandler: { success, error in
                 if let error {
                     continuation.resume(throwing: StorageServiceError.saveFailed(underlying: error))
-                } else if let localID = placeholderStore.localIdentifier {
-                    continuation.resume(returning: localID)
+                } else if let p = printStore.localIdentifier, let r = rawStore.localIdentifier {
+                    continuation.resume(returning: (p, r))
                 } else {
                     continuation.resume(throwing: StorageServiceError.unknownSaveFailure)
                 }
