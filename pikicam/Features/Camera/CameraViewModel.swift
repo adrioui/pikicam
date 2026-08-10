@@ -67,7 +67,7 @@ final class CameraViewModel {
     init() {
         self.developService = DevelopService()
         cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
-        photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }
 
     // MARK: - Authorization
@@ -80,10 +80,16 @@ final class CameraViewModel {
         return granted
     }
 
-    /// Requests photo library add-only access if not yet determined.
+    /// Requests full photo library access if not yet determined.
+    ///
+    /// Full (read-write) access is required: on iOS 26, PhotoKit rejects every
+    /// RAW+print pair layout for apps holding only add-only authorization
+    /// (PHPhotosErrorChangeNotSupported / 3300, verified on-device). The
+    /// "Allow Selected Photos" (limited) grant also cannot pair RAW
+    /// companions, so only `.authorized` counts here.
     @discardableResult
     func requestPhotoLibraryAccess() async -> Bool {
-        let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+        let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
         photoAuthStatus = status
         return status == .authorized
     }

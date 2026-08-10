@@ -68,28 +68,203 @@ final class PikicamPipelineTests: XCTestCase {
 
         let jpeg = makeSolidJPEG(width: 64, height: 64)
         let service = StorageService()
-        let identifier: String
+        let (printID, rawID): (String, String)
         do {
-            identifier = try await service.savePair(processedData: jpeg, rawData: rawData)
+            (printID, rawID) = try await service.savePair(processedData: jpeg, rawData: rawData)
         } catch StorageServiceError.saveFailed(let underlying) {
             let nsError = underlying as NSError
             if nsError.domain == "PHPhotosErrorDomain" && nsError.code == 3300 {
-                throw XCTSkip("This iOS Simulator's Photos library rejects assets with a RAW companion "
-                              + "(PHPhotosErrorChangeNotSupported / 3300). Real devices support .alternatePhoto.")
+                throw XCTSkip("This iOS Simulator's Photos library rejects RAW assets (PHPhotosErrorChangeNotSupported / 3300). "
+                              + "Real devices save RAW via independent .photo resources.")
             }
             throw StorageServiceError.saveFailed(underlying: underlying)
         }
 
-        XCTAssertFalse(identifier.isEmpty, "Photos should return a non-empty asset identifier.")
+        XCTAssertFalse(printID.isEmpty, "Print asset identifier should be non-empty.")
+        XCTAssertFalse(rawID.isEmpty, "RAW asset identifier should be non-empty.")
 
-        // The asset must exist with the DNG as a companion resource.
-        let fetch = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
-        XCTAssertEqual(fetch.count, 1, "Created asset should exist in the library.")
+        let printAsset = PHAsset.fetchAssets(withLocalIdentifiers: [printID], options: nil)
+        XCTAssertEqual(printAsset.count, 1, "Created print asset should exist.")
 
-        if let asset = fetch.firstObject {
+        let rawAsset = PHAsset.fetchAssets(withLocalIdentifiers: [rawID], options: nil)
+        XCTAssertEqual(rawAsset.count, 1, "Created RAW asset should exist.")
+
+        if let printObj = printAsset.firstObject {
+            let resources = PHAssetResource.assetResources(for: printObj)
+            XCTAssertTrue(
+                resources.contains { $0.type == .photo },
+                "Print should be stored as a `.photo` resource."
+            )
+        }
+        if let rawObj = rawAsset.firstObject {
+            let resources = PHAssetResource.assetResources(for: rawObj)
+            XCTAssertTrue(
+                resources.contains { $0.type == .photo },
+                "DNG should be stored as an independent `.photo` resource (iOS 26.6 rejects `.alternatePhoto`)."
+            )
+        }
+    }
+
+    // MARK: - Device end-to-end verification
+
+    /// Device-only: after the UI walkthrough performed a real capture, the
+    /// Photos library contains a recent developed-print asset (`.photo`) and
+    /// a recent DNG negative asset (`.photo`) — two independent assets, since
+    /// iOS 26.6's change API rejects `.alternatePhoto` pairing (3300).
+    func testDevicePhotosLibraryContainsCapturedDNGPrintPair() throws {
+        #if targetEnvironment(simulator)
+        throw XCTSkip("Device-only: simulator Photos rejects RAW assets (3300).")
+        #else
+        let readWrite = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        guard readWrite == .authorized || readWrite == .limited else {
+            throw XCTSkip("Host app has no Photos read access (status \(readWrite.rawValue)) — "
+                          + "run pikicamUITests on the device first so the permission flow grants access.")
+        }
+        let tenMinutesAgo = Date().addingTimeInterval(-600)
+        let options = PHFetchOptions()
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        options.fetchLimit = 30
+        let assets = PHAsset.fetchAssets(with: .image, options: options)
+        var foundPrint = false
+        var foundDNG = false
+        assets.enumerateObjects { asset, _, stop in
+            guard let creation = asset.creationDate, creation > tenMinutesAgo else { return }
             let resources = PHAssetResource.assetResources(for: asset)
-            XCTAssertTrue(resources.contains { $0.type == .alternatePhoto },
-                          "DNG companion should be stored as an alternate (RAW) resource.")
+            let printLike = resources.contains {
+                $0.type == .photo
+                    && ($0.originalFilename.hasSuffix(".jpg")
+                        || $0.originalFilename.hasSuffix(".jpeg")
+                        || $0.originalFilename.hasSuffix(".heic"))
+            }
+            let dngLike = resources.contains {
+                $0.type == .photo && $0.originalFilename.hasSuffix(".dng")
+            }
+            if printLike { foundPrint = true }
+            if dngLike { foundDNG = true }
+            if foundPrint && foundDNG { stop.pointee = true }
+        }
+        XCTAssertTrue(foundPrint, "No developed print asset in last 10 minutes.")
+        XCTAssertTrue(foundDNG, "No DNG negative asset in last 10 minutes.")
+        #endif
+    }
+
+    // MARK: - On-device Photos save probe (diagnostic)
+
+    /// Diagnostic (device-only): the production save of the RAW+print pair
+    /// fails with `PHPhotosErrorChangeNotSupported` (3300) on physical
+    /// hardware — the same error the simulator was known to produce. This
+    /// probe writes each candidate resource layout through the real change
+    /// API and prints what this iOS build accepts, so the storage layer can
+    /// be fixed to match. It creates a small number of clearly-named test
+    /// assets in the library (PikicamProbe-*); delete them via Photos.app.
+    func testDeviceProbePhotosSaveResourceVariants() async throws {
+        #if targetEnvironment(simulator)
+        throw XCTSkip("Device-only probe.")
+        #else
+        guard let dng = try loadDNGFixture() else {
+            throw XCTSkip("DNG fixture missing — cannot probe pairing layouts.")
+        }
+        let jpeg = makeSolidJPEG(width: 256, height: 256)
+        let variants: [(name: String, resources: [(PHAssetResourceType, Data, String?, String)])] = [
+            ("jpeg-only(.photo)", [
+                (.photo, jpeg, "public.jpeg", "jpg"),
+            ]),
+            ("dng-only(.photo, explicit UTI)", [
+                (.photo, dng, "com.adobe.raw-image", "dng"),
+            ]),
+            ("dng-only(.photo, no UTI)", [
+                (.photo, dng, nil, "dng"),
+            ]),
+            ("standard-pair(.photo jpeg + .alternatePhoto dng, explicit UTI)", [
+                (.photo, jpeg, "public.jpeg", "jpg"),
+                (.alternatePhoto, dng, "com.adobe.raw-image", "dng"),
+            ]),
+            ("reverse-pair(.photo dng + .alternatePhoto jpeg)", [
+                (.photo, dng, "com.adobe.raw-image", "dng"),
+                (.alternatePhoto, jpeg, "public.jpeg", "jpg"),
+            ]),
+            ("pair-without-explicit-dng-UTI", [
+                (.photo, jpeg, "public.jpeg", "jpg"),
+                (.alternatePhoto, dng, nil, "dng"),
+            ]),
+        ]
+
+        for variant in variants {
+            let outcome = try await probeSaveVariant(named: variant.name, resources: variant.resources)
+            print("🖼️ PROBE \(variant.name) → \(outcome)")
+        }
+
+        // Cleanup: with full access the host app can delete the probe assets
+        // it just created (impossible under add-only authorization).
+        let allAssets = PHAsset.fetchAssets(with: .image, options: nil)
+        var probes: [PHAsset] = []
+        allAssets.enumerateObjects { asset, _, _ in
+            if asset.localIdentifier.contains("PikicamProbe-") { probes.append(asset) }
+        }
+        if !probes.isEmpty {
+            do {
+                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                    PHPhotoLibrary.shared().performChanges {
+                        PHAssetChangeRequest.deleteAssets(probes as NSArray)
+                    } completionHandler: { _, error in
+                        if let error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume()
+                        }
+                    }
+                }
+                print("🧹 PROBE cleanup: deleted \(probes.count) PikicamProbe-* asset(s)")
+            } catch {
+                print("🧹 PROBE cleanup failed (add-only authorization?): \(error)")
+            }
+        }
+        #endif
+    }
+
+    /// Attempts one PHAssetCreationRequest with the given resources and
+    /// reports success (and the resulting resource layout) or the full
+    /// error detail.
+    private func probeSaveVariant(
+        named name: String,
+        resources: [(type: PHAssetResourceType, data: Data, uti: String?, ext: String)]
+    ) async throws -> String {
+        let identifier = "PikicamProbe-\(UUID().uuidString.prefix(8))"
+        let result: Result<String, Error> = await withCheckedContinuation { continuation in
+            PHPhotoLibrary.shared().performChanges {
+                let request = PHAssetCreationRequest.forAsset()
+                for (index, resource) in resources.enumerated() {
+                    let options = PHAssetResourceCreationOptions()
+                    options.originalFilename = "\(identifier)-\(index).\(resource.ext)"
+                    if let uti = resource.uti { options.uniformTypeIdentifier = uti }
+                    request.addResource(with: resource.type, data: resource.data, options: options)
+                }
+            } completionHandler: { success, error in
+                if let error {
+                    continuation.resume(returning: .failure(error))
+                } else {
+                    continuation.resume(returning: .success(identifier))
+                }
+            }
+        }
+
+        switch result {
+        case .success(let localID):
+            let fetch = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil)
+            guard let asset = fetch.firstObject else {
+                return "created but NOT fetchable (id \(localID))"
+            }
+            let stored = PHAssetResource.assetResources(for: asset)
+                .map { "\($0.type.rawValue):\($0.originalFilename)" }
+                .joined(separator: ", ")
+            return "OK ✅ asset \(localID) resources [\(stored)]"
+        case .failure(let error):
+            let ns = error as NSError
+            let detail = ns.userInfo
+                .map { "\($0.key)=\($0.value)" }
+                .sorted()
+                .joined(separator: " | ")
+            return "FAIL ❌ \(ns.domain) \(ns.code) — \(detail)"
         }
     }
 

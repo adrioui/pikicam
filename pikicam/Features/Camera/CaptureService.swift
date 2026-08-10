@@ -130,7 +130,11 @@ actor CaptureService {
             rawPixelFormatType: bayerFormat,
             processedFormat: [AVVideoCodecKey: processedCodec]
         )
-        settings.photoQualityPrioritization = .quality
+        // Never set `photoQualityPrioritization` on RAW captures: AVFoundation
+        // raises NSInvalidArgumentException ("Unsupported when capturing RAW")
+        // at capture time. The default (.balanced) is used; the developed print
+        // is produced by our own zero-process pipeline regardless.
+        // settings.photoQualityPrioritization = .quality
 
         // Use the async extension on AVCapturePhotoOutput for delegate bridging.
         let pair = try await photoOutput.capturePhotoPair(with: settings)
