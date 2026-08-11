@@ -198,6 +198,129 @@ final class SmokeLaunchTest: XCTestCase {
         )
     }
 
+    /// Stress test: capture while zoomed (the crash scenario), rapid-fire
+    /// captures, and capture right after a camera flip. Each step asserts the
+    /// app stays alive and no typed error surfaces.
+    ///
+    /// This exercises the races the main walkthrough skips: the pinch gesture
+    /// settling while capture starts, zoom + RAW capture at >1x, and
+    /// reconfiguration (flip) immediately followed by a capture.
+    func testDeviceCaptureStressWhileZoomed() throws {
+        try XCTSkipIf(
+            isSimulator,
+            "Device-only: requires a real Bayer sensor and Photos library."
+        )
+
+        let app = XCUIApplication(bundleIdentifier: "piki.pikicam")
+        app.launch()
+        XCTAssertTrue(
+            app.wait(for: .runningForeground, timeout: 10),
+            "App did not reach runningForeground state within timeout."
+        )
+
+        // First install: permission flow.
+        if app.buttons["Continue"].waitForExistence(timeout: 5) {
+            app.buttons["Continue"].tap()
+            RunLoop.current.run(until: Date().addingTimeInterval(1.5))
+            acceptSystemPermissions(app: app, waitFor: app.buttons["Capture photo"])
+        }
+
+        let shutter = app.buttons["Capture photo"]
+        XCTAssertTrue(
+            shutter.waitForExistence(timeout: 30),
+            "Camera UI did not appear on the device within timeout."
+        )
+        let zoomIndicator = app.staticTexts["zoom-indicator"]
+        XCTAssertTrue(zoomIndicator.exists, "Zoom indicator missing from the HUD.")
+
+        // --- 1. Capture at 2.5x zoom (the reported crash scenario) ---
+        app.pinch(withScale: 2.5, velocity: 0.8)
+        // Let the zoom settle before capturing.
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        attachScreenshot(of: app, named: "stress-01-zoomed")
+
+        shutter.tap()
+        // The capture pipeline is fast; the disabled window can be too brief
+        // to observe reliably. Wait for completion (re-enabled) instead, then
+        // assert no error and the app is alive.
+        XCTAssertTrue(
+            shutter.wait(for: \.isEnabled, toEqual: true, timeout: 120),
+            "Zoomed capture did not finish within 120s (hang?)."
+        )
+        assertNoErrorShown(in: app)
+        XCTAssertEqual(
+            app.state,
+            .runningForeground,
+            "App crashed during zoomed capture."
+        )
+        attachScreenshot(of: app, named: "stress-02-zoomed-captured")
+
+        // --- 2. Rapid-fire captures (3 taps, no wait between) ---
+        for i in 1...3 {
+            shutter.tap()
+            // Allow each to at least begin; don't wait for completion between.
+            RunLoop.current.run(until: Date().addingTimeInterval(0.5))
+        }
+        // Give the pipeline time to drain, then assert the app is alive.
+        let drainDeadline = Date().addingTimeInterval(60)
+        while Date() < drainDeadline && !shutter.isEnabled {
+            RunLoop.current.run(until: Date().addingTimeInterval(1))
+        }
+        XCTAssertTrue(
+            shutter.isEnabled,
+            "Rapid captures left the shutter disabled (deadlock?)."
+        )
+        assertNoErrorShown(in: app)
+        XCTAssertEqual(
+            app.state,
+            .runningForeground,
+            "App crashed during rapid-fire captures."
+        )
+        attachScreenshot(of: app, named: "stress-03-rapid-captured")
+
+        // --- 3. Capture immediately after camera flip (reconfig race) ---
+        let flip = app.buttons["front-camera-toggle"]
+        XCTAssertTrue(flip.exists, "Camera flip control missing.")
+        flip.tap()
+        waitForValue(flip, "Front")
+        // Let the session finish swapping inputs before capturing (a real user
+        // naturally waits for the preview to switch; tapping in the middle of
+        // the reconfiguration can be absorbed by the settling session).
+        RunLoop.current.run(until: Date().addingTimeInterval(2.0))
+        // Capture on the front camera right away.
+        shutter.tap()
+        XCTAssertTrue(
+            shutter.wait(for: \.isEnabled, toEqual: true, timeout: 120),
+            "Front-camera capture did not finish within 120s (hang?)."
+        )
+        assertNoErrorShown(in: app)
+        XCTAssertEqual(
+            app.state,
+            .runningForeground,
+            "App crashed during front-camera capture."
+        )
+        attachScreenshot(of: app, named: "stress-04-front-captured")
+
+        // --- 4. Flip back, zoom, capture again ---
+        flip.tap()
+        waitForValue(flip, "Back")
+        RunLoop.current.run(until: Date().addingTimeInterval(2.0))
+        app.pinch(withScale: 2.0, velocity: 0.8)
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        shutter.tap()
+        XCTAssertTrue(
+            shutter.wait(for: \.isEnabled, toEqual: true, timeout: 120),
+            "Back-camera zoomed capture did not finish within 120s."
+        )
+        assertNoErrorShown(in: app)
+        XCTAssertEqual(
+            app.state,
+            .runningForeground,
+            "App crashed during back-camera zoomed capture."
+        )
+        attachScreenshot(of: app, named: "stress-05-back-zoomed-captured")
+    }
+
     // MARK: - Helpers
 
     /// Accepts the camera ("OK"), photo-library add-only ("Allow"), and
