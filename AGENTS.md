@@ -62,9 +62,7 @@ quoting the result.
 - `pikicamUITests/` — `SmokeLaunchTest.swift`: simulator launch smoke check (typed
   camera-unavailable message) and physical-device capture→save walkthrough with
   screenshots.
-- `scripts/verify.sh` — the verify chain defined above; `scripts/verify_coverage.sh`
-  — coverage-gap report (a feature needs a dedicated test file or a runtime ref in
-  `pikicamTests/`/`pikicamUITests/`; `--fail-on-gap` exits 1 on gaps); `.swiftlint.yml` +
+- `scripts/verify.sh` — the verify chain defined above; `.swiftlint.yml` +
   `.swift-format` are the lint/format configs; `project.yml` is the xcodegen model
   (regeneration requires a machine with xcodegen; the checked-in pbxproj is
   hand-maintained and must stay in sync).
