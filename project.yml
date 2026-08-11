@@ -53,14 +53,28 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamTests
 
+  pikicamUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: pikicamUITests
+    dependencies:
+      - target: pikicam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamUITests
+        TEST_TARGET_NAME: pikicam
+
 schemes:
   pikicam:
     build:
       targets:
         pikicam: all
         pikicamTests: [test]
+        pikicamUITests: [test]
     test:
       config: Debug
       gatherCoverageData: false
       targets:
         - pikicamTests
+        - pikicamUITests

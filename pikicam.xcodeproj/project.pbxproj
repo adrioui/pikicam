@@ -24,6 +24,13 @@
 		E718889B3007CACA00C573A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E71888683007CACA00C573A7 /* Assets.xcassets */; };
 		5A5A11013007CACA00C573A7 /* PikicamPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A11033007CACA00C573A7 /* PikicamPipelineTests.swift */; };
 		5A5A11023007CACA00C573A7 /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 5A5A11053007CACA00C573A7 /* IMG_1361.DNG */; };
+	NEW01BUILD /* CameraControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW01 /* CameraControls.swift */; };
+	NEW02BUILD /* CameraHUDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW02 /* CameraHUDButton.swift */; };
+	NEW03BUILD /* ZoomIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW03 /* ZoomIndicatorView.swift */; };
+	NEW04BUILD /* GridOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW04 /* GridOverlayView.swift */; };
+	NEW05BUILD /* VolumeButtonCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW05 /* VolumeButtonCaptureView.swift */; };
+	NEW07BUILD /* CameraControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW07 /* CameraControlTests.swift */; };
+	UITSBUILD1 /* SmokeLaunchTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = UITSFILE01 /* SmokeLaunchTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +52,15 @@
 		E71888683007CACA00C573A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5A5A11033007CACA00C573A7 /* PikicamPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamPipelineTests.swift; sourceTree = "<group>"; };
 		5A5A11043007CACA00C573A7 /* pikicamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+	UITSPROD01 /* pikicamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A5A11053007CACA00C573A7 /* IMG_1361.DNG */ = {isa = PBXFileReference; lastKnownFileType = image.dng; path = Fixtures/IMG_1361.DNG; sourceTree = "<group>"; };
+	UITSFILE01 /* SmokeLaunchTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeLaunchTest.swift; sourceTree = "<group>"; };
+	NEW01 /* CameraControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/CameraControls.swift"; sourceTree = "<group>"; };
+	NEW02 /* CameraHUDButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/CameraHUDButton.swift"; sourceTree = "<group>"; };
+	NEW03 /* ZoomIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/ZoomIndicatorView.swift"; sourceTree = "<group>"; };
+	NEW04 /* GridOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/GridOverlayView.swift"; sourceTree = "<group>"; };
+	NEW05 /* VolumeButtonCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/VolumeButtonCaptureView.swift"; sourceTree = "<group>"; };
+	NEW07 /* CameraControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraControlTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +87,7 @@
 				E718886B3007CACA00C573A7 /* pikicam */,
 				E71887A33007C45400C573A7 /* Products */,
 				5A5A11063007CACA00C573A7 /* pikicamTests */,
+			UITSGROUP1 /* pikicamUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -175,10 +191,19 @@
 			children = (
 				5A5A11033007CACA00C573A7 /* PikicamPipelineTests.swift */,
 				5A5A11053007CACA00C573A7 /* IMG_1361.DNG */,
+				NEW07 /* CameraControlTests.swift */,
 			);
 			path = pikicamTests;
 			sourceTree = "<group>";
 		};
+	UITSGROUP1 /* pikicamUITests */ = {
+		isa = PBXGroup;
+		children = (
+			UITSFILE01 /* SmokeLaunchTest.swift */,
+		);
+		path = pikicamUITests;
+		sourceTree = "<group>";
+	};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -221,6 +246,26 @@
 			productReference = 5A5A11043007CACA00C573A7 /* pikicamTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+	UITSTGT001 /* pikicamUITests */ = {
+		isa = PBXNativeTarget;
+		buildConfigurationList = UITSCFGLST1 /* Build configuration list for PBXNativeTarget "pikicamUITests" */;
+		buildPhases = (
+			UITSSRC001 /* Sources */,
+			UITSFW0001 /* Frameworks */,
+			UITSRES001 /* Resources */,
+		);
+		buildRules = (
+		);
+		dependencies = (
+			UITSDEP001 /* PBXTargetDependency */,
+		);
+		name = pikicamUITests;
+		packageProductDependencies = (
+		);
+		productName = pikicamUITests;
+		productReference = UITSPROD01 /* pikicamUITests.xctest */;
+		productType = "com.apple.product-type.bundle.ui-testing";
+	};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -256,12 +301,20 @@
 			targets = (
 				E71887A13007C45400C573A7 /* pikicam */,
 				5A5A11073007CACA00C573A7 /* pikicamTests */,
+				UITSTGT001 /* pikicamUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXContainerItemProxy section */
-		5A5A110E3007CACA00C573A7 /* PBXContainerItemProxy */ = {
+		UITSPROXY1 /* PBXContainerItemProxy */ = {
+		isa = PBXContainerItemProxy;
+		containerPortal = E718879A3007C45400C573A7 /* Project object */;
+		proxyType = 1;
+		remoteGlobalIDString = E71887A13007C45400C573A7;
+		remoteInfo = pikicam;
+	};
+	5A5A110E3007CACA00C573A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E718879A3007C45400C573A7 /* Project object */;
 			proxyType = 1;
@@ -270,8 +323,35 @@
 		};
 /* End PBXContainerItemProxy section */
 
+	UITSSRC001 /* Sources */ = {
+		isa = PBXSourcesBuildPhase;
+		buildActionMask = 2147483647;
+		files = (
+			UITSBUILD1 /* SmokeLaunchTest.swift in Sources */,
+		);
+		runOnlyForDeploymentPostprocessing = 0;
+	};
+	UITSFW0001 /* Frameworks */ = {
+		isa = PBXFrameworksBuildPhase;
+		buildActionMask = 2147483647;
+		files = (
+		);
+		runOnlyForDeploymentPostprocessing = 0;
+	};
+	UITSRES001 /* Resources */ = {
+		isa = PBXResourcesBuildPhase;
+		buildActionMask = 2147483647;
+		files = (
+		);
+		runOnlyForDeploymentPostprocessing = 0;
+	};
 /* Begin PBXTargetDependency section */
-		5A5A110F3007CACA00C573A7 /* PBXTargetDependency */ = {
+		UITSDEP001 /* PBXTargetDependency */ = {
+		isa = PBXTargetDependency;
+		target = E71887A13007C45400C573A7 /* pikicam */;
+		targetProxy = UITSPROXY1 /* PBXContainerItemProxy */;
+	};
+	5A5A110F3007CACA00C573A7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E71887A13007C45400C573A7 /* pikicam */;
 			targetProxy = 5A5A110E3007CACA00C573A7 /* PBXContainerItemProxy */;
@@ -316,6 +396,11 @@
 				E71888843007CACA00C573A7 /* CIRAWZeroProcessor.swift in Sources */,
 				E71888853007CACA00C573A7 /* DevelopService.swift in Sources */,
 				E718888B3007CACA00C573A7 /* RAWProcessor.swift in Sources */,
+				NEW01BUILD /* CameraControls.swift in Sources */,
+				NEW02BUILD /* CameraHUDButton.swift in Sources */,
+				NEW03BUILD /* ZoomIndicatorView.swift in Sources */,
+				NEW04BUILD /* GridOverlayView.swift in Sources */,
+				NEW05BUILD /* VolumeButtonCaptureView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +409,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A5A11013007CACA00C573A7 /* PikicamPipelineTests.swift in Sources */,
+				NEW07BUILD /* CameraControlTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,6 +692,45 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+	UITSCFGD01 /* Debug */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+			CODE_SIGN_STYLE = Automatic;
+			CURRENT_PROJECT_VERSION = 1;
+			GENERATE_INFOPLIST_FILE = YES;
+			MARKETING_VERSION = 1.0;
+			PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamUITests;
+			PRODUCT_NAME = "$(TARGET_NAME)";
+			SWIFT_VERSION = 5.0;
+			TEST_TARGET_NAME = pikicam;
+			TARGETED_DEVICE_FAMILY = "1,2";
+		};
+		name = Debug;
+	};
+	UITSCFGR01 /* Release */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+			CODE_SIGN_STYLE = Automatic;
+			CURRENT_PROJECT_VERSION = 1;
+			GENERATE_INFOPLIST_FILE = YES;
+			MARKETING_VERSION = 1.0;
+			PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamUITests;
+			PRODUCT_NAME = "$(TARGET_NAME)";
+			SWIFT_VERSION = 5.0;
+			TEST_TARGET_NAME = pikicam;
+			TARGETED_DEVICE_FAMILY = "1,2";
+		};
+		name = Release;
+	};
+	UITSCFGLST1 /* Build configuration list for PBXNativeTarget "pikicamUITests" */ = {
+		isa = XCConfigurationList;
+		buildConfigurations = (
+			UITSCFGD01 /* Debug */,
+			UITSCFGR01 /* Release */,
+		);
+		defaultConfigurationIsVisible = 0;
+		defaultConfigurationName = Release;
+	};
 /* End XCConfigurationList section */
 	};
 	rootObject = E718879A3007C45400C573A7 /* Project object */;
