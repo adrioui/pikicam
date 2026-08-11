@@ -111,3 +111,31 @@ enum GridGeometry {
         lineFractions.map { $0 * size.height }
     }
 }
+
+// MARK: - CropMath
+
+/// Geometry for mapping a framing zoom factor to a print crop.
+///
+/// Pure-Bayer RAW only captures at 1× (AVFoundation raises an uncaught ObjC
+/// exception for RAW + zoom > 1 — see `CaptureService.capturePhoto`), so the
+/// capture runs at 1× and the framing zoom is restored immediately. The DNG
+/// is therefore full-sensor and the developed print must be cropped to the
+/// field of view the user composed: at factor `z`, the visible frame is the
+/// centered `1/z` of the full sensor.
+enum CropMath {
+
+    /// The centered rect of `extent` representing the field of view at
+    /// `factor`. Factors ≤ 1.0 (no zoom) return the full extent unchanged.
+    /// The crop keeps the image's native resolution (a rect crop, no
+    /// resampling).
+    static func rect(in extent: CGRect, for factor: CGFloat) -> CGRect {
+        guard factor > 1.0 else { return extent }
+        let cropWidth = extent.width / factor
+        let cropHeight = extent.height / factor
+        let origin = CGPoint(
+            x: extent.midX - cropWidth / 2,
+            y: extent.midY - cropHeight / 2
+        )
+        return CGRect(x: origin.x, y: origin.y, width: cropWidth, height: cropHeight)
+    }
+}

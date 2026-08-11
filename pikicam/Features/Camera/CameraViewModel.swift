@@ -179,7 +179,16 @@ final class CameraViewModel {
     }
 
     /// Applies a (clamped) zoom factor from the pinch gesture.
+    ///
+    /// The zoom is a device-level property: the sensor crops its readout so
+    /// the preview shows the framed field of view. The value is clamped to the
+    /// device's valid range and applied under `lockForConfiguration()`.
+    /// Zoom is never changed while a capture is in flight (changing
+    /// `videoZoomFactor` during RAW capture can crash AVFoundation); captures
+    /// at a zoom ≥ 1× run at 1× internally and restore the framing immediately
+    /// (see `CaptureService.capturePhoto`).
     func setZoom(_ factor: CGFloat) async {
+        guard !isCapturing else { return }
         let clamped = ZoomMath.clamped(factor, range: zoomRange)
         guard clamped != zoomFactor else { return }
         do {
@@ -200,8 +209,14 @@ final class CameraViewModel {
     ///
     /// The pipeline runs across three actors, each on its own queue:
     /// 1. `CaptureService` captures the Bayer RAW + processed preview.
-    /// 2. `DevelopService` zero-develops the DNG into a print.
+    /// 2. `DevelopService` zero-develops the DNG into a print, cropped to the
+    ///    framing zoom (the DNG is full-sensor; the crop is print-time only).
     /// 3. `StorageService` saves both the DNG and print to the Photos library.
+    ///
+    /// The zoom is a device property that crops the sensor; pure-Bayer RAW
+    /// only captures at 1× (AVFoundation crashes otherwise), so the capture
+    /// runs at 1× and the framing zoom is restored immediately. The print is
+    /// cropped to the framing zoom so the saved photo matches the composition.
     func capture() async {
         guard !isCapturing, isConfigured else { return }
 
@@ -209,12 +224,15 @@ final class CameraViewModel {
         defer { isCapturing = false }
 
         do {
-            // Step 1: Capture pure Bayer RAW.
+            // Step 1: Capture pure Bayer RAW (captured at 1× internally; the
+            // framing zoom is restored before the capture returns).
             let photoResult = try await captureService.capturePhoto()
 
-            // Step 2: Zero-develop the DNG (all computational photography off).
+            // Step 2: Zero-develop the DNG, cropping the print to the framing
+            // zoom so the saved photo matches what the user composed.
             let developResult = try await developService.develop(
-                dngData: photoResult.rawData
+                dngData: photoResult.rawData,
+                cropFactor: photoResult.captureZoom
             )
 
             // Step 3: Save the print + DNG pair to the Photos library.
