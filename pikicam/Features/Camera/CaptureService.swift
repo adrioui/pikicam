@@ -242,13 +242,45 @@ actor CaptureService {
     /// Configures the capture settings to use pure Bayer format (not ProRAW),
     /// which disables all multi-frame computational photography features.
     ///
-    /// - Returns: A `PhotoCaptureResult` containing processed and raw data plus the photo.
+    /// Pure-Bayer RAW capture is only legal at 1× on this device: requesting
+    /// `rawPixelFormatType` while `videoZoomFactor > 1` makes AVFoundation's
+    /// `-[AVCapturePhotoOutput capturePhotoWithSettings:delegate:]` raise an
+    /// uncaught ObjC exception → SIGABRT (verified in on-device crash logs).
+    /// The capture therefore runs at 1× and the framing zoom is restored
+    /// immediately; the caller crops the developed print to `captureZoom` so
+    /// the saved photo matches the composition, while the DNG stays
+    /// full-sensor (a crop is a print-time decision).
+    ///
+    /// - Returns: A `PhotoCaptureResult` with processed/raw data and the
+    ///   framing zoom the capture should be cropped to.
     /// - Throws: `CaptureError` if capture fails.
     func capturePhoto() async throws -> PhotoCaptureResult {
         #if os(iOS)
-        // Ensure we have a valid Bayer format selected
-        guard let bayerFormat = await queryAvailableBayerFormats().first else {
+        // Ensure we have a valid Bayer format selected. Checked first so a
+        // platform without a Bayer sensor (e.g. the simulator) fails with the
+        // explicit no-Bayer error rather than a session precondition error.
+        guard let bayerFormat = await queryActiveBayerFormat() else {
             throw CaptureError.noBayerFormatAvailable
+        }
+
+        guard let device = cameraDevice else {
+            throw CaptureError.sessionNotConfigured
+        }
+
+        // Remember the framing zoom, capture at 1×, then restore it.
+        let captureZoom = device.videoZoomFactor
+        let needsZoomReset = captureZoom != 1.0
+        if needsZoomReset {
+            _ = try? applyVideoZoomFactor(1.0, to: device)
+            // Let the session settle on the 1× format before capturing:
+            // an immediate capture right after the zoom change can return
+            // incomplete photo data (no processed/raw payload).
+            try await Task.sleep(nanoseconds: 250_000_000)
+        }
+        defer {
+            if needsZoomReset {
+                _ = try? applyVideoZoomFactor(captureZoom, to: device)
+            }
         }
 
         guard let processedCodec = preferredProcessedCodec() else {
@@ -277,7 +309,12 @@ actor CaptureService {
             throw CaptureError.missingImageData
         }
 
-        return PhotoCaptureResult(photo: processedPhoto, processedData: processedData, rawData: rawData)
+        return PhotoCaptureResult(
+            photo: processedPhoto,
+            processedData: processedData,
+            rawData: rawData,
+            captureZoom: captureZoom
+        )
         #else
         throw CaptureError.unsupportedPlatform
         #endif
@@ -285,6 +322,22 @@ actor CaptureService {
     
     // MARK: - Format Selection
     
+    /// Returns a pure-Bayer RAW pixel format the photo output currently
+    /// supports, or `nil` if none does.
+    ///
+    /// `AVCapturePhotoOutput.availableRawPhotoPixelFormatTypes` is the static
+    /// output-wide list of RAW formats this output can produce. It is the
+    /// same list AVFoundation validates `rawPixelFormatType` against at
+    /// `capturePhotoWithSettings:` time; requesting a format outside it raises
+    /// an uncaught ObjC `NSInvalidArgumentException` → SIGABRT.
+    func queryActiveBayerFormat() async -> OSType? {
+        await MainActor.run { () -> OSType? in
+            photoOutput.availableRawPhotoPixelFormatTypes
+                .filter { Self.isBayerRawPixelFormat($0) }
+                .first
+        }
+    }
+
     /// Queries available raw pixel formats and returns those that are pure Bayer.
     ///
     /// Filters out ProRAW formats to ensure we get a single-exposure Bayer readout
@@ -351,15 +404,16 @@ actor CaptureService {
     
     /// Configures the photo output for RAW capture.
     ///
-    /// Sets `isAppleProRAWEnabled = false` to ensure we get pure Bayer data,
-    /// and configures other output properties for quality-first capture.
+    /// Sets `isAppleProRAWEnabled = false` to ensure we get pure Bayer data.
+    /// `maxPhotoQualityPrioritization` is deliberately left at its default:
+    /// setting it to `.quality` makes `capturePhotoWithSettings:` raise an
+    /// NSInvalidArgumentException ("Unsupported when capturing RAW") whenever
+    /// the capture settings request RAW — an uncaught ObjC exception that
+    /// aborts the app (verified on-device via crash logs).
     private func configureRAWOutput() {
         #if os(iOS)
         // Disable Apple ProRAW to get pure Bayer
         photoOutput.isAppleProRAWEnabled = false
-        
-        // Set photo quality prioritization to quality over speed
-        photoOutput.maxPhotoQualityPrioritization = .quality
         #endif
     }
 }
@@ -380,6 +434,11 @@ struct PhotoCaptureResult: @unchecked Sendable {
 
     /// Raw DNG file data from the sensor (Bayer RAW).
     let rawData: Data
+
+    /// The zoom factor the capture was framed at (≥ 1.0). The DNG is
+    /// full-sensor; the developed print must be cropped to this factor's
+    /// field of view so the saved photo matches the user's composition.
+    let captureZoom: CGFloat
 }
 
 /// Sendable wrapper for handing the preview layer an AVFoundation session.
