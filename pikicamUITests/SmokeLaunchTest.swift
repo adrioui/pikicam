@@ -43,12 +43,19 @@ final class SmokeLaunchTest: XCTestCase {
         )
         attachScreenshot(of: app, named: "01-launch-simulator")
 
-        // On a simulator the live UI shows the typed no-camera error
-        // (see runtime screenshot: OCR captured this text). Match loosely:
-        // SwiftUI replaces the Text's label with the accessibilityLabel,
-        // which is prefixed with "Error: ".
+        // On a simulator the live UI shows one of two typed states, depending
+        // on what the fresh sim grants (see runtime screenshots):
+        // - With camera+photos granted: `CaptureError.cameraUnavailable`
+        //   ("No back wide camera is available.").
+        // - On a fresh sim without grants: the app stops before configuring
+        //   the session at `CameraViewModelError.missingPermissions`
+        //   ("Camera and photo library access are required.").
+        // Either is the honest typed state for this environment; match loosely
+        // (SwiftUI exposes the accessibilityLabel, prefixed with "Error: ").
         let errorText = app.staticTexts
-            .matching(NSPredicate(format: "label CONTAINS[c] 'No back wide camera is available.'"))
+            .matching(NSPredicate(
+                format: "label CONTAINS[c] 'No back wide camera is available.' "
+                    + "OR label CONTAINS[c] 'Camera and photo library access are required.'"))
             .firstMatch
         XCTAssertTrue(
             errorText.waitForExistence(timeout: 5),
@@ -107,7 +114,66 @@ final class SmokeLaunchTest: XCTestCase {
         RunLoop.current.run(until: Date().addingTimeInterval(2))
         attachScreenshot(of: app, named: "03-camera-live-preview")
 
+        // Camera controls: grid, flash, camera flip, pinch zoom (see
+        // CameraControls + the standalone HUD views for identifiers).
+        let gridToggle = app.buttons["grid-toggle"]
+        XCTAssertTrue(gridToggle.waitForExistence(timeout: 5),
+                      "Camera control HUD did not appear on the device.")
+        attachScreenshot(of: app, named: "03b-camera-controls")
+
+        // 3×3 grid overlay appears and disappears with its toggle.
+        gridToggle.tap()
+        XCTAssertTrue(app.otherElements["grid-overlay"].waitForExistence(timeout: 3),
+                      "Grid overlay did not appear after toggling the grid.")
+        attachScreenshot(of: app, named: "03c-grid-overlay")
+        gridToggle.tap()
+        XCTAssertTrue(app.otherElements["grid-overlay"].waitForNonExistence(timeout: 3),
+                      "Grid overlay did not disappear after toggling the grid off.")
+
+        // Flash (torch) cycles off → on → auto → off on the back camera.
+        let flashToggle = app.buttons["flash-toggle"]
+        XCTAssertTrue(flashToggle.exists, "Flash control missing while on the back camera.")
+        flashToggle.tap()
+        waitForValue(flashToggle, "On")
+        flashToggle.tap()
+        waitForValue(flashToggle, "Auto")
+        flashToggle.tap()
+        waitForValue(flashToggle, "Off")
+
+        // Front camera: flip, verify state + zoom reset, flip back.
+        let flip = app.buttons["front-camera-toggle"]
+        flip.tap()
+        waitForValue(flip, "Front")
+        XCTAssertTrue(app.buttons["flash-toggle"].waitForNonExistence(timeout: 3),
+                      "Flash control must disappear on the front camera (no torch).")
+        attachScreenshot(of: app, named: "03d-front-camera")
+        flip.tap()
+        waitForValue(flip, "Back")
+        XCTAssertTrue(app.buttons["flash-toggle"].waitForExistence(timeout: 3),
+                      "Flash control did not return on the back camera.")
+
+        // Pinch-to-zoom: the zoom indicator leaves and returns to 1.0x.
+        // The pinch must target the app's root element (the ZStack carrying
+        // the MagnificationGesture) — the AVCaptureVideoPreviewLayer-backed
+        // preview element swallows synthetic pinch events.
+        let zoomIndicator = app.staticTexts["zoom-indicator"]
+        XCTAssertTrue(zoomIndicator.exists, "Zoom indicator missing from the HUD.")
+        XCTAssertTrue(app.otherElements["preview-pinch-area"].exists,
+                      "Preview pinch area missing.")
+        app.pinch(withScale: 2.0, velocity: 0.8)
+        waitFor(NSPredicate(format: "value != '1.0x'"), on: zoomIndicator, timeout: 5)
+        attachScreenshot(of: app, named: "03e-zoomed")
+        // Pinch-in back toward 1.0x: velocity must be negative when scale < 1
+        // (XCUIElement.pinch raises NSInvalidArgumentException otherwise). Use
+        // a decisive scale so the zoom-out reliably lands below the current
+        // factor and clamps back to the 1.0x minimum.
+        app.pinch(withScale: 0.1, velocity: -2.0)
+        waitFor(NSPredicate(format: "value == '1.0x'"), on: zoomIndicator, timeout: 5)
+
         // One real capture: RAW DNG + zero-developed print, saved to Photos.
+        // (The hardware volume buttons are the dedicated shutter — see
+        // VolumeButtonCaptureView — while the on-screen button remains a
+        // secondary path; this walkthrough drives the on-screen shutter.)
         shutter.tap()
 
         // The shutter disables while the capture → develop → save pipeline
@@ -183,6 +249,29 @@ final class SmokeLaunchTest: XCTestCase {
         XCTAssertFalse(
             errorText.waitForExistence(timeout: 2),
             "Capture surfaced an error: \(errorText.label)"
+        )
+    }
+
+    /// Waits until `element`'s accessibility value equals `value`.
+    private func waitForValue(_ element: XCUIElement, _ value: String, timeout: TimeInterval = 5) {
+        let predicate = NSPredicate(format: "value == %@", value)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        XCTAssertEqual(
+            XCTWaiter().wait(for: [expectation], timeout: timeout),
+            .completed,
+            "Element \(element) did not reach value '\(value)' within \(timeout)s "
+                + "(current value: \(String(describing: element.value)))."
+        )
+    }
+
+    /// Waits until `predicate` matches `element`.
+    private func waitFor(_ predicate: NSPredicate, on element: XCUIElement, timeout: TimeInterval = 5) {
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        XCTAssertEqual(
+            XCTWaiter().wait(for: [expectation], timeout: timeout),
+            .completed,
+            "Predicate \(predicate) never matched \(element) within \(timeout)s "
+                + "(current value: \(String(describing: element.value)))."
         )
     }
 
