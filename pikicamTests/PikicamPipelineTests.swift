@@ -71,6 +71,11 @@ final class PikicamPipelineTests: XCTestCase {
         let (printID, rawID): (String, String)
         do {
             (printID, rawID) = try await service.savePair(processedData: jpeg, rawData: rawData)
+        } catch StorageServiceError.insufficientPermissions(let status) {
+            throw XCTSkip("No Photos write access in this environment (status \(status.rawValue)) — "
+                          + "grant it on the simulator with "
+                          + "`xcrun simctl privacy booted grant photos piki.pikicam`, or run the "
+                          + "device UI walkthrough first so the permission flow grants access.")
         } catch StorageServiceError.saveFailed(let underlying) {
             let nsError = underlying as NSError
             if nsError.domain == "PHPhotosErrorDomain" && nsError.code == 3300 {
