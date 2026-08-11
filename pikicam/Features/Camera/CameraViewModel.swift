@@ -62,6 +62,26 @@ final class CameraViewModel {
     /// Whether a photo capture is currently in flight.
     private(set) var isCapturing = false
 
+    // MARK: - Camera Controls
+
+    /// The physical camera currently in use.
+    private(set) var cameraPosition: CameraPosition = .back
+
+    /// The current flash (torch) mode.
+    private(set) var flashMode: FlashMode = .off
+
+    /// Whether the current camera has a torch (drives the flash button).
+    private(set) var flashAvailable = false
+
+    /// Whether the 3×3 framing grid is shown over the preview.
+    var showsGrid = false
+
+    /// The zoom factor currently applied to the camera.
+    private(set) var zoomFactor: CGFloat = 1.0
+
+    /// The zoom range the current camera supports.
+    private(set) var zoomRange: ClosedRange<CGFloat> = 1.0...1.0
+
     // MARK: - Initialization
 
     init() {
@@ -114,6 +134,7 @@ final class CameraViewModel {
             try await captureService.startSession()
             isConfigured = true
             isSessionRunning = true
+            await refreshCameraControlState()
         } catch {
             self.error = error
             isConfigured = false
@@ -124,6 +145,53 @@ final class CameraViewModel {
     func stop() async {
         await captureService.stopSession()
         isSessionRunning = false
+    }
+
+    /// Re-reads device-dependent control state after the session or camera
+    /// position changes.
+    private func refreshCameraControlState() async {
+        zoomRange = await captureService.videoZoomRange()
+        flashAvailable = await captureService.currentCameraHasTorch()
+        cameraPosition = await captureService.cameraPosition
+        flashMode = await captureService.flashMode
+    }
+
+    // MARK: - Camera Controls
+
+    /// Flips between the back and front cameras.
+    func toggleCamera() async {
+        do {
+            cameraPosition = try await captureService.toggleCamera()
+            zoomFactor = 1.0
+            await refreshCameraControlState()
+        } catch {
+            self.error = error
+        }
+    }
+
+    /// Advances flash off → on → auto → off.
+    func cycleFlash() async {
+        do {
+            flashMode = try await captureService.cycleFlash()
+        } catch {
+            self.error = error
+        }
+    }
+
+    /// Applies a (clamped) zoom factor from the pinch gesture.
+    func setZoom(_ factor: CGFloat) async {
+        let clamped = ZoomMath.clamped(factor, range: zoomRange)
+        guard clamped != zoomFactor else { return }
+        do {
+            zoomFactor = try await captureService.setVideoZoomFactor(clamped)
+        } catch {
+            self.error = error
+        }
+    }
+
+    /// Toggles the 3×3 framing grid.
+    func toggleGrid() {
+        showsGrid.toggle()
     }
 
     // MARK: - Capture Pipeline
