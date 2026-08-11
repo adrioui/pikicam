@@ -1,5 +1,5 @@
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
 // MARK: - CameraView
 
@@ -12,6 +12,7 @@ import AVFoundation
 struct CameraView: View {
     @Environment(CameraViewModel.self) private var viewModel
     @State private var session: AVCaptureSession?
+    @State private var zoomGestureBase: CGFloat = 1.0
 
     var body: some View {
         ZStack {
@@ -19,12 +20,62 @@ struct CameraView: View {
             if let session {
                 CameraPreview(session: session)
                     .ignoresSafeArea()
+                    .accessibilityIdentifier("preview-pinch-area")
             } else {
                 Color.black.ignoresSafeArea()
             }
 
-            VStack {
+            VStack(spacing: 0) {
+                // Top-right control cluster: grid, flash, camera flip.
+                if viewModel.isConfigured {
+                    HStack {
+                        Spacer()
+                        VStack(spacing: 12) {
+                            CameraHUDButton(
+                                systemImage: viewModel.showsGrid
+                                    ? "square.grid.3x3.fill" : "square.grid.3x3",
+                                identifier: "grid-toggle",
+                                label: "Grid",
+                                value: viewModel.showsGrid ? "On" : "Off",
+                                action: { viewModel.toggleGrid() }
+                            )
+                            if viewModel.flashAvailable {
+                                CameraHUDButton(
+                                    systemImage: flashIcon,
+                                    identifier: "flash-toggle",
+                                    label: "Flash",
+                                    value: viewModel.flashMode.label,
+                                    action: { Task { await viewModel.cycleFlash() } }
+                                )
+                            }
+                            CameraHUDButton(
+                                systemImage: "arrow.triangle.2.circlepath.camera",
+                                identifier: "front-camera-toggle",
+                                label: "Camera",
+                                value: viewModel.cameraPosition.label,
+                                action: { Task { await viewModel.toggleCamera() } }
+                            )
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.top, 8)
+                    }
+                }
+
                 Spacer()
+
+                // Hidden volume-button trigger: hardware sound buttons fire capture.
+                VolumeButtonCaptureView {
+                    if !viewModel.isCapturing && viewModel.isConfigured {
+                        Task { await viewModel.capture() }
+                    }
+                }
+                .frame(width: 0, height: 0)
+
+                if viewModel.isConfigured {
+                    // Current zoom factor, e.g. "1.0x".
+                    ZoomIndicatorView(factor: viewModel.zoomFactor)
+                        .padding(.bottom, 8)
+                }
 
                 // Minimal, non-blocking error feedback.
                 if let error = viewModel.error {
@@ -35,15 +86,29 @@ struct CameraView: View {
                         .accessibilityLabel("Error: \(error.localizedDescription)")
                 }
 
-                // The only control in the MVP: the shutter button.
-                ShutterButton(
-                    isCapturing: viewModel.isCapturing,
-                    action: {
-                        Task { await viewModel.capture() }
-                    }
-                )
-                .padding(.bottom, 32)
+                if viewModel.isConfigured {
+                    // The shutter release. Hardware volume buttons also
+                    // trigger a capture (VolumeButtonCaptureView above).
+                    ShutterButton(
+                        isCapturing: viewModel.isCapturing,
+                        action: {
+                            Task { await viewModel.capture() }
+                        }
+                    )
+                    .padding(.bottom, 32)
+                }
             }
+        }
+        .overlay {
+            // 3×3 framing grid on top of the preview but under the controls.
+            if viewModel.isConfigured {
+                GridOverlayView(showsGrid: viewModel.showsGrid)
+                    .ignoresSafeArea()
+            }
+        }
+        .gesture(pinchGesture)
+        .onChange(of: viewModel.cameraPosition) { _, _ in
+            zoomGestureBase = 1.0
         }
         .task {
             await viewModel.start()
@@ -53,6 +118,32 @@ struct CameraView: View {
         .onDisappear {
             Task { await viewModel.stop() }
         }
+    }
+
+    /// The flash button icon for the current mode.
+    private var flashIcon: String {
+        switch viewModel.flashMode {
+        case .off: return "bolt.slash"
+        case .on: return "bolt.fill"
+        case .auto: return "bolt.badge.automatic"
+        }
+    }
+
+    /// Pinch-to-zoom: the gesture's scale is applied on top of the zoom
+    /// factor the gesture started from, so repeated pinches accumulate.
+    private var pinchGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                let factor = ZoomMath.factor(
+                    base: zoomGestureBase,
+                    magnification: value,
+                    range: viewModel.zoomRange
+                )
+                Task { await viewModel.setZoom(factor) }
+            }
+            .onEnded { _ in
+                zoomGestureBase = viewModel.zoomFactor
+            }
     }
 }
 

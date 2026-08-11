@@ -20,8 +20,17 @@ actor CaptureService {
     /// The photo output used for capturing still images.
     private let photoOutput = AVCapturePhotoOutput()
     
-    /// The back-facing wide camera device.
+    /// The currently active wide camera device.
     private var cameraDevice: AVCaptureDevice?
+
+    /// The input currently attached to the session, if any.
+    private var cameraInput: AVCaptureDeviceInput?
+
+    /// The physical camera position currently in use.
+    private(set) var cameraPosition: CameraPosition = .back
+
+    /// The current flash (torch) mode.
+    private(set) var flashMode: FlashMode = .off
     
     /// Serial queue for all AVFoundation operations.
     private let serialQueue = DispatchSerialQueue(label: "com.pikicam.capture", qos: .userInitiated)
@@ -53,11 +62,13 @@ actor CaptureService {
         // Configure for high-quality photo capture
         session.sessionPreset = .photo
         
-        // Select back-wide camera
-        guard let device = selectBackWideCamera() else {
+        // Select the back-wide camera (the capture default).
+        guard let device = Self.selectCamera(at: .back) else {
             throw CaptureError.cameraUnavailable
         }
         self.cameraDevice = device
+        self.cameraPosition = .back
+        self.cameraInput = nil
         
         // Add device input
         do {
@@ -66,6 +77,7 @@ actor CaptureService {
                 throw CaptureError.cannotAddInput
             }
             session.addInput(input)
+            cameraInput = input
         } catch {
             throw CaptureError.inputCreationFailed(underlying: error)
         }
@@ -105,6 +117,124 @@ actor CaptureService {
         CaptureSessionBox(session: session)
     }
     
+    // MARK: - Camera Controls
+
+    /// Toggles between the back and front cameras.
+    ///
+    /// Reconfigures the session input inside one begin/commit configuration
+    /// block. A freshly added input starts at 1× zoom; the selected torch
+    /// mode is reapplied when the new camera has a torch (front cameras do
+    /// not), otherwise the flash falls back to `.off` and the caller is told
+    /// the new state.
+    ///
+    /// - Returns: The newly active `CameraPosition`.
+    func toggleCamera() async throws -> CameraPosition {
+        guard isConfigured else { throw CaptureError.sessionNotConfigured }
+
+        let next: CameraPosition = cameraPosition == .back ? .front : .back
+        guard let device = Self.selectCamera(at: next.avPosition) else {
+            throw CaptureError.cameraUnavailable
+        }
+
+        let newInput: AVCaptureDeviceInput
+        do {
+            newInput = try AVCaptureDeviceInput(device: device)
+        } catch {
+            throw CaptureError.inputCreationFailed(underlying: error)
+        }
+
+        session.beginConfiguration()
+        defer { session.commitConfiguration() }
+
+        if let cameraInput {
+            session.removeInput(cameraInput)
+        }
+        guard session.canAddInput(newInput) else {
+            throw CaptureError.cannotAddInput
+        }
+        session.addInput(newInput)
+        cameraInput = newInput
+        cameraDevice = device
+        cameraPosition = next
+
+        // A fresh input already starts at 1×; resetting explicitly keeps the
+        // state honest if the session is later reconfigured. Failure here is
+        // benign (no divergence possible).
+        _ = try? applyVideoZoomFactor(1.0, to: device)
+        if device.hasTorch {
+            _ = try? applyTorchMode(flashMode, to: device)
+        } else if flashMode != .off {
+            flashMode = .off
+        }
+        return next
+    }
+
+    /// The zoom range the current camera actually supports
+    /// (front cameras typically expose a fixed 1× range).
+    func videoZoomRange() async -> ClosedRange<CGFloat> {
+        guard let device = cameraDevice else { return 1.0...1.0 }
+        return device.minAvailableVideoZoomFactor...device.maxAvailableVideoZoomFactor
+    }
+
+    /// Sets the video zoom factor, clamped to the device's available range.
+    ///
+    /// - Returns: the clamped factor actually applied, which the UI mirrors.
+    func setVideoZoomFactor(_ factor: CGFloat) async throws -> CGFloat {
+        guard let device = cameraDevice else { throw CaptureError.sessionNotConfigured }
+        let clamped = ZoomMath.clamped(
+            factor,
+            range: device.minAvailableVideoZoomFactor...device.maxAvailableVideoZoomFactor
+        )
+        try applyVideoZoomFactor(clamped, to: device)
+        return clamped
+    }
+
+    /// Whether the current camera has a torch (flash). Front cameras do not.
+    func currentCameraHasTorch() async -> Bool {
+        cameraDevice?.hasTorch ?? false
+    }
+
+    /// Advances the flash mode off → on → auto → off and applies it to the
+    /// torch. RAW single exposures cannot use the processed-pipeline photo
+    /// flash, so the torch is the honest flash equivalent for pikicam.
+    ///
+    /// - Returns: the newly active `FlashMode`.
+    func cycleFlash() async throws -> FlashMode {
+        guard let device = cameraDevice, device.hasTorch else {
+            throw CaptureError.torchUnavailable
+        }
+        flashMode = flashMode.next()
+        try applyTorchMode(flashMode, to: device)
+        return flashMode
+    }
+
+    // MARK: - Private Camera Helpers
+
+    /// Applies a zoom factor under a configuration lock.
+    private func applyVideoZoomFactor(_ factor: CGFloat, to device: AVCaptureDevice) throws {
+        do {
+            try device.lockForConfiguration()
+            device.videoZoomFactor = factor
+            device.unlockForConfiguration()
+        } catch {
+            throw CaptureError.deviceLockFailed(underlying: error)
+        }
+    }
+
+    /// Applies a torch (flash) mode under a configuration lock.
+    private func applyTorchMode(_ mode: FlashMode, to device: AVCaptureDevice) throws {
+        guard device.hasTorch, device.isTorchModeSupported(mode.avTorchMode) else {
+            throw CaptureError.torchUnavailable
+        }
+        do {
+            try device.lockForConfiguration()
+            device.torchMode = mode.avTorchMode
+            device.unlockForConfiguration()
+        } catch {
+            throw CaptureError.deviceLockFailed(underlying: error)
+        }
+    }
+
     // MARK: - Photo Capture
     
     /// Captures a single Bayer RAW photo with simultaneous JPEG processing.
@@ -201,17 +331,18 @@ actor CaptureService {
     
     // MARK: - Private Helpers
     
-    /// Selects the back-wide camera device.
+    /// Selects the wide-angle camera at the given position.
     ///
-    /// Prefers the main wide camera (.builtInWideAngleCamera) over ultra-wide or telephoto.
-    /// On devices with multiple lenses, this ensures we get the primary sensor.
+    /// Prefers the main wide camera (.builtInWideAngleCamera) over ultra-wide or
+    /// telephoto. On devices with multiple lenses, this ensures we get the primary
+    /// sensor for the requested position.
     ///
-    /// - Returns: The selected AVCaptureDevice, or nil if no suitable camera is found.
-    private func selectBackWideCamera() -> AVCaptureDevice? {
+    /// - Returns: The selected AVCaptureDevice, or nil if no suitable camera exists.
+    private static func selectCamera(at position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let discoverySession = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInWideAngleCamera],
             mediaType: .video,
-            position: .back
+            position: position
         )
         
         // Return the first wide-angle camera found
@@ -271,6 +402,9 @@ enum CaptureError: LocalizedError, Equatable {
     case noProcessedCodecAvailable
     case missingImageData
     case unsupportedPlatform
+    case sessionNotConfigured
+    case torchUnavailable
+    case deviceLockFailed(underlying: Error)
 
     static func == (lhs: CaptureError, rhs: CaptureError) -> Bool {
         switch (lhs, rhs) {
@@ -280,9 +414,12 @@ enum CaptureError: LocalizedError, Equatable {
              (.noBayerFormatAvailable, .noBayerFormatAvailable),
              (.noProcessedCodecAvailable, .noProcessedCodecAvailable),
              (.missingImageData, .missingImageData),
-             (.unsupportedPlatform, .unsupportedPlatform):
+             (.unsupportedPlatform, .unsupportedPlatform),
+             (.sessionNotConfigured, .sessionNotConfigured),
+             (.torchUnavailable, .torchUnavailable):
             return true
-        case let (.inputCreationFailed(l), .inputCreationFailed(r)):
+        case let (.inputCreationFailed(l), .inputCreationFailed(r)),
+             let (.deviceLockFailed(l), .deviceLockFailed(r)):
             let lhsError = l as NSError
             let rhsError = r as NSError
             return lhsError.domain == rhsError.domain && lhsError.code == rhsError.code
@@ -309,6 +446,12 @@ enum CaptureError: LocalizedError, Equatable {
             return "The captured photo contains no image data."
         case .unsupportedPlatform:
             return "Camera capture is only supported on iPhone."
+        case .sessionNotConfigured:
+            return "The capture session is not configured yet."
+        case .torchUnavailable:
+            return "This camera has no flash (torch)."
+        case .deviceLockFailed(let error):
+            return "The camera could not be configured: \(error.localizedDescription)"
         }
     }
 }
