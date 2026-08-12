@@ -175,4 +175,68 @@ final class CameraControlTests: XCTestCase {
         XCTAssertEqual(CaptureOrientation(orientation: .faceUp), .up)
         XCTAssertEqual(CaptureOrientation(orientation: .unknown), .up)
     }
+
+    // MARK: - Aspect ratio
+
+    func testAspectRatioCycleIsClosed() {
+        var a = AspectRatio.ratio4x3
+        for _ in 0..<(AspectRatio.allCases.count * 2) { a = a.next() }
+        XCTAssertEqual(a, .ratio4x3)
+    }
+
+    func testAspectRatioRatiosAreCorrect() {
+        XCTAssertEqual(AspectRatio.ratio4x3.ratio, 4.0 / 3.0, accuracy: 0.0001)
+        XCTAssertEqual(AspectRatio.ratio16x9.ratio, 16.0 / 9.0, accuracy: 0.0001)
+        XCTAssertEqual(AspectRatio.ratio1x1.ratio, 1.0, accuracy: 0.0001)
+    }
+
+    func testPrintCropIntersectsZoomAndAspect() {
+        let sensor = CGRect(x: 0, y: 0, width: 4000, height: 3000) // 4:3
+        // 16:9 aspect on a 4:3 sensor → width-bound: keeps full sensor width,
+        // crops top/bottom (iOS Camera photo convention).
+        let crop = PrintCrop.rect(in: sensor, zoomFactor: 1.0, aspect: .ratio16x9)
+        XCTAssertEqual(crop.width, sensor.width)
+        XCTAssertEqual(crop.height, sensor.width / (16.0 / 9.0), accuracy: 0.0001)
+        XCTAssertTrue(sensor.contains(crop))
+        XCTAssertEqual(crop.midX, sensor.midX, accuracy: 0.0001)
+        XCTAssertEqual(crop.midY, sensor.midY, accuracy: 0.0001)
+    }
+
+    func testPrintCropAppliesZoomInsideAspectRect() {
+        let sensor = CGRect(x: 0, y: 0, width: 4000, height: 3000)
+        let crop = PrintCrop.rect(in: sensor, zoomFactor: 2.0, aspect: .ratio1x1)
+        XCTAssertEqual(crop.width, sensor.height / 2, accuracy: 0.0001) // 1:1 square, 2x zoom
+        XCTAssertEqual(crop.height, sensor.height / 2, accuracy: 0.0001)
+        XCTAssertTrue(sensor.contains(crop))
+    }
+
+    // MARK: - Exposure compensation
+
+    func testExposureCompensationSnapsToThirds() {
+        XCTAssertEqual(ExposureCompensation(stops: 0.4).stops, 1.0 / 3.0, accuracy: 0.0001)
+        XCTAssertEqual(ExposureCompensation(stops: -0.4).stops, -1.0 / 3.0, accuracy: 0.0001)
+        XCTAssertEqual(ExposureCompensation(stops: 1.7).stops, 5.0 / 3.0, accuracy: 0.0001)
+    }
+
+    func testExposureCompensationClampsAtLimits() {
+        XCTAssertEqual(ExposureCompensation(stops: 5.0).stops, ExposureCompensation.maxStop)
+        XCTAssertEqual(ExposureCompensation(stops: -5.0).stops, ExposureCompensation.minStop)
+    }
+
+    func testExposureCompensationCycleWrapsAtLimits() {
+        XCTAssertEqual(ExposureCompensation(stops: ExposureCompensation.maxStop).next().stops,
+                       ExposureCompensation.minStop)
+        XCTAssertEqual(ExposureCompensation(stops: ExposureCompensation.minStop).next().stops,
+                       ExposureCompensation.minStop + ExposureCompensation.step)
+    }
+
+    func testExposureCompensationLabelFormats() {
+        XCTAssertEqual(ExposureCompensation.zero.label, "0")
+        XCTAssertEqual(ExposureCompensation(stops: 1).label, "+1")
+        XCTAssertEqual(ExposureCompensation(stops: -2).label, "−2")
+        XCTAssertEqual(ExposureCompensation(stops: 2.0 / 3.0).label, "+2/3")
+        XCTAssertEqual(ExposureCompensation(stops: -1.0 / 3.0).label, "−1/3")
+        XCTAssertEqual(ExposureCompensation(stops: 5.0 / 3.0).label, "+1 2/3")
+        XCTAssertEqual(ExposureCompensation(stops: -7.0 / 3.0).label, "−2 1/3")
+    }
 }

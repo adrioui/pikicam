@@ -50,6 +50,25 @@ actor StorageService {
         return printID
     }
 
+    /// Deletes the print and (if present) the DNG asset from the Photos
+    /// library. Missing assets are skipped — no error.
+    func deletePair(printID: String, rawID: String?) async throws {
+        try await checkAuthorization()
+        let ids = [printID, rawID].compactMap { $0 }
+        let assets = PHAsset.fetchAssets(withLocalIdentifiers: ids, options: nil)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            PHPhotoLibrary.shared().performChanges {
+                PHAssetChangeRequest.deleteAssets(assets)
+            } completionHandler: { _, error in
+                if let error {
+                    continuation.resume(throwing: StorageServiceError.deleteFailed(underlying: error))
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
     // MARK: - Private
 
     private func checkAuthorization() throws {
@@ -120,6 +139,7 @@ enum StorageServiceError: LocalizedError {
     case insufficientPermissions(status: PHAuthorizationStatus)
     case saveFailed(underlying: Error)
     case unknownSaveFailure
+    case deleteFailed(underlying: Error)
 
     var errorDescription: String? {
         switch self {
@@ -129,6 +149,8 @@ enum StorageServiceError: LocalizedError {
             return "Failed to save photo: \(error.localizedDescription)"
         case .unknownSaveFailure:
             return "An unknown error occurred while saving the photo."
+        case .deleteFailed(let error):
+            return "Failed to delete photo: \(error.localizedDescription)"
         }
     }
 }
