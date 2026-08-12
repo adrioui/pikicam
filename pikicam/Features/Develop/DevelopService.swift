@@ -72,19 +72,11 @@ actor DevelopService {
         cropFactor: CGFloat = 1.0
     ) async throws -> DevelopResult {
         let ciImage = try processor.develop(dngData: dngData, mode: mode)
-        let framed = crop(ciImage, toFactor: cropFactor)
+        let framed = ciImage.cropped(to: ZoomMath.cropRect(
+            in: ciImage.extent, for: cropFactor
+        ))
         let jpegData = try encodeJPEG(framed)
         return DevelopResult(jpegData: jpegData, ciImage: framed)
-    }
-
-    /// Crops an image to the field of view of a zoom factor.
-    ///
-    /// At factor `z`, the visible frame is the central `1/z` of the full
-    /// sensor. The crop is centered and keeps the image's native resolution
-    /// (a rect crop, no resampling). The geometry lives in `CropMath` so it
-    /// is unit-testable without a DNG.
-    private func crop(_ image: CIImage, toFactor factor: CGFloat) -> CIImage {
-        image.cropped(to: CropMath.rect(in: image.extent, for: factor))
     }
 
     // MARK: - JPEG Encoding

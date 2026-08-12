@@ -310,7 +310,6 @@ actor CaptureService {
         }
 
         return PhotoCaptureResult(
-            photo: processedPhoto,
             processedData: processedData,
             rawData: rawData,
             captureZoom: captureZoom
@@ -426,9 +425,6 @@ actor CaptureService {
 /// the `CaptureService` actor or transferred to `CameraViewModel` on `@MainActor`.
 /// The photo reference is short-lived — data is extracted immediately after capture.
 struct PhotoCaptureResult: @unchecked Sendable {
-    /// The original captured photo object.
-    let photo: AVCapturePhoto
-
     /// JPEG/HEIC processed image data (ISP-processed preview).
     let processedData: Data
 
