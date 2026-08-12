@@ -45,6 +45,7 @@ final class CameraViewModel {
     private(set) var flashAvailable = false
     var isRAWEnabled: Bool = true
     var showsGrid = false
+    var exposureCompensation: ExposureCompensation = .zero
     private(set) var zoomFactor: CGFloat = 1.0
     private(set) var zoomRange: ClosedRange<CGFloat> = 1.0...1.0
 
@@ -153,8 +154,16 @@ final class CameraViewModel {
 
     func toggleGrid() { showsGrid.toggle() }
     func toggleRAW() { isRAWEnabled.toggle() }
+
+    func cycleExposureCompensation() {
+        exposureCompensation = exposureCompensation.next()
+        Task { try? await captureService.setExposureBias(exposureCompensation.stops) }
+    }
+
     func clearReview() { lastReviewResult = nil }
 
+    /// Deletes the print and (if present) DNG asset for the last capture and
+    /// dismisses the review overlay.
     /// Cycles self-timer off → 3s → 10s → off. Cancels any in-flight countdown.
     func cycleSelfTimer() {
         selfTimerTask?.cancel()

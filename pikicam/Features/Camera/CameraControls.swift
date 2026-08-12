@@ -205,3 +205,36 @@ enum AspectRatio: String, CaseIterable, Sendable {
 /// ... maxExposureTargetBias`; this snaps user input to discrete steps and
 /// formats the label (e.g. "+1 2/3", "-2/3", "0").
 
+
+struct ExposureCompensation: Equatable, Sendable {
+    let stops: Double
+
+    static let minStop: Double = -3.0
+    static let maxStop: Double = 3.0
+    static let step: Double = 1.0 / 3.0
+    static let zero = ExposureCompensation(stops: 0)
+
+    init(stops: Double) {
+        let clamped = min(max(stops, Self.minStop), Self.maxStop)
+        self.stops = (clamped / Self.step).rounded() * Self.step
+    }
+
+    func next() -> ExposureCompensation {
+        let next = stops + Self.step
+        let wrapped = next > Self.maxStop ? Self.minStop : next
+        return ExposureCompensation(stops: wrapped)
+    }
+
+    var label: String {
+        if stops == 0 { return "0" }
+        let sign = stops > 0 ? "+" : "−"
+        let whole = abs(stops)
+        let thirds = (whole * 3).rounded()
+        if thirds.truncatingRemainder(dividingBy: 3) == 0 {
+            return "\(sign)\(Int(whole))"
+        }
+        let intPart = Int(thirds) / 3
+        let fracPart = Int(thirds.truncatingRemainder(dividingBy: 3))
+        return "\(sign)\(intPart) \(fracPart)/3"
+    }
+}
