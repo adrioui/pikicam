@@ -3,31 +3,21 @@ import UniformTypeIdentifiers
 
 // MARK: - StorageService
 
-/// Manages saving captured photo pairs (DNG negative + JPEG/HEIC print)
-/// to the user's Photos library using `PHAssetCreationRequest`.
+/// Saves pikicam captures to the user's Photos library.
 ///
-/// ## Saving Strategy (verified on-device, iOS 26.6)
-///
-/// PhotoKit on iOS 26.6 rejects the `.alternatePhoto` pairing layout
-/// (`PHPhotosErrorChangeNotSupported` / 3300) regardless of authorization
-/// level, resource UTIs, or pairing order. The working approach saves
-/// *two independent assets* (each a `.photo` resource):
-///
-/// - Asset 1 — the developed JPEG/HEIC print.
-/// - Asset 2 — the untouched DNG negative (`.photo` resource, `.dng` UT).
-///
-/// Both assets are created in a single `performChanges` batch.
+/// iOS 26.6 rejects the `.alternatePhoto` pairing layout
+/// (`PHPhotosErrorChangeNotSupported` / 3300), so the DNG and the print
+/// are saved as two independent `.photo` resources in a single
+/// `performChanges` batch.
 actor StorageService {
 
-    // MARK: - Save Pair
+    // MARK: - Save
 
     /// Saves the developed print and its raw DNG companion as two separate
-    /// Photos assets (verified on-device: `.alternatePhoto` pairing fails
-    /// with `PHPhotosErrorDomain` 3300 on iOS 26.6).
+    /// Photos assets.
     ///
     /// - Returns: `(printLocalID, rawLocalID)` — both non-empty on success.
-    /// - Throws: `StorageServiceError` if either save fails.
-    /// Saves the developed print and its raw DNG companion.
+    /// - Throws: `StorageServiceError` if the save fails.
     @discardableResult
     func savePair(
         processedData: Data,
@@ -35,55 +25,60 @@ actor StorageService {
         identifier: String = UUID().uuidString,
         codec: UTType = .jpeg
     ) async throws -> (String, String) {
-        let result = try await self.savePairInternal(
-            processedData: processedData, rawData: rawData, identifier: identifier, codec: codec, includeRaw: true
+        try await checkAuthorization()
+        let (printID, rawID) = try await performChanges(
+            printData: processedData, rawData: rawData, identifier: identifier, codec: codec
         )
-        guard let rawID = result.1 else {
+        guard let rawID else {
             throw StorageServiceError.unknownSaveFailure
         }
-        return (result.0, rawID)
+        return (printID, rawID)
     }
 
-    /// Saves only the developed print (no DNG) — best-practice: when RAW output is disabled.
+    /// Saves only the developed print (RAW output is disabled).
+    ///
+    /// - Returns: The print asset's local identifier.
+    /// - Throws: `StorageServiceError` if the save fails.
     @discardableResult
     func savePrintOnly(
         processedData: Data,
         identifier: String = UUID().uuidString,
         codec: UTType = .jpeg
     ) async throws -> String {
-        let (printID, _) = try await self.savePairInternal(
-            processedData: processedData, rawData: Data(), identifier: identifier, codec: codec, includeRaw: false
-        )
+        try await checkAuthorization()
+        let (printID, _) = try await performChanges(printData: processedData, rawData: nil, identifier: identifier, codec: codec)
         return printID
     }
 
-    private func savePairInternal(
-        processedData: Data,
-        rawData: Data,
-        identifier: String,
-        codec: UTType,
-        includeRaw: Bool
-    ) async throws -> (String, String?) {
-        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        guard status == .authorized else {
-            throw StorageServiceError.insufficientPermissions(status: status)
-        }
+    // MARK: - Private
 
-        return try await withCheckedThrowingContinuation { continuation in
+    private func checkAuthorization() throws {
+        guard PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized else {
+            throw StorageServiceError.insufficientPermissions(status: PHPhotoLibrary.authorizationStatus(for: .readWrite))
+        }
+    }
+
+    /// Performs a single `performChanges` batch creating one or two assets.
+    /// When `rawData` is nil, only the print asset is created.
+    private func performChanges(
+        printData: Data,
+        rawData: Data?,
+        identifier: String,
+        codec: UTType
+    ) async throws -> (String, String?) {
+        try await withCheckedThrowingContinuation { continuation in
             let printStore = AssetPlaceholderStore()
             let rawStore = AssetPlaceholderStore()
 
             PHPhotoLibrary.shared().performChanges {
-                // Print asset (independent `.photo` resource).
                 let printReq = PHAssetCreationRequest.forAsset()
                 let printOptions = PHAssetResourceCreationOptions()
                 printOptions.originalFilename = "\(identifier).\(Self.fileExtension(for: codec))"
                 printOptions.uniformTypeIdentifier = codec.identifier
-                printReq.addResource(with: .photo, data: processedData, options: printOptions)
+                printReq.addResource(with: .photo, data: printData, options: printOptions)
                 printStore.localIdentifier = printReq.placeholderForCreatedAsset?.localIdentifier
 
-                // Negative asset only when RAW is enabled.
-                if includeRaw {
+                if let rawData {
                     let rawReq = PHAssetCreationRequest.forAsset()
                     let rawOptions = PHAssetResourceCreationOptions()
                     rawOptions.originalFilename = "\(identifier).dng"
@@ -105,10 +100,6 @@ actor StorageService {
         }
     }
 
-    // MARK: - Helpers
-
-    /// File extension for the given output codec, used for the saved asset's
-    /// original filename. Defaults to `jpg` for unknown codecs.
     private static func fileExtension(for codec: UTType) -> String {
         switch codec {
         case .jpeg: return "jpg"
