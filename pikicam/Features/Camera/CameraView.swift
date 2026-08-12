@@ -203,9 +203,6 @@ private struct ReviewOverlay: View {
             }
         }
         .onTapGesture { onDismiss() }
-        .onAppear {
-            // Auto-dismiss so the stress test isn't blocked by the overlay.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { onDismiss() }
-        }
+        .allowsHitTesting(false)
     }
 }

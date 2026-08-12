@@ -27,12 +27,42 @@ actor StorageService {
     ///
     /// - Returns: `(printLocalID, rawLocalID)` — both non-empty on success.
     /// - Throws: `StorageServiceError` if either save fails.
+    /// Saves the developed print and its raw DNG companion.
     @discardableResult
     func savePair(
         processedData: Data,
-        rawData: Data? = nil,
+        rawData: Data,
         identifier: String = UUID().uuidString,
         codec: UTType = .jpeg
+    ) async throws -> (String, String) {
+        let result = try await self.savePairInternal(
+            processedData: processedData, rawData: rawData, identifier: identifier, codec: codec, includeRaw: true
+        )
+        guard let rawID = result.1 else {
+            throw StorageServiceError.unknownSaveFailure
+        }
+        return (result.0, rawID)
+    }
+
+    /// Saves only the developed print (no DNG) — best-practice: when RAW output is disabled.
+    @discardableResult
+    func savePrintOnly(
+        processedData: Data,
+        identifier: String = UUID().uuidString,
+        codec: UTType = .jpeg
+    ) async throws -> String {
+        let (printID, _) = try await self.savePairInternal(
+            processedData: processedData, rawData: Data(), identifier: identifier, codec: codec, includeRaw: false
+        )
+        return printID
+    }
+
+    private func savePairInternal(
+        processedData: Data,
+        rawData: Data,
+        identifier: String,
+        codec: UTType,
+        includeRaw: Bool
     ) async throws -> (String, String?) {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         guard status == .authorized else {
@@ -53,7 +83,7 @@ actor StorageService {
                 printStore.localIdentifier = printReq.placeholderForCreatedAsset?.localIdentifier
 
                 // Negative asset only when RAW is enabled.
-                if let rawData {
+                if includeRaw {
                     let rawReq = PHAssetCreationRequest.forAsset()
                     let rawOptions = PHAssetResourceCreationOptions()
                     rawOptions.originalFilename = "\(identifier).dng"

@@ -252,11 +252,17 @@ final class CameraViewModel {
                 cropFactor: photoResult.captureZoom
             )
 
-            // Step 3: Save print (and DNG if RAW toggle is enabled).
-            try await storageService.savePair(
-                processedData: developResult.jpegData,
-                rawData: isRAWEnabled ? photoResult.rawData : nil
-            )
+            // Step 3: Save print (and DNG if RAW toggle is enabled) — clean boundary.
+            if isRAWEnabled {
+                try await storageService.savePair(
+                    processedData: developResult.jpegData,
+                    rawData: photoResult.rawData
+                )
+            } else {
+                try await storageService.savePrintOnly(
+                    processedData: developResult.jpegData
+                )
+            }
 
             // Step 4: Set review result for the post-capture overlay.
             lastReviewResult = (

@@ -92,7 +92,12 @@ actor DevelopService {
         default: 0
         }
         guard rotationAngle != 0 else { return image }
-        return image.transformed(by: CGAffineTransform(rotationAngle: rotationAngle))
+        // Best-practice: use CoreImage's native rotation filter rather than geometric transform.
+        let filter = CIFilter(name: "CIAffineTransform")
+        filter?.setValue(image, forKey: kCIInputImageKey)
+        let transform = CGAffineTransform(rotationAngle: rotationAngle)
+        filter?.setValue(NSValue(cgAffineTransform: transform), forKey: kCIInputTransformKey)
+        return filter?.outputImage ?? image
     }
 
     // MARK: - JPEG Encoding
