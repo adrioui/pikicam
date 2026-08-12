@@ -5,11 +5,19 @@ import Photos
 
 // MARK: - ReviewResult
 
-/// The artifact shown in the post-capture review overlay.
+/// The artifact shown in the post-capture review overlay. Carries both
+/// asset identifiers so the overlay can delete them on demand.
 struct ReviewResult: Sendable {
     let jpegData: Data
     let captureZoom: CGFloat
     let timestamp: Date
+    let savedAssets: SavedAssets
+}
+
+/// The local identifiers of the two assets saved to Photos for a capture.
+struct SavedAssets: Sendable {
+    let printID: String
+    let rawID: String?
 }
 
 // MARK: - CameraViewModel
@@ -45,6 +53,7 @@ final class CameraViewModel {
     private(set) var flashAvailable = false
     var isRAWEnabled: Bool = true
     var showsGrid = false
+    var aspectRatio: AspectRatio = .ratio4x3
     var exposureCompensation: ExposureCompensation = .zero
     private(set) var zoomFactor: CGFloat = 1.0
     private(set) var zoomRange: ClosedRange<CGFloat> = 1.0...1.0
@@ -154,6 +163,16 @@ final class CameraViewModel {
 
     func toggleGrid() { showsGrid.toggle() }
     func toggleRAW() { isRAWEnabled.toggle() }
+    func cycleAspectRatio() { aspectRatio = aspectRatio.next() }
+
+    /// Deletes the print and (if present) DNG asset for the last capture and
+    /// dismisses the review overlay.
+    func deleteLastCapture() {
+        guard let review = lastReviewResult else { return }
+        let assets = review.savedAssets
+        lastReviewResult = nil
+        Task { try? await storageService.deletePair(printID: assets.printID, rawID: assets.rawID) }
+    }
 
     func cycleExposureCompensation() {
         exposureCompensation = exposureCompensation.next()
@@ -197,20 +216,25 @@ final class CameraViewModel {
             let developResult = try await developService.develop(
                 dngData: photoResult.rawData,
                 cropFactor: photoResult.captureZoom,
+                aspect: aspectRatio,
                 orientation: orientation
             )
+            let savedAssets: SavedAssets
             if isRAWEnabled {
-                try await storageService.savePair(
+                let (printID, rawID) = try await storageService.savePair(
                     processedData: developResult.jpegData,
                     rawData: photoResult.rawData
                 )
+                savedAssets = SavedAssets(printID: printID, rawID: rawID)
             } else {
-                try await storageService.savePrintOnly(processedData: developResult.jpegData)
+                let printID = try await storageService.savePrintOnly(processedData: developResult.jpegData)
+                savedAssets = SavedAssets(printID: printID, rawID: nil)
             }
             lastReviewResult = ReviewResult(
                 jpegData: developResult.jpegData,
                 captureZoom: photoResult.captureZoom,
-                timestamp: Date()
+                timestamp: Date(),
+                savedAssets: savedAssets
             )
         } catch {
             self.error = error

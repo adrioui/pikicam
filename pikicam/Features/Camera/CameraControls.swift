@@ -139,19 +139,19 @@ enum PrintCrop {
     }
 
     /// The largest rect of `extent` matching `aspect`, centered.
+    ///
+    /// Each candidate fills one sensor axis: widthBound fills the width
+    /// (cropping top/bottom), heightBound fills the height (cropping left/
+    /// right). For 4:3 sensor + 16:9, widthBound (4000×2250) fits and is
+    /// chosen. For 4:3 sensor + 1:1, heightBound (3000×3000) fits and is
+    /// chosen. Matches the iOS Camera photo convention: the wider FOV is
+    /// preserved by cropping the shorter axis.
     private static func aspectRect(in extent: CGRect, aspect: AspectRatio) -> CGRect {
-        let extentAspect = extent.width / extent.height
-        let width: CGFloat
-        let height: CGFloat
-        if aspect.ratio > extentAspect {
-            width = extent.height * aspect.ratio
-            height = extent.height
-        } else {
-            width = extent.width
-            height = extent.width / aspect.ratio
-        }
-        let origin = CGPoint(x: extent.midX - width / 2, y: extent.midY - height / 2)
-        return CGRect(x: origin.x, y: origin.y, width: width, height: height)
+        let widthBound = CGRect(x: 0, y: 0, width: extent.width, height: extent.width / aspect.ratio)
+        let heightBound = CGRect(x: 0, y: 0, width: extent.height * aspect.ratio, height: extent.height)
+        let fits = widthBound.height <= extent.height ? widthBound : heightBound
+        let origin = CGPoint(x: extent.midX - fits.width / 2, y: extent.midY - fits.height / 2)
+        return CGRect(x: origin.x, y: origin.y, width: fits.width, height: fits.height)
     }
 
     /// The centered `1/zoomFactor` rect of `aspectRect`, clamped to `extent`.
@@ -230,11 +230,10 @@ struct ExposureCompensation: Equatable, Sendable {
         let sign = stops > 0 ? "+" : "−"
         let whole = abs(stops)
         let thirds = (whole * 3).rounded()
-        if thirds.truncatingRemainder(dividingBy: 3) == 0 {
-            return "\(sign)\(Int(whole))"
-        }
         let intPart = Int(thirds) / 3
         let fracPart = Int(thirds.truncatingRemainder(dividingBy: 3))
+        if fracPart == 0 { return "\(sign)\(intPart)" }
+        if intPart == 0 { return "\(sign)\(fracPart)/3" }
         return "\(sign)\(intPart) \(fracPart)/3"
     }
 }
