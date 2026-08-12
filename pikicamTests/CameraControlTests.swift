@@ -146,4 +146,33 @@ final class CameraControlTests: XCTestCase {
         XCTAssertEqual(GridGeometry.lineFractions[0], 1.0 / 3.0, accuracy: 0.0001)
         XCTAssertEqual(GridGeometry.lineFractions[1], 2.0 / 3.0, accuracy: 0.0001)
     }
+
+    // MARK: - Self-timer
+
+    func testSelfTimerCyclesOffThreeTen() {
+        XCTAssertEqual(SelfTimerOption.off.next(), .threeSeconds)
+        XCTAssertEqual(SelfTimerOption.threeSeconds.next(), .tenSeconds)
+        XCTAssertEqual(SelfTimerOption.tenSeconds.next(), .off)
+        var option = SelfTimerOption.off
+        for _ in 0..<9 { option = option.next() }
+        XCTAssertEqual(option, .off, "Cycle is closed under repeated application.")
+    }
+
+    func testSelfTimerSecondsAreCorrect() {
+        XCTAssertEqual(SelfTimerOption.off.seconds, 0)
+        XCTAssertEqual(SelfTimerOption.threeSeconds.seconds, 3)
+        XCTAssertEqual(SelfTimerOption.tenSeconds.seconds, 10)
+    }
+
+    // MARK: - Capture orientation
+
+    func testCaptureOrientationMapsFromUIDeviceOrientation() {
+        XCTAssertEqual(CaptureOrientation(orientation: .portrait), .up)
+        XCTAssertEqual(CaptureOrientation(orientation: .portraitUpsideDown), .down)
+        XCTAssertEqual(CaptureOrientation(orientation: .landscapeLeft), .left)
+        XCTAssertEqual(CaptureOrientation(orientation: .landscapeRight), .right)
+        // Face-up/face-down/unknown → portrait (safe default).
+        XCTAssertEqual(CaptureOrientation(orientation: .faceUp), .up)
+        XCTAssertEqual(CaptureOrientation(orientation: .unknown), .up)
+    }
 }

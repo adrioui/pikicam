@@ -3,93 +3,55 @@ import SwiftUI
 import AVFoundation
 import Photos
 
+// MARK: - ReviewResult
+
+/// The artifact shown in the post-capture review overlay.
+struct ReviewResult: Sendable {
+    let jpegData: Data
+    let captureZoom: CGFloat
+    let timestamp: Date
+}
+
 // MARK: - CameraViewModel
 
-/// The main view model for the camera screen.
-///
-/// Owned by the `@MainActor` and uses `@Observable` (iOS 17+) for fine-grained
-/// view updates. Bridges the `CaptureService` actor to the SwiftUI layer and
-/// orchestrates the capture → develop → save pipeline.
-///
-/// ## Pipeline Flow
-/// ```
-/// Permission → Configure Session → Start Preview
-///   → Shutter → CaptureService.capturePhoto()
-///   → DevelopService.develop(dngData)        // zero-process
-///   → StorageService.savePair(print, raw)
-/// ```
+/// Owns the camera UI state and orchestrates capture → develop → save.
 @MainActor
 @Observable
 final class CameraViewModel {
 
-    // MARK: - Services
-
-    /// The actor managing the AVCaptureSession pipeline.
     let captureService = CaptureService()
-
-    /// The actor managing zero-process RAW development.
     let developService: DevelopService
-
-    /// The actor managing photo library saves.
     let storageService = StorageService()
 
-    // MARK: - Authorization State
-
-    /// Whether the user has granted camera access.
+    // Authorization
     private(set) var cameraAuthStatus: AVAuthorizationStatus = .notDetermined
-
-    /// Whether the user has granted photo library write access.
     private(set) var photoAuthStatus: PHAuthorizationStatus = .notDetermined
-
-    /// Computed: true when both camera and photo library access are granted.
     var hasRequiredAuth: Bool {
         cameraAuthStatus == .authorized && photoAuthStatus == .authorized
     }
 
-    // MARK: - Session State
-
-    /// Whether the capture session is running.
+    // Session
     private(set) var isSessionRunning = false
-
-    /// Whether configuration is in progress or has completed.
     private(set) var isConfigured = false
-
-    /// Configuration or capture error, if any.
     private(set) var error: Error?
 
-    // MARK: - Capture State
-
-    /// Whether a photo capture is currently in flight.
+    // Capture
     private(set) var isCapturing = false
+    private(set) var lastReviewResult: ReviewResult?
 
-    /// The result of the last capture, shown in the post-capture review overlay.
-    private(set) var lastReviewResult: (jpegData: Data, zoomFactor: CGFloat, timestamp: Date)?
-
-    // MARK: - Camera Controls
-
-    /// The physical camera currently in use.
+    // Camera controls
     private(set) var cameraPosition: CameraPosition = .back
-
-    /// The current flash (torch) mode.
     private(set) var flashMode: FlashMode = .off
-
-    /// Whether the current camera has a torch (drives the flash button).
     private(set) var flashAvailable = false
-
-    /// Whether RAW DNG output is enabled (best-practice HUD toggle; default on).
-    /// When disabled, the DNG is not saved — only the developed print is persisted.
     var isRAWEnabled: Bool = true
-
-    /// Whether the 3×3 framing grid is shown over the preview.
     var showsGrid = false
-
-    /// The zoom factor currently applied to the camera.
     private(set) var zoomFactor: CGFloat = 1.0
-
-    /// The zoom range the current camera supports.
     private(set) var zoomRange: ClosedRange<CGFloat> = 1.0...1.0
 
-    // MARK: - Initialization
+    // Self-timer
+    var selfTimer: SelfTimerOption = .off
+    private(set) var selfTimerRemaining: Int = 0
+    private var selfTimerTask: Task<Void, Never>?
 
     init() {
         self.developService = DevelopService()
@@ -99,7 +61,6 @@ final class CameraViewModel {
 
     // MARK: - Authorization
 
-    /// Requests camera access if not yet determined.
     @discardableResult
     func requestCameraAccess() async -> Bool {
         let granted = await AVCaptureDevice.requestAccess(for: .video)
@@ -107,13 +68,10 @@ final class CameraViewModel {
         return granted
     }
 
-    /// Requests full photo library access if not yet determined.
-    ///
-    /// Full (read-write) access is required: on iOS 26, PhotoKit rejects every
+    /// Full read-write access is required: on iOS 26, PhotoKit rejects every
     /// RAW+print pair layout for apps holding only add-only authorization
-    /// (PHPhotosErrorChangeNotSupported / 3300, verified on-device). The
-    /// "Allow Selected Photos" (limited) grant also cannot pair RAW
-    /// companions, so only `.authorized` counts here.
+    /// (`PHPhotosErrorChangeNotSupported` / 3300, verified on-device). The
+    /// "Allow Selected Photos" grant also cannot pair RAW companions.
     @discardableResult
     func requestPhotoLibraryAccess() async -> Bool {
         let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
@@ -121,7 +79,6 @@ final class CameraViewModel {
         return status == .authorized
     }
 
-    /// Requests all required permissions. Returns `true` once all are granted.
     func requestAllPermissions() async -> Bool {
         let camera = await requestCameraAccess()
         let photos = await requestPhotoLibraryAccess()
@@ -130,13 +87,11 @@ final class CameraViewModel {
 
     // MARK: - Session Lifecycle
 
-    /// Configures the capture session and starts it.
     func start() async {
         guard hasRequiredAuth else {
             error = CameraViewModelError.missingPermissions
             return
         }
-
         do {
             try await captureService.startSession()
             isConfigured = true
@@ -148,14 +103,12 @@ final class CameraViewModel {
         }
     }
 
-    /// Stops the capture session.
     func stop() async {
+        selfTimerTask?.cancel()
         await captureService.stopSession()
         isSessionRunning = false
     }
 
-    /// Re-reads device-dependent control state after the session or camera
-    /// position changes.
     private func refreshCameraControlState() async {
         zoomRange = await captureService.videoZoomRange()
         flashAvailable = await captureService.currentCameraHasTorch()
@@ -165,7 +118,6 @@ final class CameraViewModel {
 
     // MARK: - Camera Controls
 
-    /// Flips between the back and front cameras.
     func toggleCamera() async {
         do {
             cameraPosition = try await captureService.toggleCamera()
@@ -176,7 +128,6 @@ final class CameraViewModel {
         }
     }
 
-    /// Advances flash off → on → auto → off.
     func cycleFlash() async {
         do {
             flashMode = try await captureService.cycleFlash()
@@ -185,15 +136,10 @@ final class CameraViewModel {
         }
     }
 
-    /// Applies a (clamped) zoom factor from the pinch gesture.
-    ///
-    /// The zoom is a device-level property: the sensor crops its readout so
-    /// the preview shows the framed field of view. The value is clamped to the
-    /// device's valid range and applied under `lockForConfiguration()`.
-    /// Zoom is never changed while a capture is in flight (changing
-    /// `videoZoomFactor` during RAW capture can crash AVFoundation); captures
-    /// at a zoom ≥ 1× run at 1× internally and restore the framing immediately
-    /// (see `CaptureService.capturePhoto`).
+    /// Zoom never changes during a capture (changing `videoZoomFactor` while
+    /// a RAW capture is in flight can crash AVFoundation). Captures at zoom
+    /// ≥ 1× run at 1× internally and restore the framing immediately
+    /// (`CaptureService.capturePhoto`).
     func setZoom(_ factor: CGFloat) async {
         guard !isCapturing else { return }
         let clamped = ZoomMath.clamped(factor, range: zoomRange)
@@ -205,73 +151,106 @@ final class CameraViewModel {
         }
     }
 
-    /// Clears the post-capture review result.
-    func clearReview() {
-        lastReviewResult = nil
+    func toggleGrid() { showsGrid.toggle() }
+    func toggleRAW() { isRAWEnabled.toggle() }
+    func clearReview() { lastReviewResult = nil }
+
+    /// Cycles self-timer off → 3s → 10s → off. Cancels any in-flight countdown.
+    func cycleSelfTimer() {
+        selfTimerTask?.cancel()
+        selfTimerRemaining = 0
+        selfTimer = selfTimer.next()
     }
 
-    /// Toggles RAW DNG output (visible HUD toggle, best-practice per Moment Pro).
-    func toggleRAW() {
-        isRAWEnabled.toggle()
-    }
-
-    /// Toggles the 3×3 framing grid.
-    func toggleGrid() {
-        showsGrid.toggle()
+    /// Cancels an in-flight self-timer countdown (e.g. on shutter cancel).
+    func cancelSelfTimer() {
+        selfTimerTask?.cancel()
+        selfTimerRemaining = 0
     }
 
     // MARK: - Capture Pipeline
 
-    /// Captures a single photo: capture → zero-develop → save.
-    ///
-    /// The pipeline runs across three actors, each on its own queue:
-    /// 1. `CaptureService` captures the Bayer RAW + processed preview.
-    /// 2. `DevelopService` zero-develops the DNG into a print, cropped to the
-    ///    framing zoom (the DNG is full-sensor; the crop is print-time only).
-    /// 3. `StorageService` saves both the DNG and print to the Photos library.
-    ///
-    /// The zoom is a device property that crops the sensor; pure-Bayer RAW
-    /// only captures at 1× (AVFoundation crashes otherwise), so the capture
-    /// runs at 1× and the framing zoom is restored immediately. The print is
-    /// cropped to the framing zoom so the saved photo matches the composition.
+    /// Capture → develop → save. If the self-timer is non-zero, waits for the
+    /// countdown first (with cancel support).
     func capture() async {
         guard !isCapturing, isConfigured else { return }
+        if selfTimer != .off {
+            await runSelfTimerCountdown()
+        }
+        guard !isCapturing else { return } // cancelled during countdown
 
         isCapturing = true
         defer { isCapturing = false }
 
         do {
-            // Step 1: Capture pure Bayer RAW (captured at 1× internally; the
-            // framing zoom is restored before the capture returns).
             let photoResult = try await captureService.capturePhoto()
-
-            // Step 2: Zero-develop the DNG, cropping the print to the framing
-            // zoom so the saved photo matches what the user composed.
+            let orientation = CaptureOrientation(orientation: UIDevice.current.orientation)
             let developResult = try await developService.develop(
                 dngData: photoResult.rawData,
-                cropFactor: photoResult.captureZoom
+                cropFactor: photoResult.captureZoom,
+                orientation: orientation
             )
-
-            // Step 3: Save print (and DNG if RAW toggle is enabled) — clean boundary.
             if isRAWEnabled {
                 try await storageService.savePair(
                     processedData: developResult.jpegData,
                     rawData: photoResult.rawData
                 )
             } else {
-                try await storageService.savePrintOnly(
-                    processedData: developResult.jpegData
-                )
+                try await storageService.savePrintOnly(processedData: developResult.jpegData)
             }
-
-            // Step 4: Set review result for the post-capture overlay.
-            lastReviewResult = (
+            lastReviewResult = ReviewResult(
                 jpegData: developResult.jpegData,
-                zoomFactor: photoResult.captureZoom,
+                captureZoom: photoResult.captureZoom,
                 timestamp: Date()
             )
         } catch {
             self.error = error
+        }
+    }
+
+    private func runSelfTimerCountdown() async {
+        selfTimerRemaining = selfTimer.seconds
+        selfTimerTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            while self.selfTimerRemaining > 0, !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1))
+                if Task.isCancelled { return }
+                self.selfTimerRemaining -= 1
+            }
+        }
+        await selfTimerTask?.value
+    }
+}
+
+// MARK: - SelfTimerOption
+
+/// Self-timer delay before the shutter fires. Cycled via HUD.
+enum SelfTimerOption: Sendable, CaseIterable {
+    case off
+    case threeSeconds
+    case tenSeconds
+
+    var seconds: Int {
+        switch self {
+        case .off: return 0
+        case .threeSeconds: return 3
+        case .tenSeconds: return 10
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .off: return "Off"
+        case .threeSeconds: return "3s"
+        case .tenSeconds: return "10s"
+        }
+    }
+
+    func next() -> SelfTimerOption {
+        switch self {
+        case .off: return .threeSeconds
+        case .threeSeconds: return .tenSeconds
+        case .tenSeconds: return .off
         }
     }
 }

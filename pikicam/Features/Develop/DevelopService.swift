@@ -1,120 +1,100 @@
 import Foundation
-import UIKit
 import CoreImage
+import UIKit
 import Metal
 
 // MARK: - DevelopService
 
-/// An actor managing the RAW image development pipeline.
-///
-/// Delegates development to a `RAWProcessor` (a `CIRAWZeroProcessor` by
-/// default) and encodes the result as a JPEG with a reused Metal-backed
-/// `CIContext`. The actor keeps `CIContext` access thread-safe.
+/// Develops a RAW DNG into a viewable JPEG with all computational
+/// photography disabled (zero-process). Owns the Metal-backed `CIContext`
+/// that turns `CIImage`s into encoded bytes.
 actor DevelopService {
 
-    // MARK: - Properties
-
-    /// The processor that turns DNG bytes into a developed image.
     private let processor: RAWProcessor
-
-    /// Reused CIContext for rendering (Metal-backed, cache disabled).
     private let ciContext: CIContext
-
-    /// Color space used for the final JPEG.
     private let colorSpace: CGColorSpace
-
-    // MARK: - Initialization
 
     init(processor: RAWProcessor? = nil) {
         self.processor = processor ?? CIRAWZeroProcessor()
+        self.colorSpace = CGColorSpace(name: CGColorSpace.displayP3) ?? CGColorSpaceCreateDeviceRGB()
 
-        let colorSpace = CGColorSpace(name: CGColorSpace.displayP3) ?? CGColorSpaceCreateDeviceRGB()
-        self.colorSpace = colorSpace
-
-        // Metal-backed CIContext with no intermediates caching for minimal memory.
         if let device = MTLCreateSystemDefaultDevice() {
             self.ciContext = CIContext(
                 mtlDevice: device,
-                options: [
-                    .cacheIntermediates: false,
-                    .outputColorSpace: colorSpace,
-                ]
+                options: [.cacheIntermediates: false, .outputColorSpace: self.colorSpace]
             )
         } else {
-            self.ciContext = CIContext(
-                options: [
-                    .cacheIntermediates: false,
-                    .outputColorSpace: colorSpace,
-                ]
-            )
+            self.ciContext = CIContext(options: [.cacheIntermediates: false, .outputColorSpace: self.colorSpace])
         }
     }
 
     // MARK: - Development
 
-    /// Develops a RAW DNG file into a viewable JPEG with zero processing.
+    /// Develops a RAW DNG into a JPEG, cropped to the framing zoom and
+    /// rotated to match the device's physical orientation.
     ///
-    /// This is the core of pikicam's "zero-processing" philosophy. The DNG data
-    /// is processed through the current RAW processor with all computational
-    /// photography enhancements disabled.
-    ///
-    /// - Parameters:
-    ///   - dngData: The raw DNG file data from AVCapturePhoto.rawFileDataRepresentation().
-    ///   - mode: The development mode determining which enhancements are applied.
-    ///   - cropFactor: The zoom factor the capture was framed at (≥ 1.0). The
-    ///     DNG is full-sensor (pure-Bayer RAW only captures at 1×); cropping
-    ///     the print to `1/cropFactor` of the frame reproduces the composition
-    ///     the user saw.
-    /// - Returns: A `DevelopResult` containing JPEG data and the CIImage.
-    /// - Throws: `DevelopError` if processing fails.
+    /// - Parameter dngData: The DNG bytes from `AVCapturePhoto.rawFileDataRepresentation()`.
+    /// - Parameter cropFactor: The zoom factor the capture was framed at (≥ 1.0).
+    ///   The DNG is full-sensor; cropping the print reproduces the framing.
+    /// - Parameter orientation: The physical orientation at capture time. Must
+    ///   be passed in by the caller (which lives on the main actor) so this
+    ///   background actor never reads `UIDevice` directly.
+    /// - Returns: JPEG data and the rotated, cropped `CIImage`.
     func develop(
         dngData: Data,
         mode: CaptureMode = .zero,
-        cropFactor: CGFloat = 1.0
+        cropFactor: CGFloat = 1.0,
+        orientation: CaptureOrientation = .up
     ) async throws -> DevelopResult {
         let ciImage = try processor.develop(dngData: dngData, mode: mode)
-        let framed = ciImage.cropped(to: ZoomMath.cropRect(
-            in: ciImage.extent, for: cropFactor
-        ))
-        let oriented = Self.applyOrientationRotation(to: framed)
+        let framed = ciImage.cropped(to: ZoomMath.cropRect(in: ciImage.extent, for: cropFactor))
+        let oriented = Self.apply(orientation: orientation, to: framed)
         let jpegData = try encodeJPEG(oriented)
         return DevelopResult(jpegData: jpegData, ciImage: oriented)
     }
 
-    /// Applies device-orientation rotation so the saved image matches the
-    /// physical orientation when captured (best-practice: like native Camera app).
-    private static func applyOrientationRotation(to image: CIImage) -> CIImage {
-        let orientation = UIDevice.current.orientation
-        let rotationAngle: CGFloat = switch orientation {
-        case .landscapeLeft: .pi / 2
-        case .landscapeRight: -.pi / 2
-        case .portraitUpsideDown: .pi
-        default: 0
-        }
-        guard rotationAngle != 0 else { return image }
-        // Best-practice: use CoreImage's native rotation filter rather than geometric transform.
+    private static func apply(orientation: CaptureOrientation, to image: CIImage) -> CIImage {
+        guard let transform = orientation.affineTransform, !transform.isIdentity else { return image }
         let filter = CIFilter(name: "CIAffineTransform")
         filter?.setValue(image, forKey: kCIInputImageKey)
-        let transform = CGAffineTransform(rotationAngle: rotationAngle)
         filter?.setValue(NSValue(cgAffineTransform: transform), forKey: kCIInputTransformKey)
         return filter?.outputImage ?? image
     }
 
-    // MARK: - JPEG Encoding
-
-    /// Encodes a `CIImage` to JPEG using the reused `CIContext`.
-    ///
-    /// - Parameter ciImage: The image to encode.
-    /// - Returns: JPEG-encoded data.
-    /// - Throws: `DevelopError.jpegEncodingFailed` if encoding fails.
     private func encodeJPEG(_ ciImage: CIImage) throws -> Data {
-        guard let jpegData = ciContext.jpegRepresentation(
-            of: ciImage,
-            colorSpace: colorSpace,
-            options: [:]
-        ) else {
+        guard let jpegData = ciContext.jpegRepresentation(of: ciImage, colorSpace: colorSpace, options: [:]) else {
             throw DevelopError.jpegEncodingFailed
         }
         return jpegData
+    }
+}
+
+// MARK: - CaptureOrientation
+
+/// The physical orientation the device was held in when the shutter fired.
+/// Captured on the main actor at the moment of capture and passed to the
+/// background develop pipeline so the actor never reads `UIDevice`.
+enum CaptureOrientation: Sendable {
+    case up
+    case down
+    case left
+    case right
+
+    init(orientation: UIDeviceOrientation) {
+        switch orientation {
+        case .landscapeLeft: self = .left
+        case .landscapeRight: self = .right
+        case .portraitUpsideDown: self = .down
+        default: self = .up
+        }
+    }
+
+    fileprivate var affineTransform: CGAffineTransform? {
+        switch self {
+        case .up: return nil
+        case .down: return CGAffineTransform(rotationAngle: .pi)
+        case .left: return CGAffineTransform(rotationAngle: .pi / 2)
+        case .right: return CGAffineTransform(rotationAngle: -.pi / 2)
+        }
     }
 }

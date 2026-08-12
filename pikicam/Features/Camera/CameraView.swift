@@ -3,12 +3,8 @@ import SwiftUI
 
 // MARK: - CameraView
 
-/// The main camera interface.
-///
-/// MVP design: a full-screen live preview with a single shutter button.
-/// Tapping it captures one pure Bayer RAW frame, develops it with all
-/// computational-photography processing disabled, and saves the resulting
-/// print alongside the untouched DNG to the user's Photos library.
+/// Full-screen camera: live preview, shutter, and a top-right HUD cluster
+/// of quick toggles (RAW, grid, flash, self-timer, camera flip).
 struct CameraView: View {
     @Environment(CameraViewModel.self) private var viewModel
     @State private var session: AVCaptureSession?
@@ -16,106 +12,18 @@ struct CameraView: View {
 
     var body: some View {
         ZStack {
-            // Live camera preview
-            if let session {
-                CameraPreview(session: session)
-                    .ignoresSafeArea()
-                    .accessibilityIdentifier("preview-pinch-area")
-            } else {
-                Color.black.ignoresSafeArea()
-            }
-
-            VStack(spacing: 0) {
-                // Top-right control cluster: grid, flash, camera flip.
-                if viewModel.isConfigured {
-                    HStack {
-                        Spacer()
-                        VStack(spacing: 12) {
-                            CameraHUDButton(
-                                systemImage: viewModel.isRAWEnabled ? "camera.fill" : "camera",
-                                identifier: "raw-toggle",
-                                label: "RAW",
-                                value: viewModel.isRAWEnabled ? "On" : "Off",
-                                action: { viewModel.toggleRAW() }
-                            )
-                            CameraHUDButton(
-                                systemImage: viewModel.showsGrid
-                                    ? "square.grid.3x3.fill" : "square.grid.3x3",
-                                identifier: "grid-toggle",
-                                label: "Grid",
-                                value: viewModel.showsGrid ? "On" : "Off",
-                                action: { viewModel.toggleGrid() }
-                            )
-                            if viewModel.flashAvailable {
-                                CameraHUDButton(
-                                    systemImage: flashIcon,
-                                    identifier: "flash-toggle",
-                                    label: "Flash",
-                                    value: viewModel.flashMode.label,
-                                    action: { Task { await viewModel.cycleFlash() } }
-                                )
-                            }
-                            CameraHUDButton(
-                                systemImage: "arrow.triangle.2.circlepath.camera",
-                                identifier: "front-camera-toggle",
-                                label: "Camera",
-                                value: viewModel.cameraPosition.label,
-                                action: { Task { await viewModel.toggleCamera() } }
-                            )
-                        }
-                        .padding(.trailing, 20)
-                        .padding(.top, 8)
-                    }
-                }
-
-                Spacer()
-
-                // Hidden volume-button trigger: hardware sound buttons fire capture.
-                VolumeButtonCaptureView {
-                    if !viewModel.isCapturing && viewModel.isConfigured {
-                        Task { await viewModel.capture() }
-                    }
-                }
-                .frame(width: 0, height: 0)
-
-                if viewModel.isConfigured {
-                    // Current zoom factor, e.g. "1.0x".
-                    ZoomIndicatorView(factor: viewModel.zoomFactor)
-                        .padding(.bottom, 8)
-                }
-
-                // Minimal, non-blocking error feedback.
-                if let error = viewModel.error {
-                    Text(error.localizedDescription)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .padding(.horizontal)
-                        .accessibilityLabel("Error: \(error.localizedDescription)")
-                }
-
-                if viewModel.isConfigured {
-                    // The shutter release. Hardware volume buttons also
-                    // trigger a capture (VolumeButtonCaptureView above).
-                    ShutterButton(
-                        isCapturing: viewModel.isCapturing,
-                        action: {
-                            Task { await viewModel.capture() }
-                        }
-                    )
-                    .padding(.bottom, 32)
-                }
-            }
+            preview
+            controls
         }
         .overlay {
             if let review = viewModel.lastReviewResult {
                 ReviewOverlay(
                     jpegData: review.jpegData,
-                    captureZoom: review.zoomFactor,
+                    captureZoom: review.captureZoom,
                     timestamp: review.timestamp,
                     onDismiss: { viewModel.clearReview() }
                 )
             }
-            // 3×3 framing grid on top of the preview but under the controls.
             if viewModel.isConfigured {
                 GridOverlayView(showsGrid: viewModel.showsGrid)
                     .ignoresSafeArea()
@@ -127,15 +35,113 @@ struct CameraView: View {
         }
         .task {
             await viewModel.start()
-            let sessionBox = await viewModel.captureService.getSession()
-            session = sessionBox.session
+            session = await viewModel.captureService.getSession().session
         }
         .onDisappear {
             Task { await viewModel.stop() }
         }
     }
 
-    /// The flash button icon for the current mode.
+    // MARK: - Subviews
+
+    @ViewBuilder
+    private var preview: some View {
+        if let session {
+            CameraPreview(session: session)
+                .ignoresSafeArea()
+                .accessibilityIdentifier("preview-pinch-area")
+        } else {
+            Color.black.ignoresSafeArea()
+        }
+    }
+
+    @ViewBuilder
+    private var controls: some View {
+        VStack(spacing: 0) {
+            if viewModel.isConfigured {
+                HUDCluster
+                Spacer()
+                VolumeButtonCaptureView {
+                    if !viewModel.isCapturing && viewModel.isConfigured {
+                        Task { await viewModel.capture() }
+                    }
+                }
+                .frame(width: 0, height: 0)
+                ZoomIndicatorView(factor: viewModel.zoomFactor)
+                    .padding(.bottom, 8)
+            } else {
+                Spacer()
+            }
+            if let error = viewModel.error {
+                Text(error.localizedDescription)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .padding(.horizontal)
+                    .accessibilityLabel("Error: \(error.localizedDescription)")
+            }
+            if viewModel.isConfigured {
+                if viewModel.selfTimerRemaining > 0 {
+                    SelfTimerCountdownView(remaining: viewModel.selfTimerRemaining)
+                }
+                ShutterButton(
+                    isCapturing: viewModel.isCapturing,
+                    action: { Task { await viewModel.capture() } }
+                )
+                .padding(.bottom, 32)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var HUDCluster: some View {
+        HStack {
+            Spacer()
+            VStack(spacing: 12) {
+                CameraHUDButton(
+                    systemImage: viewModel.isRAWEnabled ? "camera.fill" : "camera",
+                    identifier: "raw-toggle",
+                    label: "RAW",
+                    value: viewModel.isRAWEnabled ? "On" : "Off",
+                    action: { viewModel.toggleRAW() }
+                )
+                CameraHUDButton(
+                    systemImage: viewModel.showsGrid
+                        ? "square.grid.3x3.fill" : "square.grid.3x3",
+                    identifier: "grid-toggle",
+                    label: "Grid",
+                    value: viewModel.showsGrid ? "On" : "Off",
+                    action: { viewModel.toggleGrid() }
+                )
+                if viewModel.flashAvailable {
+                    CameraHUDButton(
+                        systemImage: flashIcon,
+                        identifier: "flash-toggle",
+                        label: "Flash",
+                        value: viewModel.flashMode.label,
+                        action: { Task { await viewModel.cycleFlash() } }
+                    )
+                }
+                CameraHUDButton(
+                    systemImage: viewModel.selfTimer == .off
+                        ? "timer" : "timer.circle.fill",
+                    identifier: "self-timer-toggle",
+                    label: "Timer",
+                    value: viewModel.selfTimer.label,
+                    action: { viewModel.cycleSelfTimer() }
+                )
+                CameraHUDButton(
+                    systemImage: "arrow.triangle.2.circlepath.camera",
+                    identifier: "front-camera-toggle",
+                    label: "Camera",
+                    value: viewModel.cameraPosition.label,
+                    action: { Task { await viewModel.toggleCamera() } }
+                )
+            }
+            .padding(.trailing, 20)
+            .padding(.top, 8)
+        }
+    }
+
     private var flashIcon: String {
         switch viewModel.flashMode {
         case .off: return "bolt.slash"
@@ -144,8 +150,6 @@ struct CameraView: View {
         }
     }
 
-    /// Pinch-to-zoom: the gesture's scale is applied on top of the zoom
-    /// factor the gesture started from, so repeated pinches accumulate.
     private var pinchGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
@@ -167,7 +171,11 @@ struct CameraView: View {
         .environment(CameraViewModel())
 }
 
-// MARK: - Post-Capture Review (inline best-practice: avoids extra pbxproj file)
+// MARK: - ReviewOverlay
+
+/// Shows the just-captured print above the live preview. Non-blocking
+/// (`.allowsHitTesting(false)`) so the shutter and HUD stay tappable,
+/// and self-dismisses after a few seconds.
 private struct ReviewOverlay: View {
     let jpegData: Data
     let captureZoom: CGFloat
@@ -176,7 +184,7 @@ private struct ReviewOverlay: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.black.opacity(0.85).ignoresSafeArea()
             if let image = UIImage(data: jpegData) {
                 Image(uiImage: image)
                     .resizable()
@@ -202,7 +210,29 @@ private struct ReviewOverlay: View {
                 .padding(.bottom, 32)
             }
         }
-        .onTapGesture { onDismiss() }
         .allowsHitTesting(false)
+        .task {
+            try? await Task.sleep(for: .seconds(3))
+            if !Task.isCancelled { onDismiss() }
+        }
+        .accessibilityIdentifier("review-overlay")
+    }
+}
+
+// MARK: - SelfTimerCountdownView
+
+/// Big centered number shown while the self-timer counts down. Doubles as
+/// the cancel target — tapping anywhere on the screen cancels via the VM.
+private struct SelfTimerCountdownView: View {
+    let remaining: Int
+
+    var body: some View {
+        Text("\(remaining)")
+            .font(.system(size: 96, weight: .bold, design: .rounded))
+            .foregroundStyle(.white)
+            .padding(24)
+            .background(.black.opacity(0.6))
+            .clipShape(Circle())
+            .accessibilityIdentifier("self-timer-countdown")
     }
 }
