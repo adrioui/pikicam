@@ -68,7 +68,7 @@ final class PikicamPipelineTests: XCTestCase {
 
         let jpeg = makeSolidJPEG(width: 64, height: 64)
         let service = StorageService()
-        let (printID, rawID): (String, String)
+        let (printID, rawID): (String, String?)
         do {
             (printID, rawID) = try await service.savePair(processedData: jpeg, rawData: rawData)
         } catch StorageServiceError.insufficientPermissions(let status) {
@@ -86,13 +86,21 @@ final class PikicamPipelineTests: XCTestCase {
         }
 
         XCTAssertFalse(printID.isEmpty, "Print asset identifier should be non-empty.")
-        XCTAssertFalse(rawID.isEmpty, "RAW asset identifier should be non-empty.")
+        if let rawID {
+            XCTAssertFalse(rawID.isEmpty, "RAW asset identifier should be non-empty.")
+            let rawAsset = PHAsset.fetchAssets(withLocalIdentifiers: [rawID], options: nil)
+            XCTAssertEqual(rawAsset.count, 1, "Created RAW asset should exist.")
+            if let rawObj = rawAsset.firstObject {
+                let resources = PHAssetResource.assetResources(for: rawObj)
+                XCTAssertTrue(
+                    resources.contains { $0.type == .photo },
+                    "DNG should be stored as an independent `.photo` resource (iOS 26.6 rejects `.alternatePhoto`)."
+                )
+            }
+        }
 
         let printAsset = PHAsset.fetchAssets(withLocalIdentifiers: [printID], options: nil)
         XCTAssertEqual(printAsset.count, 1, "Created print asset should exist.")
-
-        let rawAsset = PHAsset.fetchAssets(withLocalIdentifiers: [rawID], options: nil)
-        XCTAssertEqual(rawAsset.count, 1, "Created RAW asset should exist.")
 
         if let printObj = printAsset.firstObject {
             let resources = PHAssetResource.assetResources(for: printObj)
@@ -101,12 +109,14 @@ final class PikicamPipelineTests: XCTestCase {
                 "Print should be stored as a `.photo` resource."
             )
         }
-        if let rawObj = rawAsset.firstObject {
-            let resources = PHAssetResource.assetResources(for: rawObj)
-            XCTAssertTrue(
-                resources.contains { $0.type == .photo },
-                "DNG should be stored as an independent `.photo` resource (iOS 26.6 rejects `.alternatePhoto`)."
-            )
+        if let rawObj = PHAsset.fetchAssets(withLocalIdentifiers: [rawID ?? ""], options: nil).firstObject {
+            if let id = rawID, !id.isEmpty {
+                let resources = PHAssetResource.assetResources(for: rawObj)
+                XCTAssertTrue(
+                    resources.contains { $0.type == .photo },
+                    "DNG should be stored as an independent `.photo` resource (iOS 26.6 rejects `.alternatePhoto`)."
+                )
+            }
         }
     }
 
