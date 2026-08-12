@@ -85,9 +85,24 @@ enum ZoomMath {
         clamped(base * magnification, range: range)
     }
 
+    /// The centered rect of `extent` at zoom `factor`. Factors ≤ 1.0
+    /// return the full extent unchanged — this is the geometric counterpart
+    /// to the zoom factor (see `factor` above): at `z`, the visible frame
+    /// is the centered `1/z` of the full sensor.
+    static func cropRect(in extent: CGRect, for zoomFactor: CGFloat) -> CGRect {
+        guard zoomFactor > 1.0 else { return extent }
+        let cropWidth = extent.width / zoomFactor
+        let cropHeight = extent.height / zoomFactor
+        let origin = CGPoint(
+            x: extent.midX - cropWidth / 2,
+            y: extent.midY - cropHeight / 2
+        )
+        return CGRect(x: origin.x, y: origin.y, width: cropWidth, height: cropHeight)
+    }
+
     /// The compact label shown over the preview, e.g. "1.0x" (POSIX locale so
-    /// the text — and UI tests asserting on it — never depend on the
-    /// device's region settings).
+    /// the text — and UI tests asserting on it — never depend on the device's
+    /// region settings).
     static func label(for factor: CGFloat) -> String {
         String(format: "%.1fx", locale: Locale(identifier: "en_US_POSIX"), factor)
     }
@@ -112,30 +127,6 @@ enum GridGeometry {
     }
 }
 
-// MARK: - CropMath
-
-/// Geometry for mapping a framing zoom factor to a print crop.
-///
-/// Pure-Bayer RAW only captures at 1× (AVFoundation raises an uncaught ObjC
-/// exception for RAW + zoom > 1 — see `CaptureService.capturePhoto`), so the
-/// capture runs at 1× and the framing zoom is restored immediately. The DNG
-/// is therefore full-sensor and the developed print must be cropped to the
-/// field of view the user composed: at factor `z`, the visible frame is the
-/// centered `1/z` of the full sensor.
-enum CropMath {
-
-    /// The centered rect of `extent` representing the field of view at
-    /// `factor`. Factors ≤ 1.0 (no zoom) return the full extent unchanged.
-    /// The crop keeps the image's native resolution (a rect crop, no
-    /// resampling).
-    static func rect(in extent: CGRect, for factor: CGFloat) -> CGRect {
-        guard factor > 1.0 else { return extent }
-        let cropWidth = extent.width / factor
-        let cropHeight = extent.height / factor
-        let origin = CGPoint(
-            x: extent.midX - cropWidth / 2,
-            y: extent.midY - cropHeight / 2
-        )
-        return CGRect(x: origin.x, y: origin.y, width: cropWidth, height: cropHeight)
-    }
-}
+/// Geometry for framing zoom and the corresponding print crop.
+/// At factor `z`, the visible frame is the centered `1/z` of the full
+/// sensor; the DNG captures at 1× (full-sensor) and the developed print

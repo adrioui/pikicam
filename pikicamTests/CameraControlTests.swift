@@ -90,13 +90,13 @@ final class CameraControlTests: XCTestCase {
 
     func testCropRectIsIdentityBelowOrAtUnityZoom() {
         let extent = CGRect(x: 10, y: 20, width: 4032, height: 3024)
-        XCTAssertEqual(CropMath.rect(in: extent, for: 1.0), extent)
-        XCTAssertEqual(CropMath.rect(in: extent, for: 0.5), extent)
+        XCTAssertEqual(ZoomMath.cropRect(in: extent, for: 1.0), extent)
+        XCTAssertEqual(ZoomMath.cropRect(in: extent, for: 0.5), extent)
     }
 
     func testCropRectIsCenteredAndShrinksByFactor() {
         let extent = CGRect(x: 0, y: 0, width: 4000, height: 3000)
-        let rect = CropMath.rect(in: extent, for: 2.0)
+        let rect = ZoomMath.cropRect(in: extent, for: 2.0)
         XCTAssertEqual(rect.width, 2000, accuracy: 0.0001)
         XCTAssertEqual(rect.height, 1500, accuracy: 0.0001)
         // Centered: equal margins on both sides of each axis.
@@ -108,7 +108,7 @@ final class CameraControlTests: XCTestCase {
 
     func testCropRectPreservesAspectRatio() {
         let extent = CGRect(x: 0, y: 0, width: 4032, height: 3024)
-        let rect = CropMath.rect(in: extent, for: 2.5)
+        let rect = ZoomMath.cropRect(in: extent, for: 2.5)
         // The crop shrinks both axes by the same factor, so the aspect ratio
         // of the framed print matches the composition the user saw.
         XCTAssertEqual(
@@ -121,7 +121,7 @@ final class CameraControlTests: XCTestCase {
     func testCropRectStaysInsideTheSensorExtent() {
         let extent = CGRect(x: 0, y: 0, width: 4032, height: 3024)
         for factor: CGFloat in [1.5, 2.0, 3.0, 5.0] {
-            let rect = CropMath.rect(in: extent, for: factor)
+            let rect = ZoomMath.cropRect(in: extent, for: factor)
             XCTAssertTrue(extent.contains(rect), "Crop at \(factor)× left the sensor bounds.")
         }
     }
