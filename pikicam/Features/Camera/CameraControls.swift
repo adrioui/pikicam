@@ -127,6 +127,81 @@ enum GridGeometry {
     }
 }
 
-/// Geometry for framing zoom and the corresponding print crop.
-/// At factor `z`, the visible frame is the centered `1/z` of the full
-/// sensor; the DNG captures at 1× (full-sensor) and the developed print
+// MARK: - PrintCrop
+
+/// The final print crop — the intersection of the user's framing zoom and
+/// the chosen aspect ratio. The DNG stays full-sensor; this is print-time
+/// geometry only.
+enum PrintCrop {
+
+    static func rect(in extent: CGRect, zoomFactor: CGFloat, aspect: AspectRatio) -> CGRect {
+        zoomRect(intersected: aspectRect(in: extent, aspect: aspect), in: extent, zoomFactor: zoomFactor)
+    }
+
+    /// The largest rect of `extent` matching `aspect`, centered.
+    private static func aspectRect(in extent: CGRect, aspect: AspectRatio) -> CGRect {
+        let extentAspect = extent.width / extent.height
+        let width: CGFloat
+        let height: CGFloat
+        if aspect.ratio > extentAspect {
+            width = extent.height * aspect.ratio
+            height = extent.height
+        } else {
+            width = extent.width
+            height = extent.width / aspect.ratio
+        }
+        let origin = CGPoint(x: extent.midX - width / 2, y: extent.midY - height / 2)
+        return CGRect(x: origin.x, y: origin.y, width: width, height: height)
+    }
+
+    /// The centered `1/zoomFactor` rect of `aspectRect`, clamped to `extent`.
+    private static func zoomRect(intersected aspectRect: CGRect, in extent: CGRect, zoomFactor: CGFloat) -> CGRect {
+        guard zoomFactor > 1.0 else { return aspectRect }
+        let width = aspectRect.width / zoomFactor
+        let height = aspectRect.height / zoomFactor
+        let origin = CGPoint(
+            x: max(extent.minX, min(aspectRect.midX - width / 2, aspectRect.maxX - width)),
+            y: max(extent.minY, min(aspectRect.midY - height / 2, aspectRect.maxY - height))
+        )
+        return CGRect(x: origin.x, y: origin.y, width: width, height: height)
+    }
+}
+
+// MARK: - AspectRatio
+
+/// The output aspect ratio of the developed print. The DNG is always
+/// captured full-sensor; the aspect is applied as a final print crop.
+enum AspectRatio: String, CaseIterable, Sendable {
+    case ratio4x3
+    case ratio16x9
+    case ratio1x1
+
+    var ratio: CGFloat {
+        switch self {
+        case .ratio4x3: return 4.0 / 3.0
+        case .ratio16x9: return 16.0 / 9.0
+        case .ratio1x1: return 1.0
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .ratio4x3: return "4:3"
+        case .ratio16x9: return "16:9"
+        case .ratio1x1: return "1:1"
+        }
+    }
+
+    func next() -> AspectRatio {
+        let all = AspectRatio.allCases
+        let i = all.firstIndex(of: self) ?? 0
+        return all[(i + 1) % all.count]
+    }
+}
+// MARK: - ExposureCompensation
+
+/// Exposure bias in EV stops, snapped to 1/3-stop increments. The capture
+/// device's `exposureTargetBias` accepts any value in `minExposureTargetBias
+/// ... maxExposureTargetBias`; this snaps user input to discrete steps and
+/// formats the label (e.g. "+1 2/3", "-2/3", "0").
+

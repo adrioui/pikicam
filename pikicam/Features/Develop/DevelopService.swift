@@ -31,23 +31,25 @@ actor DevelopService {
     // MARK: - Development
 
     /// Develops a RAW DNG into a JPEG, cropped to the framing zoom and
-    /// rotated to match the device's physical orientation.
+    /// aspect ratio, then rotated to match the device's physical orientation.
     ///
     /// - Parameter dngData: The DNG bytes from `AVCapturePhoto.rawFileDataRepresentation()`.
     /// - Parameter cropFactor: The zoom factor the capture was framed at (≥ 1.0).
     ///   The DNG is full-sensor; cropping the print reproduces the framing.
+    /// - Parameter aspect: Output aspect ratio of the print.
     /// - Parameter orientation: The physical orientation at capture time. Must
     ///   be passed in by the caller (which lives on the main actor) so this
-    ///   background actor never reads `UIDevice` directly.
+    ///   background actor never reads `UIDevice`.
     /// - Returns: JPEG data and the rotated, cropped `CIImage`.
     func develop(
         dngData: Data,
         mode: CaptureMode = .zero,
         cropFactor: CGFloat = 1.0,
+        aspect: AspectRatio = .ratio4x3,
         orientation: CaptureOrientation = .up
     ) async throws -> DevelopResult {
         let ciImage = try processor.develop(dngData: dngData, mode: mode)
-        let framed = ciImage.cropped(to: ZoomMath.cropRect(in: ciImage.extent, for: cropFactor))
+        let framed = ciImage.cropped(to: PrintCrop.rect(in: ciImage.extent, zoomFactor: cropFactor, aspect: aspect))
         let oriented = Self.apply(orientation: orientation, to: framed)
         let jpegData = try encodeJPEG(oriented)
         return DevelopResult(jpegData: jpegData, ciImage: oriented)
