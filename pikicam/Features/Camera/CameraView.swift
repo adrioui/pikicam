@@ -32,6 +32,13 @@ struct CameraView: View {
                         Spacer()
                         VStack(spacing: 12) {
                             CameraHUDButton(
+                                systemImage: viewModel.isRAWEnabled ? "camera.fill" : "camera",
+                                identifier: "raw-toggle",
+                                label: "RAW",
+                                value: viewModel.isRAWEnabled ? "On" : "Off",
+                                action: { viewModel.toggleRAW() }
+                            )
+                            CameraHUDButton(
                                 systemImage: viewModel.showsGrid
                                     ? "square.grid.3x3.fill" : "square.grid.3x3",
                                 identifier: "grid-toggle",
@@ -100,6 +107,14 @@ struct CameraView: View {
             }
         }
         .overlay {
+            if let review = viewModel.lastReviewResult {
+                ReviewOverlay(
+                    jpegData: review.jpegData,
+                    captureZoom: review.zoomFactor,
+                    timestamp: review.timestamp,
+                    onDismiss: { viewModel.clearReview() }
+                )
+            }
             // 3×3 framing grid on top of the preview but under the controls.
             if viewModel.isConfigured {
                 GridOverlayView(showsGrid: viewModel.showsGrid)
@@ -150,4 +165,43 @@ struct CameraView: View {
 #Preview {
     CameraView()
         .environment(CameraViewModel())
+}
+
+// MARK: - Post-Capture Review (inline best-practice: avoids extra pbxproj file)
+private struct ReviewOverlay: View {
+    let jpegData: Data
+    let captureZoom: CGFloat
+    let timestamp: Date
+    let onDismiss: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            if let image = UIImage(data: jpegData) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .ignoresSafeArea()
+            }
+            VStack {
+                Spacer()
+                HStack(spacing: 16) {
+                    Text(String(format: "%.1fx", captureZoom))
+                        .font(.caption)
+                        .foregroundStyle(.white)
+                        .padding(6)
+                        .background(.black.opacity(0.6))
+                        .clipShape(Capsule())
+                    Text(timestamp, style: .time)
+                        .font(.caption)
+                        .foregroundStyle(.white)
+                        .padding(6)
+                        .background(.black.opacity(0.6))
+                        .clipShape(Capsule())
+                }
+                .padding(.bottom, 32)
+            }
+        }
+        .onTapGesture { onDismiss() }
+    }
 }

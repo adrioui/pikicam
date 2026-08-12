@@ -30,10 +30,10 @@ actor StorageService {
     @discardableResult
     func savePair(
         processedData: Data,
-        rawData: Data,
+        rawData: Data? = nil,
         identifier: String = UUID().uuidString,
         codec: UTType = .jpeg
-    ) async throws -> (String, String) {
+    ) async throws -> (String, String?) {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         guard status == .authorized else {
             throw StorageServiceError.insufficientPermissions(status: status)
@@ -52,20 +52,22 @@ actor StorageService {
                 printReq.addResource(with: .photo, data: processedData, options: printOptions)
                 printStore.localIdentifier = printReq.placeholderForCreatedAsset?.localIdentifier
 
-                // Negative asset (independent `.photo` resource with DNG data).
-                let rawReq = PHAssetCreationRequest.forAsset()
-                let rawOptions = PHAssetResourceCreationOptions()
-                rawOptions.originalFilename = "\(identifier).dng"
-                rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier
-                    ?? "com.adobe.raw-image"
-                rawReq.addResource(with: .photo, data: rawData, options: rawOptions)
-                rawStore.localIdentifier = rawReq.placeholderForCreatedAsset?.localIdentifier
+                // Negative asset only when RAW is enabled.
+                if let rawData {
+                    let rawReq = PHAssetCreationRequest.forAsset()
+                    let rawOptions = PHAssetResourceCreationOptions()
+                    rawOptions.originalFilename = "\(identifier).dng"
+                    rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier
+                        ?? "com.adobe.raw-image"
+                    rawReq.addResource(with: .photo, data: rawData, options: rawOptions)
+                    rawStore.localIdentifier = rawReq.placeholderForCreatedAsset?.localIdentifier
+                }
 
             } completionHandler: { success, error in
                 if let error {
                     continuation.resume(throwing: StorageServiceError.saveFailed(underlying: error))
-                } else if let p = printStore.localIdentifier, let r = rawStore.localIdentifier {
-                    continuation.resume(returning: (p, r))
+                } else if let p = printStore.localIdentifier {
+                    continuation.resume(returning: (p, rawStore.localIdentifier))
                 } else {
                     continuation.resume(throwing: StorageServiceError.unknownSaveFailure)
                 }
