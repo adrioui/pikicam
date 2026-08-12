@@ -208,6 +208,30 @@ actor CaptureService {
         return flashMode
     }
 
+    /// The exposure-bias range the current device supports.
+    func exposureBiasRange() async -> ClosedRange<Double> {
+        guard let device = cameraDevice else { return 0...0 }
+        return Double(device.minExposureTargetBias)...Double(device.maxExposureTargetBias)
+    }
+
+    /// Sets the device's exposure target bias, in EV stops. The device
+    /// controls continuous AE convergence; this call only sets the target.
+    func setExposureBias(_ stops: Double) async throws {
+        guard let device = cameraDevice else { throw CaptureError.sessionNotConfigured }
+        let range = await exposureBiasRange()
+        let clamped = ExposureCompensation(stops: stops)
+        let target = max(range.lowerBound, min(clamped.stops, range.upperBound))
+        try await applyExposureBias(Float(target), to: device)
+    }
+
+    private func applyExposureBias(_ bias: Float, to device: AVCaptureDevice) async throws {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            device.setExposureTargetBias(bias) { _ in
+                continuation.resume()
+            }
+        }
+    }
+
     // MARK: - Private Camera Helpers
 
     /// Applies a zoom factor under a configuration lock.
