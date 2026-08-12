@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import CoreImage
 import Metal
 
@@ -75,8 +76,23 @@ actor DevelopService {
         let framed = ciImage.cropped(to: ZoomMath.cropRect(
             in: ciImage.extent, for: cropFactor
         ))
-        let jpegData = try encodeJPEG(framed)
-        return DevelopResult(jpegData: jpegData, ciImage: framed)
+        let oriented = Self.applyOrientationRotation(to: framed)
+        let jpegData = try encodeJPEG(oriented)
+        return DevelopResult(jpegData: jpegData, ciImage: oriented)
+    }
+
+    /// Applies device-orientation rotation so the saved image matches the
+    /// physical orientation when captured (best-practice: like native Camera app).
+    private static func applyOrientationRotation(to image: CIImage) -> CIImage {
+        let orientation = UIDevice.current.orientation
+        let rotationAngle: CGFloat = switch orientation {
+        case .landscapeLeft: .pi / 2
+        case .landscapeRight: -.pi / 2
+        case .portraitUpsideDown: .pi
+        default: 0
+        }
+        guard rotationAngle != 0 else { return image }
+        return image.transformed(by: CGAffineTransform(rotationAngle: rotationAngle))
     }
 
     // MARK: - JPEG Encoding

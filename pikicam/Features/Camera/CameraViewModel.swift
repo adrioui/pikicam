@@ -62,6 +62,9 @@ final class CameraViewModel {
     /// Whether a photo capture is currently in flight.
     private(set) var isCapturing = false
 
+    /// The result of the last capture, shown in the post-capture review overlay.
+    private(set) var lastReviewResult: (jpegData: Data, zoomFactor: CGFloat, timestamp: Date)?
+
     // MARK: - Camera Controls
 
     /// The physical camera currently in use.
@@ -72,6 +75,10 @@ final class CameraViewModel {
 
     /// Whether the current camera has a torch (drives the flash button).
     private(set) var flashAvailable = false
+
+    /// Whether RAW DNG output is enabled (best-practice HUD toggle; default on).
+    /// When disabled, the DNG is not saved — only the developed print is persisted.
+    var isRAWEnabled: Bool = true
 
     /// Whether the 3×3 framing grid is shown over the preview.
     var showsGrid = false
@@ -198,6 +205,16 @@ final class CameraViewModel {
         }
     }
 
+    /// Clears the post-capture review result.
+    func clearReview() {
+        lastReviewResult = nil
+    }
+
+    /// Toggles RAW DNG output (visible HUD toggle, best-practice per Moment Pro).
+    func toggleRAW() {
+        isRAWEnabled.toggle()
+    }
+
     /// Toggles the 3×3 framing grid.
     func toggleGrid() {
         showsGrid.toggle()
@@ -235,10 +252,17 @@ final class CameraViewModel {
                 cropFactor: photoResult.captureZoom
             )
 
-            // Step 3: Save the print + DNG pair to the Photos library.
+            // Step 3: Save print (and DNG if RAW toggle is enabled).
             try await storageService.savePair(
                 processedData: developResult.jpegData,
-                rawData: photoResult.rawData
+                rawData: isRAWEnabled ? photoResult.rawData : nil
+            )
+
+            // Step 4: Set review result for the post-capture overlay.
+            lastReviewResult = (
+                jpegData: developResult.jpegData,
+                zoomFactor: photoResult.captureZoom,
+                timestamp: Date()
             )
         } catch {
             self.error = error
