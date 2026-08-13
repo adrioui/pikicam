@@ -71,16 +71,17 @@ actor CaptureService {
         self.cameraInput = nil
         
         // Add device input
+        let input: AVCaptureDeviceInput
         do {
-            let input = try AVCaptureDeviceInput(device: device)
-            guard session.canAddInput(input) else {
-                throw CaptureError.cannotAddInput
-            }
-            session.addInput(input)
-            cameraInput = input
+            input = try AVCaptureDeviceInput(device: device)
         } catch {
             throw CaptureError.inputCreationFailed(underlying: error)
         }
+        guard session.canAddInput(input) else {
+            throw CaptureError.cannotAddInput
+        }
+        session.addInput(input)
+        cameraInput = input
         
         // Add photo output
         guard session.canAddOutput(photoOutput) else {
@@ -127,6 +128,10 @@ actor CaptureService {
     /// not), otherwise the flash falls back to `.off` and the caller is told
     /// the new state.
     ///
+    /// The switch is transactional: if the new input cannot be added, the
+    /// previous input (if any) is restored and the session keeps running
+    /// with the original camera.
+    ///
     /// - Returns: The newly active `CameraPosition`.
     func toggleCamera() async throws -> CameraPosition {
         guard isConfigured else { throw CaptureError.sessionNotConfigured }
@@ -146,10 +151,15 @@ actor CaptureService {
         session.beginConfiguration()
         defer { session.commitConfiguration() }
 
-        if let cameraInput {
-            session.removeInput(cameraInput)
+        let previousInput = cameraInput
+        if let previousInput {
+            session.removeInput(previousInput)
         }
         guard session.canAddInput(newInput) else {
+            // Restore the previous input so the session is unchanged.
+            if let previousInput {
+                session.addInput(previousInput)
+            }
             throw CaptureError.cannotAddInput
         }
         session.addInput(newInput)
@@ -158,11 +168,11 @@ actor CaptureService {
         cameraPosition = next
 
         // A fresh input already starts at 1×; resetting explicitly keeps the
-        // state honest if the session is later reconfigured. Failure here is
-        // benign (no divergence possible).
-        _ = try? applyVideoZoomFactor(1.0, to: device)
+        // state honest if the session is later reconfigured. A failure here
+        // is propagated: the device is not left in an unknown zoom state.
+        try applyVideoZoomFactor(1.0, to: device)
         if device.hasTorch {
-            _ = try? applyTorchMode(flashMode, to: device)
+            try applyTorchMode(flashMode, to: device)
         } else if flashMode != .off {
             flashMode = .off
         }
@@ -261,24 +271,23 @@ actor CaptureService {
 
     // MARK: - Photo Capture
     
-    /// Captures a single Bayer RAW photo with simultaneous JPEG processing.
+    /// Captures a single Bayer RAW photo (DNG-only).
     ///
     /// Configures the capture settings to use pure Bayer format (not ProRAW),
-    /// which disables all multi-frame computational photography features.
+    /// which disables all multi-frame computational photography features, and
+    /// requests RAW only — no processed print is produced or retained.
     ///
     /// Pure-Bayer RAW capture is only legal at 1× on this device: requesting
     /// `rawPixelFormatType` while `videoZoomFactor > 1` makes AVFoundation's
     /// `-[AVCapturePhotoOutput capturePhotoWithSettings:delegate:]` raise an
     /// uncaught ObjC exception → SIGABRT (verified in on-device crash logs).
     /// The capture therefore runs at 1× and the framing zoom is restored
-    /// immediately; the caller crops the developed print to `captureZoom` so
-    /// the saved photo matches the composition, while the DNG stays
-    /// full-sensor (a crop is a print-time decision).
+    /// immediately afterwards; the DNG stays the full-sensor original (a
+    /// crop is never a capture decision).
     ///
-    /// - Returns: A `PhotoCaptureResult` with processed/raw data and the
-    ///   framing zoom the capture should be cropped to.
+    /// - Returns: The captured full-sensor DNG and the capture timestamp.
     /// - Throws: `CaptureError` if capture fails.
-    func capturePhoto() async throws -> PhotoCaptureResult {
+    func capturePhoto() async throws -> CapturedDNG {
         #if os(iOS)
         // Ensure we have a valid Bayer format selected. Checked first so a
         // platform without a Bayer sensor (e.g. the simulator) fails with the
@@ -291,14 +300,16 @@ actor CaptureService {
             throw CaptureError.sessionNotConfigured
         }
 
-        // Remember the framing zoom, capture at 1×, then restore it.
+        // Remember the framing zoom, capture at 1×, then restore it. A failed
+        // reset is propagated so the device is never left silently at the
+        // wrong zoom.
         let captureZoom = device.videoZoomFactor
         let needsZoomReset = captureZoom != 1.0
         if needsZoomReset {
-            _ = try? applyVideoZoomFactor(1.0, to: device)
+            try applyVideoZoomFactor(1.0, to: device)
             // Let the session settle on the 1× format before capturing:
             // an immediate capture right after the zoom change can return
-            // incomplete photo data (no processed/raw payload).
+            // incomplete photo data.
             try await Task.sleep(nanoseconds: 250_000_000)
         }
         defer {
@@ -307,37 +318,22 @@ actor CaptureService {
             }
         }
 
-        guard let processedCodec = preferredProcessedCodec() else {
-            throw CaptureError.noProcessedCodecAvailable
-        }
-
-        // Configure photo settings for Bayer RAW + a supported processed format.
-        let settings = AVCapturePhotoSettings(
-            rawPixelFormatType: bayerFormat,
-            processedFormat: [AVVideoCodecKey: processedCodec]
-        )
+        // Configure RAW-only photo settings: the sole delivered payload is the
+        // Bayer DNG. No processed format is requested and no processed data
+        // is retained.
+        let settings = AVCapturePhotoSettings(rawPixelFormatType: bayerFormat)
         // Never set `photoQualityPrioritization` on RAW captures: AVFoundation
         // raises NSInvalidArgumentException ("Unsupported when capturing RAW")
-        // at capture time. The default (.balanced) is used; the developed print
-        // is produced by our own zero-process pipeline regardless.
-        // settings.photoQualityPrioritization = .quality
+        // at capture time. The default (.balanced) is used.
 
         // Use the async extension on AVCapturePhotoOutput for delegate bridging.
-        let pair = try await photoOutput.capturePhotoPair(with: settings)
+        let photo = try await photoOutput.capturePhoto(with: settings)
 
-        // Extract processed (JPEG) and raw (DNG) data.
-        guard let processedPhoto = pair.processedPhoto,
-              let rawPhoto = pair.rawPhoto,
-              let processedData = processedPhoto.fileDataRepresentation(),
-              let rawData = rawPhoto.fileDataRepresentation() else {
+        guard let dngData = photo.fileDataRepresentation() else {
             throw CaptureError.missingImageData
         }
 
-        return PhotoCaptureResult(
-            processedData: processedData,
-            rawData: rawData,
-            captureZoom: captureZoom
-        )
+        return CapturedDNG(data: dngData, capturedAt: Date())
         #else
         throw CaptureError.unsupportedPlatform
         #endif
@@ -391,19 +387,6 @@ actor CaptureService {
             return false
         }
     }
-
-    /// Picks a processed-photo codec that this capture output currently supports.
-    private func preferredProcessedCodec() -> AVVideoCodecType? {
-        if photoOutput.availablePhotoCodecTypes.contains(.hevc) {
-            return .hevc
-        }
-
-        if photoOutput.availablePhotoCodecTypes.contains(.jpeg) {
-            return .jpeg
-        }
-
-        return photoOutput.availablePhotoCodecTypes.first
-    }
     
     // MARK: - Private Helpers
     
@@ -441,26 +424,6 @@ actor CaptureService {
     }
 }
 
-// MARK: - PhotoCaptureResult
-
-/// The result of a photo capture, containing both processed and raw data.
-///
-/// `AVCapturePhoto` is not `Sendable`, but it is only accessed from within
-/// the `CaptureService` actor or transferred to `CameraViewModel` on `@MainActor`.
-/// The photo reference is short-lived — data is extracted immediately after capture.
-struct PhotoCaptureResult: @unchecked Sendable {
-    /// JPEG/HEIC processed image data (ISP-processed preview).
-    let processedData: Data
-
-    /// Raw DNG file data from the sensor (Bayer RAW).
-    let rawData: Data
-
-    /// The zoom factor the capture was framed at (≥ 1.0). The DNG is
-    /// full-sensor; the developed print must be cropped to this factor's
-    /// field of view so the saved photo matches the user's composition.
-    let captureZoom: CGFloat
-}
-
 /// Sendable wrapper for handing the preview layer an AVFoundation session.
 ///
 /// `AVCaptureSession` is managed by `CaptureService`; SwiftUI only stores
@@ -478,8 +441,8 @@ enum CaptureError: LocalizedError, Equatable {
     case inputCreationFailed(underlying: Error)
     case cannotAddOutput
     case noBayerFormatAvailable
-    case noProcessedCodecAvailable
     case missingImageData
+    case captureFailed(underlying: Error)
     case unsupportedPlatform
     case sessionNotConfigured
     case torchUnavailable
@@ -491,14 +454,14 @@ enum CaptureError: LocalizedError, Equatable {
              (.cannotAddInput, .cannotAddInput),
              (.cannotAddOutput, .cannotAddOutput),
              (.noBayerFormatAvailable, .noBayerFormatAvailable),
-             (.noProcessedCodecAvailable, .noProcessedCodecAvailable),
              (.missingImageData, .missingImageData),
              (.unsupportedPlatform, .unsupportedPlatform),
              (.sessionNotConfigured, .sessionNotConfigured),
              (.torchUnavailable, .torchUnavailable):
             return true
         case let (.inputCreationFailed(l), .inputCreationFailed(r)),
-             let (.deviceLockFailed(l), .deviceLockFailed(r)):
+             let (.deviceLockFailed(l), .deviceLockFailed(r)),
+             let (.captureFailed(l), .captureFailed(r)):
             let lhsError = l as NSError
             let rhsError = r as NSError
             return lhsError.domain == rhsError.domain && lhsError.code == rhsError.code
@@ -519,10 +482,10 @@ enum CaptureError: LocalizedError, Equatable {
             return "The photo output could not be added to the capture session."
         case .noBayerFormatAvailable:
             return "No Bayer RAW format is available on this camera."
-        case .noProcessedCodecAvailable:
-            return "No supported processed photo codec is available on this camera."
         case .missingImageData:
             return "The captured photo contains no image data."
+        case .captureFailed(let error):
+            return "The photo could not be captured: \(error.localizedDescription)"
         case .unsupportedPlatform:
             return "Camera capture is only supported on iPhone."
         case .sessionNotConfigured:

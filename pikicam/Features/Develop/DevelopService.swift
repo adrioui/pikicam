@@ -5,9 +5,13 @@ import Metal
 
 // MARK: - DevelopService
 
-/// Develops a RAW DNG into a viewable JPEG with all computational
-/// photography disabled (zero-process). Owns the Metal-backed `CIContext`
-/// that turns `CIImage`s into encoded bytes.
+/// Renders a RAW DNG into a transient in-memory display rendition with all
+/// computational photography disabled (zero-process). Owns the Metal-backed
+/// `CIContext` that turns `CIImage`s into display-ready bitmaps.
+///
+/// DevelopService is used only for transient full-screen rendering of the
+/// original DNG. Nothing here is persisted: no JPEG is encoded and no file
+/// is written.
 actor DevelopService {
 
     private let processor: RAWProcessor
@@ -28,31 +32,29 @@ actor DevelopService {
         }
     }
 
-    // MARK: - Development
+    // MARK: - Rendering
 
-    /// Develops a RAW DNG into a JPEG, cropped to the framing zoom and
-    /// aspect ratio, then rotated to match the device's physical orientation.
+    /// Renders a RAW DNG into a transient display rendition.
+    ///
+    /// The DNG is developed with the zero-process recipe and rotated to match
+    /// the device's physical orientation. The DNG is always the full-sensor
+    /// original; no crop is applied. The result is in-memory only — it is for
+    /// transient UI display and is never encoded to JPEG or persisted.
     ///
     /// - Parameter dngData: The DNG bytes from `AVCapturePhoto.rawFileDataRepresentation()`.
-    /// - Parameter cropFactor: The zoom factor the capture was framed at (≥ 1.0).
-    ///   The DNG is full-sensor; cropping the print reproduces the framing.
-    /// - Parameter aspect: Output aspect ratio of the print.
     /// - Parameter orientation: The physical orientation at capture time. Must
     ///   be passed in by the caller (which lives on the main actor) so this
     ///   background actor never reads `UIDevice`.
-    /// - Returns: JPEG data and the rotated, cropped `CIImage`.
-    func develop(
+    /// - Returns: A transient display rendition.
+    /// - Throws: `DevelopError` if processing fails.
+    func render(
         dngData: Data,
-        mode: CaptureMode = .zero,
-        cropFactor: CGFloat = 1.0,
-        aspect: AspectRatio = .ratio4x3,
         orientation: CaptureOrientation = .up
-    ) async throws -> DevelopResult {
-        let ciImage = try processor.develop(dngData: dngData, mode: mode)
-        let framed = ciImage.cropped(to: PrintCrop.rect(in: ciImage.extent, zoomFactor: cropFactor, aspect: aspect))
-        let oriented = Self.apply(orientation: orientation, to: framed)
-        let jpegData = try encodeJPEG(oriented)
-        return DevelopResult(jpegData: jpegData, ciImage: oriented)
+    ) async throws -> DNGDisplayRendition {
+        let ciImage = try processor.develop(dngData: dngData)
+        let oriented = Self.apply(orientation: orientation, to: ciImage)
+        let cgImage = try renderBitmap(of: oriented)
+        return DNGDisplayRendition(ciImage: oriented, cgImage: cgImage)
     }
 
     private static func apply(orientation: CaptureOrientation, to image: CIImage) -> CIImage {
@@ -63,11 +65,14 @@ actor DevelopService {
         return filter?.outputImage ?? image
     }
 
-    private func encodeJPEG(_ ciImage: CIImage) throws -> Data {
-        guard let jpegData = ciContext.jpegRepresentation(of: ciImage, colorSpace: colorSpace, options: [:]) else {
-            throw DevelopError.jpegEncodingFailed
+    /// Renders the image to a display bitmap in the pipeline's color space.
+    ///
+    /// All `CIContext` use happens here, inside the actor, off-main.
+    private func renderBitmap(of ciImage: CIImage) throws -> CGImage {
+        guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
+            throw DevelopError.renderingFailed
         }
-        return jpegData
+        return cgImage
     }
 }
 

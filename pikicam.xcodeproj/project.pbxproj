@@ -31,6 +31,8 @@
 	NEW05BUILD /* VolumeButtonCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW05 /* VolumeButtonCaptureView.swift */; };
 	NEW07BUILD /* CameraControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = NEW07 /* CameraControlTests.swift */; };
 	UITSBUILD1 /* SmokeLaunchTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = UITSFILE01 /* SmokeLaunchTest.swift */; };
+	E71890013007CACA00C573A7BUILD /* PikicamLibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71890013007CACA00C573A7 /* PikicamLibraryModel.swift */; };
+	E71890023007CACA00C573A7BUILD /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71890023007CACA00C573A7 /* GalleryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +63,8 @@
 	NEW04 /* GridOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/GridOverlayView.swift"; sourceTree = "<group>"; };
 	NEW05 /* VolumeButtonCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "pikicam/Features/Camera/VolumeButtonCaptureView.swift"; sourceTree = "<group>"; };
 	NEW07 /* CameraControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraControlTests.swift"; sourceTree = "<group>"; };
+	E71890013007CACA00C573A7 /* PikicamLibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamLibraryModel.swift; sourceTree = "<group>"; };
+	E71890023007CACA00C573A7 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,10 +161,20 @@
 			path = Develop;
 			sourceTree = "<group>";
 		};
-		E71888643007CACA00C573A7 /* Features */ = {
+			E71890033007CACA00C573A7 /* Gallery */ = {
+			isa = PBXGroup;
+		children = (
+			E71890013007CACA00C573A7 /* PikicamLibraryModel.swift */,
+			E71890023007CACA00C573A7 /* GalleryView.swift */,
+		);
+		path = Gallery;
+		sourceTree = "<group>";
+	};
+	E71888643007CACA00C573A7 /* Features */ = {
 			isa = PBXGroup;
 			children = (
 				E718884B3007CACA00C573A7 /* Camera */,
+				E71890033007CACA00C573A7 /* Gallery */,
 				E71888543007CACA00C573A7 /* Develop */,
 			);
 			path = Features;
@@ -401,6 +415,8 @@
 				NEW03BUILD /* ZoomIndicatorView.swift in Sources */,
 				NEW04BUILD /* GridOverlayView.swift in Sources */,
 				NEW05BUILD /* VolumeButtonCaptureView.swift in Sources */,
+				E71890013007CACA00C573A7BUILD /* PikicamLibraryModel.swift in Sources */,
+				E71890023007CACA00C573A7BUILD /* GalleryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,9 +563,9 @@
 				DEVELOPMENT_TEAM = V7BF8622ZR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "pikicam needs camera access to capture photos.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "pikicam saves captured photos to your photo library.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "pikicam accesses your photo library for saved captures.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "pikicam needs camera access to capture DNG raw photos with zero computational processing.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "pikicam saves the DNG photos you capture to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "pikicam accesses your photo library to show and manage the DNG photos you capture.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -582,9 +598,9 @@
 				DEVELOPMENT_TEAM = V7BF8622ZR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "pikicam needs camera access to capture photos.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "pikicam saves captured photos to your photo library.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "pikicam accesses your photo library for saved captures.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "pikicam needs camera access to capture DNG raw photos with zero computational processing.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "pikicam saves the DNG photos you capture to your photo library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "pikicam accesses your photo library to show and manage the DNG photos you capture.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

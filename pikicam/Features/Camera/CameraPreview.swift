@@ -4,15 +4,12 @@ import AVFoundation
 /// A SwiftUI `UIViewRepresentable` wrapping `PreviewView` for the live
 /// camera preview.
 ///
-/// Bridges the UIKit-based `AVCaptureVideoPreviewLayer` into the SwiftUI
-/// view hierarchy. This approach is preferred over rendering preview frames
-/// via `CIImage` because the system preview layer provides:
-/// - Best performance and battery life
-/// - Automatic HDR tone-mapping
-/// - Deferred Start support (iOS 26+)
-/// - No CPU/GPU overhead for preview rendering
+/// Bridges the UIKit-based `AVCaptureVideoPreviewLayer` into SwiftUI.
+/// The preview always displays the full 4:3 sensor feed; framing (Photo vs
+/// Square) is a SwiftUI compositional mask over the same feed. No crop is
+/// applied to the capture pipeline and the DNG remains unchanged full-sensor.
 struct CameraPreview: UIViewRepresentable {
-    /// The capture session to display in the preview.
+    /// The capture session to display.
     let session: AVCaptureSession?
 
     /// The preview rotation angle in degrees.
@@ -31,9 +28,20 @@ struct CameraPreview: UIViewRepresentable {
         uiView.setVideoRotationAngle(rotationAngle)
     }
 
-    /// Disconnect the session when the view is removed to avoid
-    /// rendering artifacts.
+    /// Disconnect the session when the view is removed.
     static func dismantleUIView(_ uiView: PreviewView, coordinator: ()) {
         uiView.session = nil
+    }
+}
+
+extension PreviewView {
+    /// Converts a point in the view's coordinate space to the device's point of interest.
+    func devicePoint(for viewPoint: CGPoint) -> CGPoint {
+        previewLayer.captureDevicePointConverted(fromLayerPoint: viewPoint)
+    }
+
+    /// Converts a capture device point of interest to the view's point.
+    func layerPoint(for devicePoint: CGPoint) -> CGPoint {
+        previewLayer.layerPointConverted(fromCaptureDevicePoint: devicePoint)
     }
 }

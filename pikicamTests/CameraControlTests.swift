@@ -106,18 +106,7 @@ final class CameraControlTests: XCTestCase {
         XCTAssertEqual(rect.maxY, 2250, accuracy: 0.0001)
     }
 
-    func testCropRectPreservesAspectRatio() {
-        let extent = CGRect(x: 0, y: 0, width: 4032, height: 3024)
-        let rect = ZoomMath.cropRect(in: extent, for: 2.5)
-        // The crop shrinks both axes by the same factor, so the aspect ratio
-        // of the framed print matches the composition the user saw.
-        XCTAssertEqual(
-            rect.width / rect.height,
-            extent.width / extent.height,
-            accuracy: 0.0001
-        )
-    }
-
+    
     func testCropRectStaysInsideTheSensorExtent() {
         let extent = CGRect(x: 0, y: 0, width: 4032, height: 3024)
         for factor: CGFloat in [1.5, 2.0, 3.0, 5.0] {
@@ -174,40 +163,6 @@ final class CameraControlTests: XCTestCase {
         // Face-up/face-down/unknown → portrait (safe default).
         XCTAssertEqual(CaptureOrientation(orientation: .faceUp), .up)
         XCTAssertEqual(CaptureOrientation(orientation: .unknown), .up)
-    }
-
-    // MARK: - Aspect ratio
-
-    func testAspectRatioCycleIsClosed() {
-        var a = AspectRatio.ratio4x3
-        for _ in 0..<(AspectRatio.allCases.count * 2) { a = a.next() }
-        XCTAssertEqual(a, .ratio4x3)
-    }
-
-    func testAspectRatioRatiosAreCorrect() {
-        XCTAssertEqual(AspectRatio.ratio4x3.ratio, 4.0 / 3.0, accuracy: 0.0001)
-        XCTAssertEqual(AspectRatio.ratio16x9.ratio, 16.0 / 9.0, accuracy: 0.0001)
-        XCTAssertEqual(AspectRatio.ratio1x1.ratio, 1.0, accuracy: 0.0001)
-    }
-
-    func testPrintCropIntersectsZoomAndAspect() {
-        let sensor = CGRect(x: 0, y: 0, width: 4000, height: 3000) // 4:3
-        // 16:9 aspect on a 4:3 sensor → width-bound: keeps full sensor width,
-        // crops top/bottom (iOS Camera photo convention).
-        let crop = PrintCrop.rect(in: sensor, zoomFactor: 1.0, aspect: .ratio16x9)
-        XCTAssertEqual(crop.width, sensor.width)
-        XCTAssertEqual(crop.height, sensor.width / (16.0 / 9.0), accuracy: 0.0001)
-        XCTAssertTrue(sensor.contains(crop))
-        XCTAssertEqual(crop.midX, sensor.midX, accuracy: 0.0001)
-        XCTAssertEqual(crop.midY, sensor.midY, accuracy: 0.0001)
-    }
-
-    func testPrintCropAppliesZoomInsideAspectRect() {
-        let sensor = CGRect(x: 0, y: 0, width: 4000, height: 3000)
-        let crop = PrintCrop.rect(in: sensor, zoomFactor: 2.0, aspect: .ratio1x1)
-        XCTAssertEqual(crop.width, sensor.height / 2, accuracy: 0.0001) // 1:1 square, 2x zoom
-        XCTAssertEqual(crop.height, sensor.height / 2, accuracy: 0.0001)
-        XCTAssertTrue(sensor.contains(crop))
     }
 
     // MARK: - Exposure compensation
