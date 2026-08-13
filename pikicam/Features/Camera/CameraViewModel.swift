@@ -29,7 +29,13 @@ final class CameraViewModel {
     }
 
     let captureService = CaptureService()
-    let libraryModel = PikicamLibraryModel()
+    let libraryModel: PikicamLibraryModel
+
+    init(libraryModel: PikicamLibraryModel) {
+        self.libraryModel = libraryModel
+        cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+    }
 
     // Authorization
     private(set) var cameraAuthStatus: AVAuthorizationStatus = .notDetermined
@@ -62,10 +68,6 @@ final class CameraViewModel {
     private(set) var selfTimerRemaining: Int = 0
     private var selfTimerTask: Task<Void, Never>?
 
-    init() {
-        cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
-        photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-    }
 
     // MARK: - Authorization
 
@@ -168,6 +170,7 @@ final class CameraViewModel {
         }
     }
 
+
     func toggleGrid() {
         guard phase == .idle else { return }
         showsGrid.toggle()
@@ -177,6 +180,11 @@ final class CameraViewModel {
         guard phase == .idle else { return }
         framingMode = framingMode.next()
     }
+    func setFramingMode(_ mode: FramingMode) {
+        guard phase == .idle else { return }
+        framingMode = mode
+    }
+
 
     func cycleExposureCompensation() {
         guard phase == .idle else { return }

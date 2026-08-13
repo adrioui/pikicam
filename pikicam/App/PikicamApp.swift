@@ -7,8 +7,14 @@ import SwiftUI
 /// film-like images.
 @main
 struct PikicamApp: App {
-    @State private var cameraViewModel = CameraViewModel()
-    @State private var libraryModel = PikicamLibraryModel()
+    @State private var cameraViewModel: CameraViewModel
+    @State private var libraryModel: PikicamLibraryModel
+
+    init() {
+        let library = PikicamLibraryModel()
+        _libraryModel = State(initialValue: library)
+        _cameraViewModel = State(initialValue: CameraViewModel(libraryModel: library))
+    }
 
     var body: some Scene {
         WindowGroup {
