@@ -20,6 +20,7 @@ struct RootView: View {
                 PermissionsDeniedView()
             } else {
                 CameraView()
+                    // Gallery entry via lower-left thumbnail overlay on CameraView
             }
         }
         .task {

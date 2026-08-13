@@ -3,33 +3,33 @@ import SwiftUI
 import AVFoundation
 import Photos
 
-// MARK: - ReviewResult
-
-/// The artifact shown in the post-capture review overlay. Carries both
-/// asset identifiers so the overlay can delete them on demand.
-struct ReviewResult: Sendable {
-    let jpegData: Data
-    let captureZoom: CGFloat
-    let timestamp: Date
-    let savedAssets: SavedAssets
-}
-
-/// The local identifiers of the two assets saved to Photos for a capture.
-struct SavedAssets: Sendable {
-    let printID: String
-    let rawID: String?
-}
-
 // MARK: - CameraViewModel
 
-/// Owns the camera UI state and orchestrates capture → develop → save.
+/// Owns the camera UI state and orchestrates capture → single DNG save.
+///
+/// The camera has one mutually exclusive phase — `idle`, `countdown`,
+/// `capturing`, or `savingDNG` — so a second shutter action can never start
+/// a duplicate capture while one is in flight. Saving persists exactly one
+/// unchanged full-sensor DNG through `PhotoLibraryManager`; the latest
+/// capture is published only after the Photos commit succeeds.
 @MainActor
 @Observable
 final class CameraViewModel {
 
+    /// The single observable camera phase. Exactly one is active at a time.
+    enum Phase: Equatable, Sendable {
+        /// No capture activity; the shutter can start one.
+        case idle
+        /// The self-timer is counting down; the shutter cancels it.
+        case countdown
+        /// The sensor exposure is in flight.
+        case capturing
+        /// The captured DNG is being committed to Photos.
+        case savingDNG
+    }
+
     let captureService = CaptureService()
-    let developService: DevelopService
-    let storageService = StorageService()
+    let libraryModel = PikicamLibraryModel()
 
     // Authorization
     private(set) var cameraAuthStatus: AVAuthorizationStatus = .notDetermined
@@ -43,17 +43,16 @@ final class CameraViewModel {
     private(set) var isConfigured = false
     private(set) var error: Error?
 
-    // Capture
-    private(set) var isCapturing = false
-    private(set) var lastReviewResult: ReviewResult?
+    // Capture phase
+    private(set) var phase: Phase = .idle
+    private var captureTask: Task<Void, Never>?
 
     // Camera controls
     private(set) var cameraPosition: CameraPosition = .back
     private(set) var flashMode: FlashMode = .off
     private(set) var flashAvailable = false
-    var isRAWEnabled: Bool = true
+    var framingMode: FramingMode = .photo
     var showsGrid = false
-    var aspectRatio: AspectRatio = .ratio4x3
     var exposureCompensation: ExposureCompensation = .zero
     private(set) var zoomFactor: CGFloat = 1.0
     private(set) var zoomRange: ClosedRange<CGFloat> = 1.0...1.0
@@ -64,12 +63,16 @@ final class CameraViewModel {
     private var selfTimerTask: Task<Void, Never>?
 
     init() {
-        self.developService = DevelopService()
         cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
         photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }
 
     // MARK: - Authorization
+
+    /// Re-reads the current camera authorization without prompting.
+    func refreshCameraAuthorization() {
+        cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
+    }
 
     @discardableResult
     func requestCameraAccess() async -> Bool {
@@ -115,6 +118,7 @@ final class CameraViewModel {
 
     func stop() async {
         selfTimerTask?.cancel()
+        cancelCapture()
         await captureService.stopSession()
         isSessionRunning = false
     }
@@ -129,9 +133,11 @@ final class CameraViewModel {
     // MARK: - Camera Controls
 
     func toggleCamera() async {
+        guard phase == .idle else { return }
         do {
             cameraPosition = try await captureService.toggleCamera()
             zoomFactor = 1.0
+            exposureCompensation = .zero
             await refreshCameraControlState()
         } catch {
             self.error = error
@@ -139,6 +145,7 @@ final class CameraViewModel {
     }
 
     func cycleFlash() async {
+        guard phase == .idle else { return }
         do {
             flashMode = try await captureService.cycleFlash()
         } catch {
@@ -151,7 +158,7 @@ final class CameraViewModel {
     /// ≥ 1× run at 1× internally and restore the framing immediately
     /// (`CaptureService.capturePhoto`).
     func setZoom(_ factor: CGFloat) async {
-        guard !isCapturing else { return }
+        guard phase == .idle else { return }
         let clamped = ZoomMath.clamped(factor, range: zoomRange)
         guard clamped != zoomFactor else { return }
         do {
@@ -161,30 +168,25 @@ final class CameraViewModel {
         }
     }
 
-    func toggleGrid() { showsGrid.toggle() }
-    func toggleRAW() { isRAWEnabled.toggle() }
-    func cycleAspectRatio() { aspectRatio = aspectRatio.next() }
+    func toggleGrid() {
+        guard phase == .idle else { return }
+        showsGrid.toggle()
+    }
 
-    /// Deletes the print and (if present) DNG asset for the last capture and
-    /// dismisses the review overlay.
-    func deleteLastCapture() {
-        guard let review = lastReviewResult else { return }
-        let assets = review.savedAssets
-        lastReviewResult = nil
-        Task { try? await storageService.deletePair(printID: assets.printID, rawID: assets.rawID) }
+    func cycleFramingMode() {
+        guard phase == .idle else { return }
+        framingMode = framingMode.next()
     }
 
     func cycleExposureCompensation() {
+        guard phase == .idle else { return }
         exposureCompensation = exposureCompensation.next()
         Task { try? await captureService.setExposureBias(exposureCompensation.stops) }
     }
 
-    func clearReview() { lastReviewResult = nil }
-
-    /// Deletes the print and (if present) DNG asset for the last capture and
-    /// dismisses the review overlay.
     /// Cycles self-timer off → 3s → 10s → off. Cancels any in-flight countdown.
     func cycleSelfTimer() {
+        guard phase == .idle else { return }
         selfTimerTask?.cancel()
         selfTimerRemaining = 0
         selfTimer = selfTimer.next()
@@ -192,56 +194,54 @@ final class CameraViewModel {
 
     /// Cancels an in-flight self-timer countdown (e.g. on shutter cancel).
     func cancelSelfTimer() {
+        guard phase == .countdown else { return }
         selfTimerTask?.cancel()
         selfTimerRemaining = 0
+        phase = .idle
     }
 
     // MARK: - Capture Pipeline
 
-    /// Capture → develop → save. If the self-timer is non-zero, waits for the
-    /// countdown first (with cancel support).
-    func capture() async {
-        guard !isCapturing, isConfigured else { return }
-        if selfTimer != .off {
-            await runSelfTimerCountdown()
-        }
-        guard !isCapturing else { return } // cancelled during countdown
-
-        isCapturing = true
-        defer { isCapturing = false }
-
-        do {
-            let photoResult = try await captureService.capturePhoto()
-            let orientation = CaptureOrientation(orientation: UIDevice.current.orientation)
-            let developResult = try await developService.develop(
-                dngData: photoResult.rawData,
-                cropFactor: photoResult.captureZoom,
-                aspect: aspectRatio,
-                orientation: orientation
-            )
-            let savedAssets: SavedAssets
-            if isRAWEnabled {
-                let (printID, rawID) = try await storageService.savePair(
-                    processedData: developResult.jpegData,
-                    rawData: photoResult.rawData
-                )
-                savedAssets = SavedAssets(printID: printID, rawID: rawID)
-            } else {
-                let printID = try await storageService.savePrintOnly(processedData: developResult.jpegData)
-                savedAssets = SavedAssets(printID: printID, rawID: nil)
-            }
-            lastReviewResult = ReviewResult(
-                jpegData: developResult.jpegData,
-                captureZoom: photoResult.captureZoom,
-                timestamp: Date(),
-                savedAssets: savedAssets
-            )
-        } catch {
-            self.error = error
+    /// Begins the shutter operation: countdown (if armed) → capture → single
+    /// DNG save. Mutually exclusive with any in-flight phase; a second shutter
+    /// while `countdown` cancels the countdown instead.
+    func capture() {
+        switch phase {
+        case .countdown:
+            cancelSelfTimer()
+        case .idle:
+            guard isConfigured else { return }
+            captureTask = Task { await runCapture() }
+        case .capturing, .savingDNG:
+            break // never starts a duplicate
         }
     }
 
+    private func runCapture() async {
+        if selfTimer != .off {
+            await runSelfTimerCountdown()
+        }
+        guard !Task.isCancelled, phase == .idle else { return }
+
+        phase = .capturing
+        do {
+            let dng = try await captureService.capturePhoto()
+            phase = .savingDNG
+            let capture = try await libraryModel.save(dng.data)
+            libraryModel.select(capture)
+            // Publish the latest capture only after the Photos commit.
+            
+            // Brief restrained capture feedback; state returns to idle.
+            phase = .idle
+        } catch {
+            self.error = error
+            phase = .idle
+        }
+        captureTask = nil
+    }
+
     private func runSelfTimerCountdown() async {
+        phase = .countdown
         selfTimerRemaining = selfTimer.seconds
         selfTimerTask = Task { @MainActor [weak self] in
             guard let self else { return }
@@ -252,6 +252,15 @@ final class CameraViewModel {
             }
         }
         await selfTimerTask?.value
+        if phase == .countdown, selfTimerRemaining == 0 {
+            phase = .idle
+        }
+    }
+
+    private func cancelCapture() {
+        captureTask?.cancel()
+        captureTask = nil
+        phase = .idle
     }
 }
 

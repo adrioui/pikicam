@@ -5,9 +5,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>pikicam needs camera access to capture Bayer RAW photos with zero computational processing.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>pikicam saves captured DNG negatives and developed JPEG/HEIC prints to your photo library.</string>
+	<string>pikicam saves captured full-sensor DNG photos to your photo library.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>pikicam adds captured DNG and JPEG/HEIC files to your photo library.</string>
+	<string>pikicam adds captured DNG files to your photo library.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

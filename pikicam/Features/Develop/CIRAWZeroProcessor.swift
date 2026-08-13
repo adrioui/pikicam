@@ -22,27 +22,23 @@ import CoreImage
 /// - No lens correction (`isLensCorrectionEnabled = false`)
 /// - No gamut mapping (`isGamutMappingEnabled = false`)
 ///
-/// ## Phase 2 Note
-/// This processor will be replaced by a custom Metal-based pipeline that
-/// gives us full control over demosaic, color matrix application, and tone
-/// curve. Until then, this provides an honest "Apple-but-naked" rendering.
+/// Zero-process is the only recipe; there are no development modes.
 nonisolated struct CIRAWZeroProcessor: RAWProcessor {
 
     // MARK: - RAWProcessor
 
-    /// Develops DNG data into a CIImage using the specified mode.
+    /// Develops DNG data into a CIImage using the zero-process recipe.
     ///
-    /// - Parameters:
-    ///   - dngData: Raw DNG file data from the capture pipeline.
-    ///   - mode: The capture mode (zero, standard, rawOnly).
-    /// - Returns: A CIImage rendered with the chosen processing recipe.
-    /// - Throws: `DevelopError` if the filter cannot be created or has no output.
-    func develop(dngData: Data, mode: CaptureMode) throws -> CIImage {
+    /// - Parameter dngData: Raw DNG file data from the capture pipeline.
+    /// - Returns: A CIImage rendered with the zero-process recipe.
+    /// - Throws: `DevelopError` if the filter cannot be created, a required
+    ///   control is unsupported on this runtime, or the filter has no output.
+    func develop(dngData: Data) throws -> CIImage {
         guard let filter = CIRAWFilter(imageData: dngData) else {
             throw DevelopError.filterCreationFailed
         }
 
-        applyZeroRecipe(filter, mode: mode)
+        try applyZeroRecipe(filter)
 
         guard let outputImage = filter.outputImage else {
             throw DevelopError.renderingFailed
@@ -53,50 +49,41 @@ nonisolated struct CIRAWZeroProcessor: RAWProcessor {
 
     // MARK: - Zero Recipe
 
-    /// Applies the zero-process recipe to a CIRAWFilter.
+    /// Applies the zero-process recipe to a CIRAWFilter: every enhancement
+    /// knob zeroed or disabled explicitly.
     ///
-    /// In **Zero** mode, every enhancement knob is zeroed explicitly.
-    /// In **Standard** mode, Apple's defaults are left as-is.
-    /// In **RAW Only** mode, the zero recipe is used for preview.
+    /// Each control is set through its typed `CIRAWFilter` property. The
+    /// setter selector is verified with `responds(to:)` before assignment:
+    /// some runtimes (notably the iOS Simulator's `CIRAWFilterImpl`) do not
+    /// implement every control and would raise `NSInvalidArgumentException`
+    /// on set. An unsupported control is a hard, typed error — the recipe
+    /// must be complete or fail loudly; it is never silently skipped.
     ///
-    /// Each knob is applied through `apply(_:_:_:)`, which gates the setter on
-    /// `responds(to:)`: the iOS Simulator's `CIRAWFilterImpl` does not implement
-    /// most of these selectors (it raises `NSInvalidArgumentException` on
-    /// `setBaselineExposure:`, `setExposure:`, etc.). On runtimes that lack a
-    /// setter we skip it and keep the filter/`DNG` default, which is already the
-    /// closest honest "zero" behavior available there.
-    private func applyZeroRecipe(_ filter: CIRAWFilter, mode: CaptureMode) {
-        switch mode {
-        case .zero, .rawOnly:
-            // The defining recipe: every subjective knob at zero.
-            apply(filter, "baselineExposure", 0.0)
-            apply(filter, "exposure", 0.0)
-            apply(filter, "boostAmount", 0.0)
-            apply(filter, "shadowBias", 0.0)
-            apply(filter, "localToneMapAmount", 0.0)
-            apply(filter, "luminanceNoiseReductionAmount", 0.0)
-            apply(filter, "sharpnessAmount", 0.0)
-            apply(filter, "contrastAmount", 0.0)
-            apply(filter, "isLensCorrectionEnabled", false)
-            apply(filter, "isGamutMappingEnabled", false)
-
-            // White balance: use AsShot neutral (the DNG's recommended values).
-            // The filter defaults to AsShot, so we leave temperature/tint at defaults.
-
-        case .standard:
-            // Apple's default processing — leave everything at filter defaults.
-            // This serves as a comparison baseline for the zero mode.
-            break
-        }
+    /// White balance is left at the DNG's AsShot neutral (the filter's
+    /// default): temperature/tint are not subjective knobs.
+    private func applyZeroRecipe(_ filter: CIRAWFilter) throws {
+        try apply(filter, "baselineExposure") { filter.baselineExposure = 0.0 }
+        try apply(filter, "exposure") { filter.exposure = 0.0 }
+        try apply(filter, "boostAmount") { filter.boostAmount = 0.0 }
+        try apply(filter, "shadowBias") { filter.shadowBias = 0.0 }
+        try apply(filter, "localToneMapAmount") { filter.localToneMapAmount = 0.0 }
+        try apply(filter, "luminanceNoiseReductionAmount") { filter.luminanceNoiseReductionAmount = 0.0 }
+        try apply(filter, "sharpnessAmount") { filter.sharpnessAmount = 0.0 }
+        try apply(filter, "contrastAmount") { filter.contrastAmount = 0.0 }
+        try apply(filter, "isLensCorrectionEnabled") { filter.isLensCorrectionEnabled = false }
+        try apply(filter, "isGamutMappingEnabled") { filter.isGamutMappingEnabled = false }
     }
 
-    /// Sets `value` for a `CIRAWFilter` readwrite property, skipping the call on
-    /// runtimes whose private `CIRAWFilter` implementation does not implement the
-    /// corresponding setter (notably the iOS Simulator).
-    private func apply(_ filter: CIRAWFilter, _ key: String, _ value: Any) {
-        let setter = "set" + key.prefix(1).uppercased() + key.dropFirst() + ":"
-        if filter.responds(to: Selector(setter)) {
-            filter.setValue(value, forKey: key)
+    /// Assigns a `CIRAWFilter` control through its typed property, verifying
+    /// the runtime implements the setter first.
+    ///
+    /// - Throws: `DevelopError.unsupportedControl` if the runtime does not
+    ///   implement the control's setter (e.g. the iOS Simulator).
+    private func apply(_ filter: CIRAWFilter, _ control: String, _ assign: () -> Void) throws {
+        let setter = Selector("set" + control.prefix(1).uppercased() + control.dropFirst() + ":")
+        guard filter.responds(to: setter) else {
+            throw DevelopError.unsupportedControl(control)
         }
+        assign()
     }
 }

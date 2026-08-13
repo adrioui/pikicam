@@ -8,11 +8,13 @@ import SwiftUI
 @main
 struct PikicamApp: App {
     @State private var cameraViewModel = CameraViewModel()
+    @State private var libraryModel = PikicamLibraryModel()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(cameraViewModel)
+                .environment(libraryModel)
                 .preferredColorScheme(.dark)
         }
     }

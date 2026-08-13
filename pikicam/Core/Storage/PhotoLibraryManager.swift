@@ -1,156 +1,830 @@
 import Photos
+import UIKit
 import UniformTypeIdentifiers
 
-// MARK: - StorageService
+// MARK: - Public Value Types
 
-/// Saves pikicam captures to the user's Photos library.
-///
-/// iOS 26.6 rejects the `.alternatePhoto` pairing layout
-/// (`PHPhotosErrorChangeNotSupported` / 3300), so the DNG and the print
-/// are saved as two independent `.photo` resources in a single
-/// `performChanges` batch.
-actor StorageService {
+/// The immutable output of a capture: full-sensor DNG bytes plus the moment
+/// they were captured. Exactly one such payload becomes exactly one Photos
+/// asset with a single `.photo` DNG resource — nothing else is persisted.
+public struct CapturedDNG: Equatable, Sendable {
+    public let data: Data
+    public let capturedAt: Date
 
-    // MARK: - Save
-
-    /// Saves the developed print and its raw DNG companion as two separate
-    /// Photos assets.
-    ///
-    /// - Returns: `(printLocalID, rawLocalID)` — both non-empty on success.
-    /// - Throws: `StorageServiceError` if the save fails.
-    @discardableResult
-    func savePair(
-        processedData: Data,
-        rawData: Data,
-        identifier: String = UUID().uuidString,
-        codec: UTType = .jpeg
-    ) async throws -> (String, String) {
-        try await checkAuthorization()
-        let (printID, rawID) = try await performChanges(
-            printData: processedData, rawData: rawData, identifier: identifier, codec: codec
-        )
-        guard let rawID else {
-            throw StorageServiceError.unknownSaveFailure
-        }
-        return (printID, rawID)
-    }
-
-    /// Saves only the developed print (RAW output is disabled).
-    ///
-    /// - Returns: The print asset's local identifier.
-    /// - Throws: `StorageServiceError` if the save fails.
-    @discardableResult
-    func savePrintOnly(
-        processedData: Data,
-        identifier: String = UUID().uuidString,
-        codec: UTType = .jpeg
-    ) async throws -> String {
-        try await checkAuthorization()
-        let (printID, _) = try await performChanges(printData: processedData, rawData: nil, identifier: identifier, codec: codec)
-        return printID
-    }
-
-    /// Deletes the print and (if present) the DNG asset from the Photos
-    /// library. Missing assets are skipped — no error.
-    func deletePair(printID: String, rawID: String?) async throws {
-        try await checkAuthorization()
-        let ids = [printID, rawID].compactMap { $0 }
-        let assets = PHAsset.fetchAssets(withLocalIdentifiers: ids, options: nil)
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            PHPhotoLibrary.shared().performChanges {
-                PHAssetChangeRequest.deleteAssets(assets)
-            } completionHandler: { _, error in
-                if let error {
-                    continuation.resume(throwing: StorageServiceError.deleteFailed(underlying: error))
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
-    }
-
-    // MARK: - Private
-
-    private func checkAuthorization() throws {
-        guard PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized else {
-            throw StorageServiceError.insufficientPermissions(status: PHPhotoLibrary.authorizationStatus(for: .readWrite))
-        }
-    }
-
-    /// Performs a single `performChanges` batch creating one or two assets.
-    /// When `rawData` is nil, only the print asset is created.
-    private func performChanges(
-        printData: Data,
-        rawData: Data?,
-        identifier: String,
-        codec: UTType
-    ) async throws -> (String, String?) {
-        try await withCheckedThrowingContinuation { continuation in
-            let printStore = AssetPlaceholderStore()
-            let rawStore = AssetPlaceholderStore()
-
-            PHPhotoLibrary.shared().performChanges {
-                let printReq = PHAssetCreationRequest.forAsset()
-                let printOptions = PHAssetResourceCreationOptions()
-                printOptions.originalFilename = "\(identifier).\(Self.fileExtension(for: codec))"
-                printOptions.uniformTypeIdentifier = codec.identifier
-                printReq.addResource(with: .photo, data: printData, options: printOptions)
-                printStore.localIdentifier = printReq.placeholderForCreatedAsset?.localIdentifier
-
-                if let rawData {
-                    let rawReq = PHAssetCreationRequest.forAsset()
-                    let rawOptions = PHAssetResourceCreationOptions()
-                    rawOptions.originalFilename = "\(identifier).dng"
-                    rawOptions.uniformTypeIdentifier = UTType(filenameExtension: "dng")?.identifier
-                        ?? "com.adobe.raw-image"
-                    rawReq.addResource(with: .photo, data: rawData, options: rawOptions)
-                    rawStore.localIdentifier = rawReq.placeholderForCreatedAsset?.localIdentifier
-                }
-
-            } completionHandler: { success, error in
-                if let error {
-                    continuation.resume(throwing: StorageServiceError.saveFailed(underlying: error))
-                } else if let p = printStore.localIdentifier {
-                    continuation.resume(returning: (p, rawStore.localIdentifier))
-                } else {
-                    continuation.resume(throwing: StorageServiceError.unknownSaveFailure)
-                }
-            }
-        }
-    }
-
-    private static func fileExtension(for codec: UTType) -> String {
-        switch codec {
-        case .jpeg: return "jpg"
-        case .heic: return "heic"
-        case .tiff: return "tiff"
-        default: return "jpg"
-        }
+    public init(data: Data, capturedAt: Date) {
+        self.data = data
+        self.capturedAt = capturedAt
     }
 }
 
-private nonisolated final class AssetPlaceholderStore: @unchecked Sendable {
-    var localIdentifier: String?
+/// Stable identifier for a pikicam capture, generated by
+/// `PhotoLibraryManager` before persistence. The gallery selects and pages by
+/// this value, never by an array index.
+public struct CaptureID: Codable, Hashable, Sendable {
+    public let uuid: UUID
+
+    public init() {
+        self.uuid = UUID()
+    }
+
+    public init(uuid: UUID) {
+        self.uuid = uuid
+    }
+}
+
+extension CaptureID: CustomStringConvertible {
+    public var description: String { uuid.uuidString }
+}
+
+/// Codable, Sendable wrapper around `PHAsset.localIdentifier`. `PHAsset`
+/// objects never cross the storage boundary; this value does.
+public struct PhotoAssetID: Codable, Hashable, Sendable {
+    public let localIdentifier: String
+
+    public init(localIdentifier: String) {
+        self.localIdentifier = localIdentifier
+    }
+}
+
+extension PhotoAssetID: CustomStringConvertible {
+    public var description: String { localIdentifier }
+}
+
+/// The stable gallery read value: provenance plus current asset dimensions.
+public struct PikicamCapture: Codable, Hashable, Sendable {
+    public let id: CaptureID
+    public let assetID: PhotoAssetID
+    public let capturedAt: Date
+    public let pixelWidth: Int
+    public let pixelHeight: Int
+
+    public init(id: CaptureID, assetID: PhotoAssetID, capturedAt: Date, pixelWidth: Int, pixelHeight: Int) {
+        self.id = id
+        self.assetID = assetID
+        self.capturedAt = capturedAt
+        self.pixelWidth = pixelWidth
+        self.pixelHeight = pixelHeight
+    }
+}
+
+/// The photo-library authorization states `PhotoLibraryManager` exposes.
+/// Only `.authorized` and `.limited` are usable.
+public enum PhotoLibraryAuthorization: Hashable, Sendable {
+    case notDetermined
+    case restricted
+    case denied
+    case authorized
+    case limited
+
+    public var isUsable: Bool {
+        self == .authorized || self == .limited
+    }
+}
+
+/// Sendable, Equatable normalization of an arbitrary `NSError`. Raw `Error`
+/// values must not cross the actor boundary, so failures are carried as this
+/// value.
+public struct PhotoFailure: Equatable, Sendable {
+    public let domain: String
+    public let code: Int
+    public let message: String
+
+    public init(domain: String, code: Int, message: String) {
+        self.domain = domain
+        self.code = code
+        self.message = message
+    }
+
+    public init(_ error: Error) {
+        let nsError = error as NSError
+        self.init(domain: nsError.domain, code: nsError.code, message: nsError.localizedDescription)
+    }
 }
 
 // MARK: - Errors
 
-enum StorageServiceError: LocalizedError {
-    case insufficientPermissions(status: PHAuthorizationStatus)
-    case saveFailed(underlying: Error)
-    case unknownSaveFailure
-    case deleteFailed(underlying: Error)
+public enum PhotoLibraryError: LocalizedError, Equatable, Sendable {
+    case insufficientPermissions(PhotoLibraryAuthorization)
+    case saveFailed(PhotoFailure)
+    case indexReadFailed(PhotoFailure)
+    case indexWriteFailed(PhotoFailure)
+    case indexCommitFailed(PhotoFailure)
+    case indexRemovalFailed(PhotoFailure)
+    case indexInconsistent(CaptureID)
+    case deleteFailed(PhotoFailure)
+    case loadFailed(PhotoFailure)
+    case thumbnailFailed(PhotoFailure)
+    case assetUnavailable(PhotoAssetID)
+    case originalResourceUnavailable(PhotoAssetID)
+    case unknownFailure
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
-        case .insufficientPermissions(let status):
-            return "Photo library permission denied. Current status: \(status.rawValue)."
-        case .saveFailed(let error):
-            return "Failed to save photo: \(error.localizedDescription)"
-        case .unknownSaveFailure:
-            return "An unknown error occurred while saving the photo."
-        case .deleteFailed(let error):
-            return "Failed to delete photo: \(error.localizedDescription)"
+        case .insufficientPermissions(let authorization):
+            return "Photo library access is not available (current status: \(authorization))."
+        case .saveFailed(let failure):
+            return "Photos rejected the DNG save: \(failure.message)"
+        case .indexReadFailed:
+            return "The capture index could not be read."
+        case .indexWriteFailed:
+            return "The capture index could not be written."
+        case .indexCommitFailed:
+            return "The DNG was saved to Photos but the capture record could not be committed; it will be recovered on the next refresh."
+        case .indexRemovalFailed:
+            return "The asset was deleted from Photos but its capture record could not be removed; it will be reconciled on the next refresh."
+        case .indexInconsistent:
+            return "The capture index is inconsistent and the affected record stays hidden."
+        case .deleteFailed(let failure):
+            return "Photos rejected the deletion: \(failure.message)"
+        case .loadFailed(let failure):
+            return "Failed to load the original DNG: \(failure.message)"
+        case .thumbnailFailed(let failure):
+            return "Failed to render a thumbnail: \(failure.message)"
+        case .assetUnavailable(let assetID):
+            return "The photo asset \(assetID) is not available."
+        case .originalResourceUnavailable(let assetID):
+            return "The photo asset \(assetID) no longer exposes its original DNG resource."
+        case .unknownFailure:
+            return "An unknown failure occurred."
         }
+    }
+}
+
+// MARK: - PhotoLibraryManager
+
+/// The sole boundary for PhotoKit access, DNG persistence, indexed
+/// fetch/reconciliation, original-resource loading, transient image requests,
+/// deletion, and `PHPhotoLibraryChangeObserver` bridging.
+///
+/// Persistence model: PhotoKit is the authoritative store for DNG bytes and
+/// global deletion; a private versioned index in Application Support is
+/// authoritative only for pikicam provenance. A capture appears in the
+/// gallery only when a committed index record names its visible Photos asset
+/// and that asset still exposes the expected original DNG resource. No image
+/// bytes, thumbnails, `PHAsset` objects, album identifiers, or JPEGs enter
+/// the index, and `PHAsset`/`Error` values never leave this actor.
+actor PhotoLibraryManager {
+
+    // MARK: Stored State
+
+    private let invalidationStream: AsyncStream<Void>
+    private let invalidationContinuation: AsyncStream<Void>.Continuation
+    private let changeBridge: PhotoLibraryChangeBridge
+
+    private static let dngUTType: UTType = UTType(filenameExtension: "dng") ?? UTType("com.adobe.raw-image")!
+    private static let indexFileVersion = 1
+
+    public init() {
+        let (stream, continuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingNewest(1))
+        self.invalidationStream = stream
+        self.invalidationContinuation = continuation
+        // Initialize the bridge without capturing self; noteLibraryChange
+        // is called via the stored invalidation continuation, which is
+        // initialized before the bridge is registered.
+        let bridge = PhotoLibraryChangeBridge(onLibraryChange: { [continuation] in
+            continuation.yield(())
+        })
+        self.changeBridge = bridge
+        PHPhotoLibrary.shared().register(bridge)
+    }
+
+    deinit {
+        PHPhotoLibrary.shared().unregisterChangeObserver(changeBridge)
+    }
+
+    // MARK: Authorization
+
+    /// The current read-write authorization status, without prompting.
+    public func authorizationStatus() -> PhotoLibraryAuthorization {
+        Self.map(PHPhotoLibrary.authorizationStatus(for: .readWrite))
+    }
+
+    /// Prompts once for read-write access when the status is undetermined.
+    public func requestAuthorization() async -> PhotoLibraryAuthorization {
+        let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+        return Self.map(status)
+    }
+
+    private static func map(_ status: PHAuthorizationStatus) -> PhotoLibraryAuthorization {
+        switch status {
+        case .authorized: return .authorized
+        case .limited: return .limited
+        case .denied: return .denied
+        case .restricted: return .restricted
+        case .notDetermined: return .notDetermined
+        @unknown default: return .notDetermined
+        }
+    }
+
+    private func requireUsableAuthorization() throws -> PhotoLibraryAuthorization {
+        let authorization = authorizationStatus()
+        guard authorization.isUsable else {
+            throw PhotoLibraryError.insufficientPermissions(authorization)
+        }
+        return authorization
+    }
+
+    /// Like `requireUsableAuthorization()`, but prompts on `.notDetermined`
+    /// exactly once. Used only by `save`, where a persistence destination is
+    /// required for the capture to succeed.
+    private func requireUsableAuthorizationPromptingIfNeeded() async throws -> PhotoLibraryAuthorization {
+        var authorization = authorizationStatus()
+        if authorization == .notDetermined {
+            authorization = await requestAuthorization()
+        }
+        guard authorization.isUsable else {
+            throw PhotoLibraryError.insufficientPermissions(authorization)
+        }
+        return authorization
+    }
+
+    // MARK: Save
+
+    /// Persists exactly one full-sensor DNG as a single Photos asset.
+    ///
+    /// Journaled: a `pending` index record is written atomically before the
+    /// PhotoKit save, then atomically replaced by the `stored` record only
+    /// after Photos reports `success == true` with no error. A PhotoKit
+    /// failure removes the pending record; an index failure after a
+    /// successful Photos save leaves the pending record recoverable and
+    /// reports a typed partial outcome — the capture is never published
+    /// falsely.
+    public func save(_ dng: CapturedDNG) async throws -> PikicamCapture {
+        _ = try await requireUsableAuthorizationPromptingIfNeeded()
+
+        let captureID = CaptureID()
+        let filename = Self.originalFilename(for: captureID)
+        let pending = IndexRecord(captureID: captureID, capturedAt: dng.capturedAt, state: .pending(originalFilename: filename))
+
+        do {
+            var index = try loadIndex()
+            index.records.append(pending)
+            try saveIndex(index)
+        } catch {
+            throw PhotoLibraryError.indexWriteFailed(PhotoFailure(error))
+        }
+
+        let assetID: PhotoAssetID
+        do {
+            assetID = try await performDNGSave(data: dng.data, originalFilename: filename)
+        } catch {
+            // PhotoKit failed: the DNG never reached Photos, so the pending
+            // record is dropped. A secondary index failure is not reported —
+            // the primary save error is the truth.
+            if var index = try? loadIndex() {
+                index.records.removeAll { $0.captureID == captureID }
+                try? saveIndex(index)
+            }
+            throw error
+        }
+
+        do {
+            var index = try loadIndex()
+            guard let slot = index.records.firstIndex(where: { $0.captureID == captureID }) else {
+                throw PhotoLibraryError.indexCommitFailed(PhotoFailure(
+                    domain: "pikicam.PhotoLibraryManager",
+                    code: -1,
+                    message: "The pending record vanished before the index commit."
+                ))
+            }
+            index.records[slot].state = .stored(assetID: assetID)
+            try saveIndex(index)
+        } catch {
+            // Photos succeeded but the index commit failed: the DNG remains in
+            // Photos, the pending record remains recoverable, and the capture
+            // is not published.
+            throw PhotoLibraryError.indexCommitFailed(PhotoFailure(error))
+        }
+
+        guard let capture = fetchCapture(captureID: captureID, assetID: assetID, capturedAt: dng.capturedAt) else {
+            throw PhotoLibraryError.assetUnavailable(assetID)
+        }
+        return capture
+    }
+
+    /// One PhotoKit batch creating exactly one `.photo` DNG resource. The
+    /// placeholder is accepted only when both `success == true` and the
+    /// completion error is nil.
+    private func performDNGSave(data: Data, originalFilename: String) async throws -> PhotoAssetID {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<PhotoAssetID, Error>) in
+            let placeholder = PlaceholderBox()
+
+            PHPhotoLibrary.shared().performChanges {
+                let request = PHAssetCreationRequest.forAsset()
+                let options = PHAssetResourceCreationOptions()
+                options.originalFilename = originalFilename
+                options.uniformTypeIdentifier = Self.dngUTType.identifier
+                request.addResource(with: .photo, data: data, options: options)
+                placeholder.localIdentifier = request.placeholderForCreatedAsset?.localIdentifier
+            } completionHandler: { success, error in
+                if let error {
+                    continuation.resume(throwing: PhotoLibraryError.saveFailed(PhotoFailure(error)))
+                } else if success, let localIdentifier = placeholder.localIdentifier {
+                    continuation.resume(returning: PhotoAssetID(localIdentifier: localIdentifier))
+                } else {
+                    continuation.resume(throwing: PhotoLibraryError.saveFailed(PhotoFailure(
+                        domain: "PHPhotoLibrary",
+                        code: -1,
+                        message: "Photos reported the DNG save did not succeed."
+                    )))
+                }
+            }
+        }
+    }
+
+    private func fetchCapture(captureID: CaptureID, assetID: PhotoAssetID, capturedAt: Date) -> PikicamCapture? {
+        let result = PHAsset.fetchAssets(withLocalIdentifiers: [assetID.localIdentifier], options: nil)
+        guard let asset = result.firstObject, Self.hasOriginalDNGResource(asset) else { return nil }
+        return PikicamCapture(
+            id: captureID,
+            assetID: assetID,
+            capturedAt: capturedAt,
+            pixelWidth: Int(asset.pixelWidth),
+            pixelHeight: Int(asset.pixelHeight)
+        )
+    }
+
+    // MARK: Fetch / Reconciliation
+
+    /// The visible captures, newest first (capturedAt descending with
+    /// CaptureID as a deterministic tie-breaker).
+    ///
+    /// Reconciliation runs only for `pending` records: visible image assets
+    /// are matched by the exact namespaced filename. One match commits its
+    /// asset ID; no match removes the abandoned record under full
+    /// authorization but retains it hidden under limited authorization;
+    /// multiple matches raise a typed index-inconsistency error and remain
+    /// hidden. Stored records are fetched directly by local identifier;
+    /// missing stored IDs are pruned under full authorization but retained
+    /// (and omitted from the visible projection) under limited authorization,
+    /// preserving provenance if the limited selection later changes.
+    public func captures() async throws -> [PikicamCapture] {
+        let authorization = try requireUsableAuthorization()
+        let isLimited = authorization == .limited
+
+        var index: CaptureIndex
+        do {
+            index = try loadIndex()
+        } catch {
+            throw PhotoLibraryError.indexReadFailed(PhotoFailure(error))
+        }
+
+        let before = index
+        try reconcilePendingRecords(in: &index, limited: isLimited)
+        if index != before {
+            do {
+                try saveIndex(index)
+            } catch {
+                throw PhotoLibraryError.indexWriteFailed(PhotoFailure(error))
+            }
+        }
+
+        let storedRecords = index.records.filter { $0.state.storedAssetID != nil }
+        var assetByID: [String: PHAsset] = [:]
+        if !storedRecords.isEmpty {
+            let result = PHAsset.fetchAssets(
+                withLocalIdentifiers: storedRecords.compactMap { $0.state.storedAssetID?.localIdentifier },
+                options: nil
+            )
+            result.enumerateObjects { asset, _, _ in
+                assetByID[asset.localIdentifier] = asset
+            }
+        }
+
+        var captures: [PikicamCapture] = []
+        var pruned = false
+        for record in storedRecords {
+            guard let storedAssetID = record.state.storedAssetID,
+                  let asset = assetByID[storedAssetID.localIdentifier],
+                  Self.hasOriginalDNGResource(asset) else {
+                if !isLimited {
+                    index.records.removeAll { $0.captureID == record.captureID }
+                    pruned = true
+                }
+                continue
+            }
+            captures.append(PikicamCapture(
+                id: record.captureID,
+                assetID: storedAssetID,
+                capturedAt: record.capturedAt,
+                pixelWidth: Int(asset.pixelWidth),
+                pixelHeight: Int(asset.pixelHeight)
+            ))
+        }
+
+        if pruned {
+            do {
+                try saveIndex(index)
+            } catch {
+                throw PhotoLibraryError.indexWriteFailed(PhotoFailure(error))
+            }
+        }
+
+        captures.sort { lhs, rhs in
+            if lhs.capturedAt == rhs.capturedAt {
+                return lhs.id.uuid.uuidString > rhs.id.uuid.uuidString
+            }
+            return lhs.capturedAt > rhs.capturedAt
+        }
+        return captures
+    }
+
+    /// Exceptional path — enumerates visible image resources only when a
+    /// pending record exists. Matches pending records to assets by exact
+    /// namespaced filename and commits single matches.
+    private func reconcilePendingRecords(in index: inout CaptureIndex, limited: Bool) throws {
+        let pendingRecords = index.records.filter { $0.state.isPending }
+        guard !pendingRecords.isEmpty else { return }
+
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+        let assets = PHAsset.fetchAssets(with: fetchOptions)
+
+        var filenameToAssetIDs: [String: [String]] = [:]
+        assets.enumerateObjects { asset, _, _ in
+            for resource in PHAssetResource.assetResources(for: asset) {
+                guard Self.isDNGResource(resource), !resource.originalFilename.isEmpty else { continue }
+                filenameToAssetIDs[resource.originalFilename, default: []].append(asset.localIdentifier)
+            }
+        }
+
+        for record in pendingRecords {
+            guard let filename = record.state.pendingFilename else { continue }
+            let matches = filenameToAssetIDs[filename] ?? []
+            switch matches.count {
+            case 0:
+                // Invisible or truly abandoned. Only full authorization can
+                // distinguish deletion from invisibility.
+                if !limited {
+                    index.records.removeAll { $0.captureID == record.captureID }
+                }
+            case 1:
+                if let slot = index.records.firstIndex(where: { $0.captureID == record.captureID }) {
+                    index.records[slot].state = .stored(assetID: PhotoAssetID(localIdentifier: matches[0]))
+                }
+            default:
+                throw PhotoLibraryError.indexInconsistent(record.captureID)
+            }
+        }
+    }
+
+    // MARK: Original DNG Loading
+
+    /// Loads the full original DNG bytes for the indexed asset. Network
+    /// access is allowed for iCloud-only assets. The request is cancelled
+    /// when the awaiting task is cancelled, surfacing a typed load error.
+    public func loadOriginalDNG(for assetID: PhotoAssetID) async throws -> Data {
+        _ = try requireUsableAuthorization()
+
+        let result = PHAsset.fetchAssets(withLocalIdentifiers: [assetID.localIdentifier], options: nil)
+        guard let asset = result.firstObject else {
+            throw PhotoLibraryError.assetUnavailable(assetID)
+        }
+        guard let resource = PHAssetResource.assetResources(for: asset).first(where: { Self.isDNGResource($0) }) else {
+            throw PhotoLibraryError.originalResourceUnavailable(assetID)
+        }
+
+        let options = PHAssetResourceRequestOptions()
+        options.isNetworkAccessAllowed = true
+
+        let continuationBox = ContinuationBox<Data, Error>()
+        let requestIDBox = RequestIDBox()
+        let dataBox = DataBox()
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                continuationBox.install(continuation)
+                if Task.isCancelled {
+                    continuationBox.resumeOnce { $0.resume(throwing: CancellationError()) }
+                    return
+                }
+                let requestID = PHAssetResourceManager.default().requestData(
+                    for: resource,
+                    options: options,
+                    dataReceivedHandler: { chunk in
+                        dataBox.append(chunk)
+                    },
+                    completionHandler: { error in
+                        if let error {
+                            let code = (error as NSError).code
+                            if code == NSUserCancelledError || code == PHPhotosError.userCancelled.rawValue {
+                                continuationBox.resumeOnce { $0.resume(throwing: CancellationError()) }
+                            } else {
+                                continuationBox.resumeOnce { $0.resume(throwing: PhotoLibraryError.loadFailed(PhotoFailure(error))) }
+                            }
+                        } else {
+                            continuationBox.resumeOnce { $0.resume(returning: dataBox.snapshot()) }
+                        }
+                    }
+                )
+                requestIDBox.current = requestID
+            }
+        } onCancel: {
+            if let requestID = requestIDBox.current {
+                PHAssetResourceManager.default().cancelDataRequest(requestID)
+            } else {
+                continuationBox.resumeOnce { $0.resume(throwing: CancellationError()) }
+            }
+        }
+    }
+
+    // MARK: Thumbnails
+
+    /// Renders a transient thumbnail for the indexed asset via `PHImageManager`
+    /// with the original version, opportunistic degraded delivery, and
+    /// network access enabled. Nothing is persisted.
+    ///
+    /// `requestID` provides stale-result identity: callers generate a token
+    /// per gallery key and discard results whose token no longer matches the
+    /// visible key. The request is cancelled when the awaiting task is
+    /// cancelled.
+    public func requestThumbnail(
+        for assetID: PhotoAssetID,
+        requestID: UUID = UUID(),
+        targetPixelSize: CGSize
+    ) async throws -> UIImage {
+        _ = try requireUsableAuthorization()
+
+        let result = PHAsset.fetchAssets(withLocalIdentifiers: [assetID.localIdentifier], options: nil)
+        guard let asset = result.firstObject else {
+            throw PhotoLibraryError.assetUnavailable(assetID)
+        }
+
+        let options = PHImageRequestOptions()
+        options.version = .original
+        options.deliveryMode = .opportunistic
+        options.resizeMode = .fast
+        options.isNetworkAccessAllowed = true
+
+        let continuationBox = ContinuationBox<UIImage, Error>()
+        let requestIDBox = RequestIDBox()
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                continuationBox.install(continuation)
+                if Task.isCancelled {
+                    continuationBox.resumeOnce { $0.resume(throwing: CancellationError()) }
+                    return
+                }
+                let requestID = PHImageManager.default().requestImage(
+                    for: asset,
+                    targetSize: targetPixelSize,
+                    contentMode: .aspectFit,
+                    options: options
+                ) { image, info in
+                    if let image {
+                        continuationBox.resumeOnce { $0.resume(returning: image) }
+                    } else if let error = info?[PHImageErrorKey] as? Error {
+                        continuationBox.resumeOnce { $0.resume(throwing: PhotoLibraryError.thumbnailFailed(PhotoFailure(error))) }
+                    } else if let cancelled = info?[PHImageCancelledKey] as? Bool, cancelled {
+                        continuationBox.resumeOnce { $0.resume(throwing: CancellationError()) }
+                    }
+                }
+                requestIDBox.current = requestID
+            }
+        } onCancel: {
+            if let requestID = requestIDBox.current {
+                PHImageManager.default().cancelImageRequest(requestID)
+            } else {
+                continuationBox.resumeOnce { $0.resume(throwing: CancellationError()) }
+            }
+        }
+    }
+
+    // MARK: Deletion
+
+    /// Deletes the exact indexed Photos asset, then removes its index record.
+    /// Returns normally only when Photos reports successful deletion AND the
+    /// index record is removed.
+    ///
+    /// If the asset has already vanished under full authorization, the record
+    /// is reconciled as externally deleted. Under limited authorization an
+    /// unavailable asset is retained (invisibility and deletion cannot be
+    /// distinguished) and a typed error is thrown. If deletion succeeds but
+    /// index removal fails, a typed metadata-cleanup failure is thrown rather
+    /// than claiming complete success; reconciliation removes the stale
+    /// record later.
+    public func delete(_ capture: PikicamCapture) async throws {
+        let authorization = try requireUsableAuthorization()
+        let isLimited = authorization == .limited
+
+        let result = PHAsset.fetchAssets(withLocalIdentifiers: [capture.assetID.localIdentifier], options: nil)
+        guard let asset = result.firstObject else {
+            if isLimited {
+                throw PhotoLibraryError.assetUnavailable(capture.assetID)
+            }
+            // Full authorization: the asset already vanished. Reconcile it as
+            // externally deleted by removing the record.
+            do {
+                try removeIndexRecord(captureID: capture.id)
+            } catch {
+                throw PhotoLibraryError.indexRemovalFailed(PhotoFailure(error))
+            }
+            return
+        }
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            PHPhotoLibrary.shared().performChanges {
+                PHAssetChangeRequest.deleteAssets([asset] as NSArray)
+            } completionHandler: { success, error in
+                if let error {
+                    continuation.resume(throwing: PhotoLibraryError.deleteFailed(PhotoFailure(error)))
+                } else if success {
+                    continuation.resume()
+                } else {
+                    continuation.resume(throwing: PhotoLibraryError.deleteFailed(PhotoFailure(
+                        domain: "PHPhotoLibrary",
+                        code: -1,
+                        message: "Photos reported the deletion did not succeed."
+                    )))
+                }
+            }
+        }
+
+        do {
+            try removeIndexRecord(captureID: capture.id)
+        } catch {
+            // Photos deletion succeeded but metadata cleanup failed: never
+            // claim complete success.
+            throw PhotoLibraryError.indexRemovalFailed(PhotoFailure(error))
+        }
+    }
+
+    private func removeIndexRecord(captureID: CaptureID) throws {
+        var index = try loadIndex()
+        let countBefore = index.records.count
+        index.records.removeAll { $0.captureID == captureID }
+        guard index.records.count != countBefore else { return }
+        try saveIndex(index)
+    }
+
+    // MARK: Invalidation
+
+    /// One coalesced stream of PhotoKit change notifications (external
+    /// deletion, iCloud availability, user edits, limited-selection changes,
+    /// and own saves). The buffer keeps only the newest pending element, so
+    /// bursts collapse into a single invalidation.
+    public func invalidationUpdates() -> AsyncStream<Void> {
+        invalidationStream
+    }
+
+    private func noteLibraryChange() {
+        invalidationContinuation.yield(())
+    }
+
+    // MARK: Index
+
+    private static func indexFileURL() throws -> URL {
+        let base = try FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        return base.appendingPathComponent("pikicam-capture-index-v\(indexFileVersion).json", isDirectory: false)
+    }
+
+    private func loadIndex() throws -> CaptureIndex {
+        let url = try Self.indexFileURL()
+        guard FileManager.default.fileExists(atPath: url.path) else { return .empty() }
+        do {
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode(CaptureIndex.self, from: data)
+        } catch {
+            // Corrupt or unreadable index: start empty. The index is
+            // provenance-only, so losing it errs toward false negatives,
+            // never false membership.
+            return .empty()
+        }
+    }
+
+    private func saveIndex(_ index: CaptureIndex) throws {
+        let url = try Self.indexFileURL()
+        let data = try JSONEncoder().encode(index)
+        try data.write(to: url, options: .atomic)
+    }
+
+    private static func originalFilename(for captureID: CaptureID) -> String {
+        "pikicam-\(captureID.uuid.uuidString).dng"
+    }
+
+    private static func hasOriginalDNGResource(_ asset: PHAsset) -> Bool {
+        PHAssetResource.assetResources(for: asset).contains { isDNGResource($0) }
+    }
+
+    private static func isDNGResource(_ resource: PHAssetResource) -> Bool {
+        resource.type == .photo && resource.uniformTypeIdentifier == dngUTType.identifier
+    }
+}
+
+// MARK: - Private Capture Index
+
+private struct CaptureIndex: Codable, Equatable {
+    static let currentVersion = 1
+
+    var version: Int
+    var records: [IndexRecord]
+
+    static func empty() -> CaptureIndex {
+        CaptureIndex(version: currentVersion, records: [])
+    }
+}
+
+private struct IndexRecord: Codable, Equatable {
+    var captureID: CaptureID
+    var capturedAt: Date
+    var state: State
+
+    enum State: Codable, Equatable {
+        /// The capture was journaled before its PhotoKit save; the exact
+        /// namespaced filename is the crash-recovery correlation key.
+        case pending(originalFilename: String)
+        /// The PhotoKit save succeeded and this asset is the visible capture.
+        case stored(assetID: PhotoAssetID)
+
+        var isPending: Bool {
+            if case .pending = self { return true }
+            return false
+        }
+
+        var pendingFilename: String? {
+            if case .pending(let originalFilename) = self { return originalFilename }
+            return nil
+        }
+
+        var storedAssetID: PhotoAssetID? {
+            if case .stored(let assetID) = self { return assetID }
+            return nil
+        }
+    }
+}
+
+// MARK: - Private Helpers
+
+/// `PHPhotoLibraryChangeObserver` must be an `NSObject` subclass, so the
+/// actor bridges change notifications through this private object. Only an
+/// invalidation signal crosses it — never `PHAsset` or change details.
+nonisolated private final class PhotoLibraryChangeBridge: NSObject, PHPhotoLibraryChangeObserver, @unchecked Sendable {
+    private let onLibraryChange: @Sendable () -> Void
+
+    init(onLibraryChange: @escaping @Sendable () -> Void) {
+        self.onLibraryChange = onLibraryChange
+    }
+
+    nonisolated func photoLibraryDidChange(_ changeInstance: PHChange) {
+        onLibraryChange()
+    }
+}
+
+/// Holds the placeholder local identifier captured inside a
+/// `performChanges` change block for the completion handler.
+private final class PlaceholderBox: @unchecked Sendable {
+    var localIdentifier: String?
+}
+
+/// Resumes a continuation exactly once, safely across the concurrent paths
+/// of a PhotoKit callback and a cancellation handler.
+private final class ContinuationBox<Success, Failure: Error>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Success, Failure>?
+    private var didResume = false
+
+    func install(_ continuation: CheckedContinuation<Success, Failure>) {
+        lock.withLock { self.continuation = continuation }
+    }
+
+    func resumeOnce(_ action: (CheckedContinuation<Success, Failure>) -> Void) {
+        lock.withLock {
+            guard !didResume, let continuation else { return }
+            didResume = true
+            action(continuation)
+        }
+    }
+}
+
+/// Thread-safe holder for a PhotoKit request identifier so a cancellation
+/// handler can cancel the in-flight request.
+private final class RequestIDBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: Int32?
+
+    var current: Int32? {
+        get { lock.withLock { value } }
+        set { lock.withLock { value = newValue } }
+    }
+}
+
+/// Thread-safe accumulator for resource chunks delivered by
+/// `PHAssetResourceManager`.
+private final class DataBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var data = Data()
+
+    func append(_ chunk: Data) {
+        lock.withLock { data.append(chunk) }
+    }
+
+    func snapshot() -> Data {
+        lock.withLock { data }
     }
 }

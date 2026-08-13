@@ -127,75 +127,40 @@ enum GridGeometry {
     }
 }
 
-// MARK: - PrintCrop
+// MARK: - FramingMode
 
-/// The final print crop — the intersection of the user's framing zoom and
-/// the chosen aspect ratio. The DNG stays full-sensor; this is print-time
-/// geometry only.
-enum PrintCrop {
+/// The compositional aperture shown over the full-sensor preview.
+///
+/// Framing is preview-only: `photo` shows the 4:3 sensor aperture (3:4 in
+/// portrait), `square` shows a centered 1:1 compositional aperture over the
+/// same full sensor feed. The captured DNG is always the unchanged
+/// full-sensor original; no crop is applied, encoded, or persisted.
+enum FramingMode: CaseIterable, Sendable {
+    case photo
+    case square
 
-    static func rect(in extent: CGRect, zoomFactor: CGFloat, aspect: AspectRatio) -> CGRect {
-        zoomRect(intersected: aspectRect(in: extent, aspect: aspect), in: extent, zoomFactor: zoomFactor)
-    }
-
-    /// The largest rect of `extent` matching `aspect`, centered.
-    ///
-    /// Each candidate fills one sensor axis: widthBound fills the width
-    /// (cropping top/bottom), heightBound fills the height (cropping left/
-    /// right). For 4:3 sensor + 16:9, widthBound (4000×2250) fits and is
-    /// chosen. For 4:3 sensor + 1:1, heightBound (3000×3000) fits and is
-    /// chosen. Matches the iOS Camera photo convention: the wider FOV is
-    /// preserved by cropping the shorter axis.
-    private static func aspectRect(in extent: CGRect, aspect: AspectRatio) -> CGRect {
-        let widthBound = CGRect(x: 0, y: 0, width: extent.width, height: extent.width / aspect.ratio)
-        let heightBound = CGRect(x: 0, y: 0, width: extent.height * aspect.ratio, height: extent.height)
-        let fits = widthBound.height <= extent.height ? widthBound : heightBound
-        let origin = CGPoint(x: extent.midX - fits.width / 2, y: extent.midY - fits.height / 2)
-        return CGRect(x: origin.x, y: origin.y, width: fits.width, height: fits.height)
-    }
-
-    /// The centered `1/zoomFactor` rect of `aspectRect`, clamped to `extent`.
-    private static func zoomRect(intersected aspectRect: CGRect, in extent: CGRect, zoomFactor: CGFloat) -> CGRect {
-        guard zoomFactor > 1.0 else { return aspectRect }
-        let width = aspectRect.width / zoomFactor
-        let height = aspectRect.height / zoomFactor
-        let origin = CGPoint(
-            x: max(extent.minX, min(aspectRect.midX - width / 2, aspectRect.maxX - width)),
-            y: max(extent.minY, min(aspectRect.midY - height / 2, aspectRect.maxY - height))
-        )
-        return CGRect(x: origin.x, y: origin.y, width: width, height: height)
-    }
-}
-
-// MARK: - AspectRatio
-
-/// The output aspect ratio of the developed print. The DNG is always
-/// captured full-sensor; the aspect is applied as a final print crop.
-enum AspectRatio: String, CaseIterable, Sendable {
-    case ratio4x3
-    case ratio16x9
-    case ratio1x1
-
-    var ratio: CGFloat {
+    /// The preview aperture ratio (width / height) this mode composes.
+    var previewAspectRatio: CGFloat {
         switch self {
-        case .ratio4x3: return 4.0 / 3.0
-        case .ratio16x9: return 16.0 / 9.0
-        case .ratio1x1: return 1.0
+        case .photo: return 4.0 / 3.0
+        case .square: return 1.0
         }
     }
 
+    /// The human-readable label surfaced in the UI and UI tests.
     var label: String {
         switch self {
-        case .ratio4x3: return "4:3"
-        case .ratio16x9: return "16:9"
-        case .ratio1x1: return "1:1"
+        case .photo: return "Photo"
+        case .square: return "Square"
         }
     }
 
-    func next() -> AspectRatio {
-        let all = AspectRatio.allCases
-        let i = all.firstIndex(of: self) ?? 0
-        return all[(i + 1) % all.count]
+    /// The next mode in the photo → square → photo cycle.
+    func next() -> FramingMode {
+        switch self {
+        case .photo: return .square
+        case .square: return .photo
+        }
     }
 }
 // MARK: - ExposureCompensation

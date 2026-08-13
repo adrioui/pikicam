@@ -16,6 +16,10 @@ import Foundation
 /// Each `PhotoCapture` instance is one-shot — it handles a single
 /// capture and is then discarded.
 ///
+/// The request is RAW-only: the delivered photo is the DNG payload, and no
+/// processed print is produced. Delegate failures are translated into the
+/// typed `CaptureError.captureFailed` rather than surfacing a raw `Error`.
+///
 /// Note: `PhotoCapture` is intentionally **not** `Sendable`. It captures a
 /// `CheckedContinuation` (non-Sendable) and is bridged to a `AVCapturePhotoOutput`
 /// delegate callback via `objc_setAssociatedObject`. The continuation must remain
@@ -24,12 +28,11 @@ import Foundation
 /// Marking the class `Sendable` would be incorrect under strict concurrency and
 /// would hide the real lifetime guarantee provided by the wrapper.
 nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
-    private var continuation: CheckedContinuation<PhotoCapturePair, Error>?
-    private var processedPhoto: AVCapturePhoto?
-    private var rawPhoto: AVCapturePhoto?
+    private var continuation: CheckedContinuation<AVCapturePhoto, Error>?
+    private var photo: AVCapturePhoto?
     private var processingError: Error?
 
-    init(continuation: CheckedContinuation<PhotoCapturePair, Error>) {
+    init(continuation: CheckedContinuation<AVCapturePhoto, Error>) {
         self.continuation = continuation
     }
 
@@ -38,10 +41,8 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
                                   error: Error?) {
         if let error = error {
             processingError = error
-        } else if photo.isRawPhoto {
-            rawPhoto = photo
         } else {
-            processedPhoto = photo
+            self.photo = photo
         }
     }
 
@@ -55,23 +56,15 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
         }
 
         if let error = error ?? processingError {
-            continuation?.resume(throwing: error)
+            // Translate the delegate failure into a typed CaptureError so no
+            // arbitrary Error crosses the capture boundary.
+            continuation?.resume(throwing: CaptureError.captureFailed(underlying: error))
+        } else if let photo {
+            continuation?.resume(returning: photo)
         } else {
-            continuation?.resume(returning: PhotoCapturePair(
-                processedPhoto: processedPhoto,
-                rawPhoto: rawPhoto
-            ))
+            continuation?.resume(throwing: CaptureError.missingImageData)
         }
     }
-}
-
-/// The photo objects produced by one capture request.
-nonisolated struct PhotoCapturePair: @unchecked Sendable {
-    /// The processed JPEG/HEIC photo, if requested.
-    let processedPhoto: AVCapturePhoto?
-
-    /// The RAW DNG photo, if requested.
-    let rawPhoto: AVCapturePhoto?
 }
 
 // MARK: - Convenience Extension
@@ -79,25 +72,11 @@ nonisolated struct PhotoCapturePair: @unchecked Sendable {
 extension AVCapturePhotoOutput {
     /// Captures a photo using Swift async/await, bridging the delegate pattern.
     ///
-    /// - Parameter settings: The photo settings to use for capture.
+    /// - Parameter settings: The photo settings to use for capture. RAW-only
+    ///   settings deliver the DNG photo.
     /// - Returns: The captured `AVCapturePhoto`.
     func capturePhoto(with settings: AVCapturePhotoSettings) async throws -> AVCapturePhoto {
-        let pair = try await capturePhotoPair(with: settings)
-        if let processedPhoto = pair.processedPhoto {
-            return processedPhoto
-        }
-        if let rawPhoto = pair.rawPhoto {
-            return rawPhoto
-        }
-        throw CaptureError.missingImageData
-    }
-
-    /// Captures RAW and processed photos from one capture request.
-    ///
-    /// - Parameter settings: The photo settings to use for capture.
-    /// - Returns: Both photo objects produced by the request.
-    func capturePhotoPair(with settings: AVCapturePhotoSettings) async throws -> PhotoCapturePair {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             let captureDelegate = PhotoCapture(continuation: continuation)
             // Keep the delegate alive (keyed on its own address) until the
             // capture callbacks fire; `didFinishCaptureFor` clears it.

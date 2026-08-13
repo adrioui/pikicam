@@ -61,9 +61,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5A5A11073007CACA00C573A7"
-               BuildableName = "pikicamTests.xctest"
-               BlueprintName = "pikicamTests"
+               BlueprintIdentifier = "UITSTGT001"
+               BuildableName = "pikicamUITests.xctest"
+               BlueprintName = "pikicamUITests"
                ReferencedContainer = "container:pikicam.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -71,9 +71,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UITSTGT001"
-               BuildableName = "pikicamUITests.xctest"
-               BlueprintName = "pikicamUITests"
+               BlueprintIdentifier = "5A5A11073007CACA00C573A7"
+               BuildableName = "pikicamTests.xctest"
+               BlueprintName = "pikicamTests"
                ReferencedContainer = "container:pikicam.xcodeproj">
             </BuildableReference>
          </TestableReference>

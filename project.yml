@@ -35,6 +35,9 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: piki.pikicam
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        INFOPLIST_KEY_NSCameraUsageDescription: pikicam needs camera access to capture DNG raw photos with zero computational processing.
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: pikicam accesses your photo library to show and manage the DNG photos you capture.
+        INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: pikicam saves the DNG photos you capture to your photo library.
         TARGETED_DEVICE_FAMILY: "1,2"
     scheme:
       testTargets:
