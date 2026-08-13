@@ -14,6 +14,7 @@ struct CameraView: View {
 
     var body: some View {
         ZStack {
+            Color.black.ignoresSafeArea()
             preview
             controls
         }
@@ -27,10 +28,6 @@ struct CameraView: View {
             ApertureMaskOverlay(framingMode: viewModel.framingMode)
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
-        }
-        .overlay(alignment: .bottomLeading) {
-            ThumbnailOverlay(library: library, latest: library.captures.first, onTap: { galleryPresented = true })
-                .padding(16)
         }
         .fullScreenCover(isPresented: $galleryPresented) {
             GalleryView()
@@ -55,7 +52,8 @@ struct CameraView: View {
     private var preview: some View {
         if let session {
             CameraPreview(session: session)
-                .ignoresSafeArea()
+                .aspectRatio(4 / 3, contentMode: .fit)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityIdentifier("preview-pinch-area")
         } else {
             Color.black.ignoresSafeArea()
@@ -67,34 +65,115 @@ struct CameraView: View {
         VStack(spacing: 0) {
             if viewModel.isConfigured {
                 HUDCluster
+            } else {
                 Spacer()
+            }
+
+            Spacer()
+
+            if viewModel.selfTimerRemaining > 0 {
+                SelfTimerCountdownView(remaining: viewModel.selfTimerRemaining)
+            }
+
+            if viewModel.isConfigured {
+                Spacer()
+
+                // Mode strip
+                HStack(spacing: 24) {
+                    Spacer()
+                    Button(action: { viewModel.cycleFramingMode() }) {
+                        Text("PHOTO")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(.black.opacity(0.5))
+                            .clipShape(Capsule())
+                    }
+                    .accessibilityIdentifier("mode-photo")
+
+                    Button(action: { viewModel.cycleFramingMode() }) {
+                        Text("SQUARE")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(.black.opacity(0.5))
+                            .clipShape(Capsule())
+                    }
+                    .accessibilityIdentifier("mode-square")
+                    Spacer()
+                }
+                .padding(.horizontal, 40)
+                .padding(.bottom, 8)
+
+                // Bottom dock
+                HStack(alignment: .bottom) {
+                    // Thumbnail (lower-left)
+                    Button {
+                        galleryPresented = true
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.black.opacity(0.3))
+                                .frame(width: 60, height: 58)
+                            if let capture = library.captures.first {
+                                ThumbnailImage(assetID: capture.assetID, library: library)
+                            } else {
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.4))
+                                    .frame(width: 60, height: 58)
+                            }
+                        }
+                        .overlay(alignment: .bottomTrailing) {
+                            Image(systemName: "photo.on.rectangle")
+                                .font(.caption)
+                                .foregroundStyle(.yellow)
+                                .padding(2)
+                        }
+                    }
+
+                    Spacer()
+
+                    // Shutter (center)
+                    ShutterButton(
+                        isCapturing: viewModel.phase == .capturing,
+                        action: { Task { await viewModel.capture() } }
+                    )
+
+                    Spacer()
+
+                    // Flip (lower-right)
+                    CameraHUDButton(
+                        systemImage: "arrow.triangle.2.circlepath.camera",
+                        identifier: "front-camera-toggle",
+                        label: "Camera",
+                        value: viewModel.cameraPosition.label,
+                        action: { Task { await viewModel.toggleCamera() } }
+                    )
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 32)
+
+                // Hidden volume-button capture
                 VolumeButtonCaptureView {
                     if viewModel.phase != .capturing && viewModel.isConfigured {
                         Task { await viewModel.capture() }
                     }
                 }
                 .frame(width: 0, height: 0)
+
+                // Zoom indicator
                 ZoomIndicatorView(factor: viewModel.zoomFactor)
                     .padding(.bottom, 8)
-            } else {
-                Spacer()
             }
+
             if let error = viewModel.error {
                 Text(error.localizedDescription)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .padding(.horizontal)
                     .accessibilityLabel("Error: \(error.localizedDescription)")
-            }
-            if viewModel.isConfigured {
-                if viewModel.selfTimerRemaining > 0 {
-                    SelfTimerCountdownView(remaining: viewModel.selfTimerRemaining)
-                }
-                ShutterButton(
-                    isCapturing: viewModel.phase == .capturing,
-                    action: { Task { await viewModel.capture() } }
-                )
-                .padding(.bottom, 32)
             }
         }
     }
@@ -103,7 +182,7 @@ struct CameraView: View {
     private var HUDCluster: some View {
         HStack {
             Spacer()
-            VStack(spacing: 12) {
+            HStack(spacing: 20) {
                 CameraHUDButton(
                     systemImage: viewModel.showsGrid
                         ? "square.grid.3x3.fill" : "square.grid.3x3",
@@ -111,13 +190,6 @@ struct CameraView: View {
                     label: "Grid",
                     value: viewModel.showsGrid ? "On" : "Off",
                     action: { viewModel.toggleGrid() }
-                )
-                CameraHUDButton(
-                    systemImage: viewModel.framingMode == .square ? "square" : "camera.aperture",
-                    identifier: "framing-toggle",
-                    label: "Framing",
-                    value: viewModel.framingMode.label,
-                    action: { viewModel.cycleFramingMode() }
                 )
                 if viewModel.flashAvailable {
                     CameraHUDButton(
@@ -135,13 +207,6 @@ struct CameraView: View {
                     label: "Timer",
                     value: viewModel.selfTimer.label,
                     action: { viewModel.cycleSelfTimer() }
-                )
-                CameraHUDButton(
-                    systemImage: "arrow.triangle.2.circlepath.camera",
-                    identifier: "front-camera-toggle",
-                    label: "Camera",
-                    value: viewModel.cameraPosition.label,
-                    action: { Task { await viewModel.toggleCamera() } }
                 )
             }
             .padding(.trailing, 20)
