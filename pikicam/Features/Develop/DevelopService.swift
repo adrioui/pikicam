@@ -81,7 +81,7 @@ actor DevelopService {
 /// The physical orientation the device was held in when the shutter fired.
 /// Captured on the main actor at the moment of capture and passed to the
 /// background develop pipeline so the actor never reads `UIDevice`.
-enum CaptureOrientation: Sendable {
+nonisolated public enum CaptureOrientation: Sendable, Codable {
     case up
     case down
     case left

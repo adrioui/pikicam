@@ -20,20 +20,39 @@ import Foundation
 /// processed print is produced. Delegate failures are translated into the
 /// typed `CaptureError.captureFailed` rather than surfacing a raw `Error`.
 ///
-/// Note: `PhotoCapture` is intentionally **not** `Sendable`. It captures a
-/// `CheckedContinuation` (non-Sendable) and is bridged to a `AVCapturePhotoOutput`
-/// delegate callback via `objc_setAssociatedObject`. The continuation must remain
-/// alive until `photoOutput(_:didFinishProcessingPhoto:error:)` fires; the
-/// associated `DelegateWrapper` holds the only strong reference for that window.
-/// Marking the class `Sendable` would be incorrect under strict concurrency and
-/// would hide the real lifetime guarantee provided by the wrapper.
+/// The capture is kept alive until `didFinishCaptureFor` fires: the output
+/// retains it via `objc_setAssociatedObject`, and that callback clears the
+/// association. The continuation is the only mutable state; both finish
+/// callbacks arrive on AVFoundation's serial delegate queue, and the timeout
+/// task shares the same isolated instance.
 nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
+    /// How long to wait for AVFoundation's capture callbacks before failing
+    /// with `.captureTimedOut`. AVFoundation normally fires
+    /// `didFinishCaptureFor` promptly; if it never does (rare internal
+    /// failure), the continuation must still resume or the capture pipeline
+    /// deadlocks with `isCaptureInFlight` stuck true.
+    private static let captureTimeout: Duration = .seconds(15)
+
     private var continuation: CheckedContinuation<AVCapturePhoto, Error>?
     private var photo: AVCapturePhoto?
     private var processingError: Error?
+    private var timeoutTask: Task<Void, Never>?
 
     init(continuation: CheckedContinuation<AVCapturePhoto, Error>) {
         self.continuation = continuation
+        super.init()
+        self.timeoutTask = Task { [weak self] in
+            try? await Task.sleep(for: Self.captureTimeout)
+            guard !Task.isCancelled else { return }
+            self?.failWithTimeout()
+        }
+    }
+
+    private func failWithTimeout() {
+        guard let continuation else { return }
+        self.continuation = nil
+        timeoutTask = nil
+        continuation.resume(throwing: CaptureError.captureTimedOut)
     }
 
     nonisolated func photoOutput(_ output: AVCapturePhotoOutput,
@@ -52,6 +71,8 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
         let key = Unmanaged.passUnretained(self).toOpaque()
         defer {
             continuation = nil
+            timeoutTask?.cancel()
+            timeoutTask = nil
             objc_setAssociatedObject(output, key, nil, .OBJC_ASSOCIATION_ASSIGN)
         }
 

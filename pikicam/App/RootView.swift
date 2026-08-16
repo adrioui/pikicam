@@ -8,6 +8,7 @@ import UIKit
 /// becomes active.
 struct RootView: View {
     @Environment(CameraViewModel.self) private var viewModel
+    @Environment(\.scenePhase) private var scenePhase
     @State private var didRequestPermissions = false
 
     var body: some View {
@@ -20,12 +21,25 @@ struct RootView: View {
                 PermissionsDeniedView()
             } else {
                 CameraView()
-                    // Gallery entry via lower-left thumbnail overlay on CameraView
             }
         }
         .task {
             if viewModel.hasRequiredAuth {
                 didRequestPermissions = true
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // The camera view stays mounted while backgrounded, so its
+            // onDisappear never fires. Stop the session when the app leaves
+            // the foreground (AVFoundation interrupts capture anyway) and
+            // start it again when the app returns.
+            switch phase {
+            case .active where viewModel.hasRequiredAuth:
+                Task { await viewModel.start() }
+            case .background, .inactive:
+                Task { await viewModel.stop() }
+            default:
+                break
             }
         }
     }

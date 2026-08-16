@@ -2,6 +2,7 @@ import Foundation
 @preconcurrency import AVFoundation
 import CoreImage
 import CoreVideo
+import UIKit
 
 // MARK: - CaptureService
 
@@ -45,6 +46,15 @@ actor CaptureService {
 
     /// Whether the session has already been configured.
     private var isConfigured = false
+    /// Prevents zoom, exposure, flash, and duplicate capture operations from
+    /// re-entering while a RAW photo is in flight.
+    private var isCaptureInFlight = false
+
+    /// The exposure bias the next capture must apply, in EV stops. Owned by
+    /// the actor: its serial executor makes "set bias, then capture" atomic
+    /// with respect to other device calls, so the UI never needs a
+    /// hand-rolled task-chaining protocol to serialize EV against capture.
+    private var pendingExposureBias: Double = 0
 
     // MARK: - Initialization
     
@@ -134,6 +144,7 @@ actor CaptureService {
     ///
     /// - Returns: The newly active `CameraPosition`.
     func toggleCamera() async throws -> CameraPosition {
+        guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
         guard isConfigured else { throw CaptureError.sessionNotConfigured }
 
         let next: CameraPosition = cameraPosition == .back ? .front : .back
@@ -151,15 +162,20 @@ actor CaptureService {
         session.beginConfiguration()
         defer { session.commitConfiguration() }
 
-        let previousInput = cameraInput
-        if let previousInput {
+        let previous = PreviousCameraState(
+            input: cameraInput,
+            device: cameraDevice,
+            position: cameraPosition,
+            flashMode: flashMode
+        )
+        if let previousInput = previous.input {
             session.removeInput(previousInput)
         }
         guard session.canAddInput(newInput) else {
-            // Restore the previous input so the session is unchanged.
-            if let previousInput {
-                session.addInput(previousInput)
-            }
+            // New input cannot be added: try to restore the previous input.
+            // If that also fails, the session has no usable input and must
+            // not claim a configured state.
+            restorePreviousCameraState(previous, removing: nil)
             throw CaptureError.cannotAddInput
         }
         session.addInput(newInput)
@@ -168,15 +184,62 @@ actor CaptureService {
         cameraPosition = next
 
         // A fresh input already starts at 1×; resetting explicitly keeps the
-        // state honest if the session is later reconfigured. A failure here
-        // is propagated: the device is not left in an unknown zoom state.
-        try applyVideoZoomFactor(1.0, to: device)
-        if device.hasTorch {
-            try applyTorchMode(flashMode, to: device)
-        } else if flashMode != .off {
-            flashMode = .off
+        // state honest if the session is later reconfigured.
+        do {
+            try applyVideoZoomFactor(1.0, to: device)
+            if device.hasTorch {
+                try applyTorchMode(flashMode, to: device)
+            } else if flashMode != .off {
+                flashMode = .off
+            }
+        } catch {
+            // Post-switch configuration failed: roll back to the prior camera
+            // so the session remains usable with coherent state. The typed
+            // error (CaptureError.deviceLockFailed / torchUnavailable) is
+            // propagated without swallowing. If the previous input cannot be
+            // re-added, the session is left without a usable input and must
+            // not claim to be configured.
+            restorePreviousCameraState(previous, removing: newInput)
+            throw error
         }
         return next
+    }
+
+    /// The camera state that must be restored if a camera switch fails, so
+    /// both failure paths share one rollback implementation.
+    private struct PreviousCameraState {
+        let input: AVCaptureDeviceInput?
+        let device: AVCaptureDevice?
+        let position: CameraPosition
+        let flashMode: FlashMode
+    }
+
+    /// Restores the session to `previous` after a failed camera switch.
+    /// `removing` is the input added by the failed switch that must be torn
+    /// down first (nil when the new input was never added). If the previous
+    /// input cannot be re-added, the session is left without a usable input
+    /// and must not claim a configured state.
+    private func restorePreviousCameraState(_ previous: PreviousCameraState, removing newInput: AVCaptureDeviceInput?) {
+        if let newInput {
+            session.removeInput(newInput)
+        }
+        var didRestorePrevious = false
+        if let previousInput = previous.input, session.canAddInput(previousInput) {
+            session.addInput(previousInput)
+            didRestorePrevious = true
+        }
+        if didRestorePrevious {
+            cameraInput = previous.input
+            cameraDevice = previous.device
+            cameraPosition = previous.position
+            flashMode = previous.flashMode
+        } else {
+            isConfigured = false
+            cameraInput = nil
+            cameraDevice = nil
+            cameraPosition = previous.position
+            flashMode = previous.flashMode
+        }
     }
 
     /// The zoom range the current camera actually supports
@@ -190,6 +253,7 @@ actor CaptureService {
     ///
     /// - Returns: the clamped factor actually applied, which the UI mirrors.
     func setVideoZoomFactor(_ factor: CGFloat) async throws -> CGFloat {
+        guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
         guard let device = cameraDevice else { throw CaptureError.sessionNotConfigured }
         let clamped = ZoomMath.clamped(
             factor,
@@ -198,8 +262,12 @@ actor CaptureService {
         try applyVideoZoomFactor(clamped, to: device)
         return clamped
     }
+    /// The device's current zoom factor. Exposed so callers can reconcile
+    /// published framing state after a failed post-capture zoom restore.
+    func currentVideoZoomFactor() async -> CGFloat? {
+        cameraDevice?.videoZoomFactor
+    }
 
-    /// Whether the current camera has a torch (flash). Front cameras do not.
     func currentCameraHasTorch() async -> Bool {
         cameraDevice?.hasTorch ?? false
     }
@@ -210,6 +278,7 @@ actor CaptureService {
     ///
     /// - Returns: the newly active `FlashMode`.
     func cycleFlash() async throws -> FlashMode {
+        guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
         guard let device = cameraDevice, device.hasTorch else {
             throw CaptureError.torchUnavailable
         }
@@ -218,18 +287,33 @@ actor CaptureService {
         return flashMode
     }
 
-    /// The exposure-bias range the current device supports.
-    func exposureBiasRange() async -> ClosedRange<Double> {
-        guard let device = cameraDevice else { return 0...0 }
-        return Double(device.minExposureTargetBias)...Double(device.maxExposureTargetBias)
+    /// Records the exposure bias the next capture must apply, in EV stops.
+    ///
+    /// The actor's serial executor serializes this against `capturePhoto`, so
+    /// the bias is applied atomically with the RAW capture — there is no
+    /// window where the UI has committed a bias the capture ignores, and no
+    /// need for the caller to track an in-flight bias task.
+    ///
+    /// - Parameter stops: The requested bias; clamped to the device range at
+    ///   application time inside `capturePhoto`.
+    func setExposureBias(_ stops: Double) async {
+        pendingExposureBias = stops
     }
 
-    /// Sets the device's exposure target bias, in EV stops. The device
-    /// controls continuous AE convergence; this call only sets the target.
-    func setExposureBias(_ stops: Double) async throws {
+    /// Clears the pending exposure bias (e.g. after a camera toggle, which
+    /// resets the session to 0 EV).
+    func clearExposureBias() async {
+        pendingExposureBias = 0
+    }
+
+    /// Applies the pending exposure bias to the device, clamped to its
+    /// supported range. Runs inside `capturePhoto` after the zoom settle, so
+    /// the bias and the RAW exposure are one serialized actor turn.
+    private func applyPendingExposureBiasIfNeeded() async throws {
+        guard pendingExposureBias != 0 else { return }
         guard let device = cameraDevice else { throw CaptureError.sessionNotConfigured }
-        let range = await exposureBiasRange()
-        let clamped = ExposureCompensation(stops: stops)
+        let range = Double(device.minExposureTargetBias)...Double(device.maxExposureTargetBias)
+        let clamped = ExposureCompensation(stops: pendingExposureBias)
         let target = max(range.lowerBound, min(clamped.stops, range.upperBound))
         try await applyExposureBias(Float(target), to: device)
     }
@@ -244,12 +328,14 @@ actor CaptureService {
 
     // MARK: - Private Camera Helpers
 
-    /// Applies a zoom factor under a configuration lock.
+    /// Applies a zoom factor under a configuration lock. The deferred unlock
+    /// is installed only after the lock succeeds, so a thrown setter can
+    /// never wedge the device's configuration lock.
     private func applyVideoZoomFactor(_ factor: CGFloat, to device: AVCaptureDevice) throws {
         do {
             try device.lockForConfiguration()
+            defer { device.unlockForConfiguration() }
             device.videoZoomFactor = factor
-            device.unlockForConfiguration()
         } catch {
             throw CaptureError.deviceLockFailed(underlying: error)
         }
@@ -262,8 +348,8 @@ actor CaptureService {
         }
         do {
             try device.lockForConfiguration()
+            defer { device.unlockForConfiguration() }
             device.torchMode = mode.avTorchMode
-            device.unlockForConfiguration()
         } catch {
             throw CaptureError.deviceLockFailed(underlying: error)
         }
@@ -289,6 +375,10 @@ actor CaptureService {
     /// - Throws: `CaptureError` if capture fails.
     func capturePhoto() async throws -> CapturedDNG {
         #if os(iOS)
+        guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
+        isCaptureInFlight = true
+        defer { isCaptureInFlight = false }
+
         // Ensure we have a valid Bayer format selected. Checked first so a
         // platform without a Bayer sensor (e.g. the simulator) fails with the
         // explicit no-Bayer error rather than a session precondition error.
@@ -301,39 +391,67 @@ actor CaptureService {
         }
 
         // Remember the framing zoom, capture at 1×, then restore it. A failed
-        // reset is propagated so the device is never left silently at the
-        // wrong zoom.
+        // restore is propagated as a typed error so the caller never observes
+        // success with a stale 1× zoom / divergent UI state.
         let captureZoom = device.videoZoomFactor
         let needsZoomReset = captureZoom != 1.0
         if needsZoomReset {
             try applyVideoZoomFactor(1.0, to: device)
-            // Let the session settle on the 1× format before capturing:
-            // an immediate capture right after the zoom change can return
-            // incomplete photo data.
-            try await Task.sleep(nanoseconds: 250_000_000)
         }
-        defer {
+
+        let dngData: Data
+        do {
             if needsZoomReset {
-                _ = try? applyVideoZoomFactor(captureZoom, to: device)
+                // Let the session settle on the 1× format before capturing:
+                // an immediate capture right after the zoom change can return
+                // incomplete photo data.
+                try await Task.sleep(nanoseconds: 250_000_000)
             }
+
+            // Apply the committed exposure bias atomically with the capture:
+            // the actor serializes this against any concurrent
+            // `setExposureBias`, so the RAW exposure always reflects the
+            // latest UI value.
+            try await applyPendingExposureBiasIfNeeded()
+
+            // Configure RAW-only photo settings: the sole delivered payload is the
+            // Bayer DNG. No processed format is requested and no processed data
+            // is retained.
+            let settings = AVCapturePhotoSettings(rawPixelFormatType: bayerFormat)
+            // Never set `photoQualityPrioritization` on RAW captures: AVFoundation
+            // raises NSInvalidArgumentException ("Unsupported when capturing RAW")
+            // at capture time. The default (.balanced) is used.
+
+            // Use the async extension on AVCapturePhotoOutput for delegate bridging.
+            let photo = try await photoOutput.capturePhoto(with: settings)
+
+            guard let fileData = photo.fileDataRepresentation() else {
+                throw CaptureError.missingImageData
+            }
+            dngData = fileData
+        } catch {
+            // Capture (or the settle sleep) failed after the 1× switch: restore
+            // the framing zoom before propagating the original error.
+            if needsZoomReset {
+                try applyVideoZoomFactor(captureZoom, to: device)
+            }
+            if let captureError = error as? CaptureError {
+                throw captureError
+            }
+            throw CaptureError.captureFailed(underlying: error)
         }
 
-        // Configure RAW-only photo settings: the sole delivered payload is the
-        // Bayer DNG. No processed format is requested and no processed data
-        // is retained.
-        let settings = AVCapturePhotoSettings(rawPixelFormatType: bayerFormat)
-        // Never set `photoQualityPrioritization` on RAW captures: AVFoundation
-        // raises NSInvalidArgumentException ("Unsupported when capturing RAW")
-        // at capture time. The default (.balanced) is used.
-
-        // Use the async extension on AVCapturePhotoOutput for delegate bridging.
-        let photo = try await photoOutput.capturePhoto(with: settings)
-
-        guard let dngData = photo.fileDataRepresentation() else {
-            throw CaptureError.missingImageData
+        // Capture succeeded: restore the framing zoom. A failure here does not
+        // silently return the DNG with the device left at 1× — the typed error
+        // is propagated and the DNG is not reported as a successful capture
+        // with stale zoom. The device remains at 1× but the error makes the
+        // state divergence explicit and the next capture will re-apply framing.
+        if needsZoomReset {
+            try applyVideoZoomFactor(captureZoom, to: device)
         }
 
-        return CapturedDNG(data: dngData, capturedAt: Date())
+        let orientation = await MainActor.run { CaptureOrientation(orientation: UIDevice.current.orientation) }
+        return CapturedDNG(data: dngData, capturedAt: Date(), orientation: orientation)
         #else
         throw CaptureError.unsupportedPlatform
         #endif
@@ -354,22 +472,6 @@ actor CaptureService {
             photoOutput.availableRawPhotoPixelFormatTypes
                 .filter { Self.isBayerRawPixelFormat($0) }
                 .first
-        }
-    }
-
-    /// Queries available raw pixel formats and returns those that are pure Bayer.
-    ///
-    /// Filters out ProRAW formats to ensure we get a single-exposure Bayer readout
-    /// with all computational photography disabled.
-    ///
-    /// - Returns: Array of Bayer raw pixel format type codes.
-    func queryAvailableBayerFormats() async -> [OSType] {
-        // `isBayerRAWPixelFormat` is main-actor-isolated in the SDK, so the
-        // (trivial) query runs on the main actor and returns the result.
-        await MainActor.run {
-            photoOutput.availableRawPhotoPixelFormatTypes.filter { format in
-                Self.isBayerRawPixelFormat(format)
-            }
         }
     }
 
@@ -443,6 +545,8 @@ enum CaptureError: LocalizedError, Equatable {
     case noBayerFormatAvailable
     case missingImageData
     case captureFailed(underlying: Error)
+    case captureInProgress
+    case captureTimedOut
     case unsupportedPlatform
     case sessionNotConfigured
     case torchUnavailable
@@ -455,6 +559,8 @@ enum CaptureError: LocalizedError, Equatable {
              (.cannotAddOutput, .cannotAddOutput),
              (.noBayerFormatAvailable, .noBayerFormatAvailable),
              (.missingImageData, .missingImageData),
+             (.captureInProgress, .captureInProgress),
+             (.captureTimedOut, .captureTimedOut),
              (.unsupportedPlatform, .unsupportedPlatform),
              (.sessionNotConfigured, .sessionNotConfigured),
              (.torchUnavailable, .torchUnavailable):
@@ -486,6 +592,10 @@ enum CaptureError: LocalizedError, Equatable {
             return "The captured photo contains no image data."
         case .captureFailed(let error):
             return "The photo could not be captured: \(error.localizedDescription)"
+        case .captureInProgress:
+            return "A photo is already being captured."
+        case .captureTimedOut:
+            return "The photo capture did not complete in time."
         case .unsupportedPlatform:
             return "Camera capture is only supported on iPhone."
         case .sessionNotConfigured:
