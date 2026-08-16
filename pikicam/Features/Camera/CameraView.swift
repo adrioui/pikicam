@@ -4,12 +4,13 @@ import SwiftUI
 // MARK: - CameraView
 
 /// Full-screen camera: live preview, shutter, and a top-right HUD cluster
-/// of quick toggles (RAW, grid, flash, self-timer, camera flip).
+/// of quick toggles (grid, exposure, flash, self-timer, camera flip).
 struct CameraView: View {
     @Environment(CameraViewModel.self) private var viewModel
     @Environment(PikicamLibraryModel.self) private var library
     @State private var session: AVCaptureSession?
     @State private var zoomGestureBase: CGFloat = 1.0
+    @State private var lastGestureFactor: CGFloat = 1.0
     @State private var galleryPresented = false
 
     var body: some View {
@@ -36,6 +37,7 @@ struct CameraView: View {
         .gesture(pinchGesture)
         .onChange(of: viewModel.cameraPosition) { _, _ in
             zoomGestureBase = 1.0
+            lastGestureFactor = 1.0
         }
         .task {
             await viewModel.start()
@@ -52,8 +54,7 @@ struct CameraView: View {
     private var preview: some View {
         if let session {
             CameraPreview(session: session)
-                .aspectRatio(4 / 3, contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea()
                 .accessibilityIdentifier("preview-pinch-area")
         } else {
             Color.black.ignoresSafeArea()
@@ -72,7 +73,11 @@ struct CameraView: View {
             Spacer()
 
             if viewModel.selfTimerRemaining > 0 {
-                SelfTimerCountdownView(remaining: viewModel.selfTimerRemaining)
+                SelfTimerCountdownView(remaining: viewModel.selfTimerRemaining) {
+                    // A tap during the countdown cancels the whole capture
+                    // (countdown task + the capture it was about to start).
+                    viewModel.capture()
+                }
             }
 
             if viewModel.isConfigured {
@@ -81,24 +86,24 @@ struct CameraView: View {
                 // Mode strip
                 HStack(spacing: 24) {
                     Spacer()
-                    Button(action: { viewModel.cycleFramingMode() }) {
+                    Button(action: { viewModel.setFramingMode(.photo) }) {
                         Text("PHOTO")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
-                            .background(.black.opacity(0.5))
+                            .background(viewModel.framingMode == .photo ? .yellow : .black.opacity(0.5))
                             .clipShape(Capsule())
                     }
                     .accessibilityIdentifier("mode-photo")
 
-                    Button(action: { viewModel.cycleFramingMode() }) {
+                    Button(action: { viewModel.setFramingMode(.square) }) {
                         Text("SQUARE")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
-                            .background(.black.opacity(0.5))
+                            .background(viewModel.framingMode == .square ? .yellow : .black.opacity(0.5))
                             .clipShape(Capsule())
                     }
                     .accessibilityIdentifier("mode-square")
@@ -132,13 +137,14 @@ struct CameraView: View {
                                 .padding(2)
                         }
                     }
+                    .accessibilityIdentifier("gallery-thumbnail")
 
                     Spacer()
 
                     // Shutter (center)
                     ShutterButton(
-                        isCapturing: viewModel.phase == .capturing,
-                        action: { Task { await viewModel.capture() } }
+                        isCapturing: viewModel.phase == .capturing || viewModel.phase == .savingDNG,
+                        action: viewModel.capture
                     )
 
                     Spacer()
@@ -157,8 +163,8 @@ struct CameraView: View {
 
                 // Hidden volume-button capture
                 VolumeButtonCaptureView {
-                    if viewModel.phase != .capturing && viewModel.isConfigured {
-                        Task { await viewModel.capture() }
+                    if viewModel.isConfigured {
+                        viewModel.capture()
                     }
                 }
                 .frame(width: 0, height: 0)
@@ -190,6 +196,13 @@ struct CameraView: View {
                     label: "Grid",
                     value: viewModel.showsGrid ? "On" : "Off",
                     action: { viewModel.toggleGrid() }
+                )
+                CameraHUDButton(
+                    systemImage: "plus.forwardslash.minus",
+                    identifier: "exposure-toggle",
+                    label: "EV",
+                    value: viewModel.exposureCompensation.label,
+                    action: { viewModel.cycleExposureCompensation() }
                 )
                 if viewModel.flashAvailable {
                     CameraHUDButton(
@@ -230,97 +243,18 @@ struct CameraView: View {
                     magnification: value,
                     range: viewModel.zoomRange
                 )
+                // The gesture's magnification is cumulative from gesture
+                // start, so the base must stay fixed for the whole gesture;
+                // `base × value` is the correct running zoom. Remember the
+                // computed factor so `.onEnded` can seed the next gesture
+                // from the value we actually applied, not the published
+                // `zoomFactor` (which can lag behind the in-flight task).
+                lastGestureFactor = factor
                 Task { await viewModel.setZoom(factor) }
             }
             .onEnded { _ in
-                zoomGestureBase = viewModel.zoomFactor
+                zoomGestureBase = lastGestureFactor
             }
-    }
-}
-
-#Preview {
-    CameraView()
-        .environment(CameraViewModel())
-}
-
-// MARK: - ReviewOverlay
-
-/// Shows the just-captured print above the live preview. Non-blocking
-/// (`.allowsHitTesting(false)`) so the shutter and HUD stay tappable,
-/// and self-dismisses after a few seconds.
-private struct ReviewOverlay: View {
-    let jpegData: Data
-    let captureZoom: CGFloat
-    let timestamp: Date
-    let onDismiss: () -> Void
-
-    var body: some View {
-        ZStack {
-            Color.black.opacity(0.85).ignoresSafeArea()
-            if let image = UIImage(data: jpegData) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .ignoresSafeArea()
-            }
-            VStack {
-                Spacer()
-                HStack(spacing: 16) {
-                    Text(String(format: "%.1fx", captureZoom))
-                        .font(.caption)
-                        .foregroundStyle(.white)
-                        .padding(6)
-                        .background(.black.opacity(0.6))
-                        .clipShape(Capsule())
-                    Text(timestamp, style: .time)
-                        .font(.caption)
-                        .foregroundStyle(.white)
-                        .padding(6)
-                        .background(.black.opacity(0.6))
-                        .clipShape(Capsule())
-                }
-                .padding(.bottom, 32)
-            }
-        }
-        .allowsHitTesting(false)
-        .task {
-            try? await Task.sleep(for: .seconds(3))
-            if !Task.isCancelled { onDismiss() }
-        }
-        .accessibilityIdentifier("review-overlay")
-    }
-}
-
-// MARK: - ThumbnailOverlay
-
-private struct ThumbnailOverlay: View {
-    let library: PikicamLibraryModel
-    let latest: PikicamCapture?
-    let onTap: () -> Void
-
-    var body: some View {
-        Button {
-            onTap()
-        } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.black.opacity(0.3))
-                    .frame(width: 60, height: 58)
-                if let capture = latest {
-                    ThumbnailImage(assetID: capture.assetID, library: library)
-                } else {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.4))
-                        .frame(width: 60, height: 58)
-                }
-            }
-            .overlay(alignment: .bottomTrailing) {
-                Image(systemName: "photo.on.rectangle")
-                    .font(.caption)
-                    .foregroundStyle(.yellow)
-                    .padding(2)
-            }
-        }
     }
 }
 
@@ -392,6 +326,7 @@ private struct ApertureMaskOverlay: View {
 /// the cancel target — tapping anywhere on the screen cancels via the VM.
 private struct SelfTimerCountdownView: View {
     let remaining: Int
+    let onCancel: () -> Void
 
     var body: some View {
         Text("\(remaining)")
@@ -400,6 +335,10 @@ private struct SelfTimerCountdownView: View {
             .padding(24)
             .background(.black.opacity(0.6))
             .clipShape(Circle())
+            .contentShape(Rectangle())
+            .onTapGesture(perform: onCancel)
             .accessibilityIdentifier("self-timer-countdown")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityHint("Cancels the timer")
     }
 }

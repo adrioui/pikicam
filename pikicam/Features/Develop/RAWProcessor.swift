@@ -38,19 +38,13 @@ struct DNGDisplayRendition: Sendable {
 // MARK: - Errors
 
 enum DevelopError: LocalizedError, Equatable {
-    case invalidDNGData
     case filterCreationFailed
-    case unsupportedControl(String)
     case renderingFailed
 
     var errorDescription: String? {
         switch self {
-        case .invalidDNGData:
-            return "The DNG data is invalid or corrupted."
         case .filterCreationFailed:
             return "Failed to create the RAW development filter."
-        case .unsupportedControl(let control):
-            return "The RAW developer does not support the '\(control)' control on this device."
         case .renderingFailed:
             return "Failed to render the developed image."
         }
