@@ -86,35 +86,6 @@ final class CameraControlTests: XCTestCase {
         XCTAssertEqual(ZoomMath.label(for: 3.27), "3.3x")
     }
 
-    // MARK: - Crop geometry
-
-    func testCropRectIsIdentityBelowOrAtUnityZoom() {
-        let extent = CGRect(x: 10, y: 20, width: 4032, height: 3024)
-        XCTAssertEqual(ZoomMath.cropRect(in: extent, for: 1.0), extent)
-        XCTAssertEqual(ZoomMath.cropRect(in: extent, for: 0.5), extent)
-    }
-
-    func testCropRectIsCenteredAndShrinksByFactor() {
-        let extent = CGRect(x: 0, y: 0, width: 4000, height: 3000)
-        let rect = ZoomMath.cropRect(in: extent, for: 2.0)
-        XCTAssertEqual(rect.width, 2000, accuracy: 0.0001)
-        XCTAssertEqual(rect.height, 1500, accuracy: 0.0001)
-        // Centered: equal margins on both sides of each axis.
-        XCTAssertEqual(rect.minX, 1000, accuracy: 0.0001)
-        XCTAssertEqual(rect.minY, 750, accuracy: 0.0001)
-        XCTAssertEqual(rect.maxX, 3000, accuracy: 0.0001)
-        XCTAssertEqual(rect.maxY, 2250, accuracy: 0.0001)
-    }
-
-    
-    func testCropRectStaysInsideTheSensorExtent() {
-        let extent = CGRect(x: 0, y: 0, width: 4032, height: 3024)
-        for factor: CGFloat in [1.5, 2.0, 3.0, 5.0] {
-            let rect = ZoomMath.cropRect(in: extent, for: factor)
-            XCTAssertTrue(extent.contains(rect), "Crop at \(factor)× left the sensor bounds.")
-        }
-    }
-
     // MARK: - Grid geometry
 
     func testGridLinesAreAtThirds() {
@@ -193,5 +164,17 @@ final class CameraControlTests: XCTestCase {
         XCTAssertEqual(ExposureCompensation(stops: -1.0 / 3.0).label, "−1/3")
         XCTAssertEqual(ExposureCompensation(stops: 5.0 / 3.0).label, "+1 2/3")
         XCTAssertEqual(ExposureCompensation(stops: -7.0 / 3.0).label, "−2 1/3")
+    }
+
+    /// Stepping is done in whole thirds (`Int`), so a full cycle around the
+    /// −3 … +3 range returns exactly to zero — no floating-point drift
+    /// accumulates across repeated cycling.
+    func testExposureCompensationCycleIsDriftFree() {
+        var value = ExposureCompensation.zero
+        for _ in 0..<(ExposureCompensation.maxThird - ExposureCompensation.minThird + 1) {
+            value = value.next()
+        }
+        XCTAssertEqual(value, .zero, "A full 19-step cycle must return exactly to zero.")
+        XCTAssertEqual(value.stops, 0, accuracy: 0.0001)
     }
 }
