@@ -19,7 +19,7 @@ struct GalleryView: View {
                     if let latest = library.captures.first {
                         Button {
                             library.select(latest)
-                            presentViewerAfterTouchSettles()
+                            viewerPresented = true
                         } label: {
                             AsyncThumbnail(assetID: latest.assetID, library: library)
                                 .frame(width: 60, height: 50)
@@ -70,17 +70,6 @@ struct GalleryView: View {
         .task { await library.refresh() }
     }
 
-    /// Presents the DNG viewer only after the current touch has fully settled.
-    /// Without this, the touch that opens the viewer can be replayed onto the
-    /// full-screen cover's background tap gesture, immediately hiding the
-    /// viewer chrome on entry.
-    private func presentViewerAfterTouchSettles() {
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(250))
-            viewerPresented = true
-        }
-    }
-
     @ViewBuilder
     private var galleryContent: some View {
         if library.isLoading && library.captures.isEmpty && library.error == nil {
@@ -118,7 +107,7 @@ struct GalleryView: View {
                         ForEach(Array(library.captures.enumerated()), id: \.element.id.uuid) { index, capture in
                             Button(action: {
                                 library.select(capture)
-                                presentViewerAfterTouchSettles()
+                                viewerPresented = true
                             }) {
                                 AsyncThumbnail(assetID: capture.assetID, library: library)
                                     .aspectRatio(1, contentMode: .fit)
@@ -163,14 +152,10 @@ private struct FullScreenViewer: View {
     /// the actor owns a Metal-backed `CIContext`, which is too expensive to
     /// rebuild for every DNG load.
     @State private var developService = DevelopService()
-    /// Guards against the presenting tap being delivered to the viewer's
-    /// background tap gesture (which would immediately hide the chrome).
-    /// The gesture is only enabled after the full-screen cover has settled.
-    @State private var chromeToggleEnabled = false
-    /// Consumes the first background tap after the viewer appears.  This
-    /// absorbs the stray tap that can be replayed onto the newly-presented
-    /// cover, regardless of delivery delay.  After that the user can toggle
-    /// freely.
+    /// Consumes the first background tap after the viewer appears: the touch
+    /// that opened the full-screen cover can be replayed onto the background
+    /// tap gesture, which would immediately hide the chrome on entry. After
+    /// that one absorbed tap the user can toggle freely.
     @State private var hasConsumedOpeningTap = false
 
     var body: some View {
@@ -196,10 +181,6 @@ private struct FullScreenViewer: View {
             Color.clear
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    guard chromeToggleEnabled else { return }
-                    // Consume the very first background tap after the viewer
-                    // appears.  This absorbs the stray tap that can be
-                    // replayed onto the newly-presented full-screen cover.
                     guard hasConsumedOpeningTap else {
                         hasConsumedOpeningTap = true
                         return
@@ -231,18 +212,6 @@ private struct FullScreenViewer: View {
                 }
             }
 
-        }
-        .onAppear {
-            // The full-screen cover animation takes ~0.35 s.  During that
-            // window the touch that opened the viewer can be replayed onto
-            // the background tap gesture, immediately hiding the chrome.
-            // We wait 0.5 s to be well past the animation before allowing
-            // background-tap toggling.  The first background tap after that
-            // is still consumed (hasConsumedOpeningTap) to absorb any
-            // deferred stray touch delivery.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                chromeToggleEnabled = true
-            }
         }
         .alert("Delete capture?", isPresented: $deleteConfirmPresented) {
             Button("Delete", role: .destructive) {

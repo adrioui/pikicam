@@ -223,6 +223,22 @@ final class CameraControlTests: XCTestCase {
         XCTAssertEqual(crop.midY, view.midY, accuracy: 0.0001)
     }
 
+    func testPrintCropHandlesDegenerateExtent() {
+        // Zero-size extents (transient GeometryReader layout in the framing
+        // overlays) must yield a zero rect — no crash, no unbounded candidate.
+        XCTAssertEqual(PrintCrop.rect(in: .zero, zoomFactor: 1.0, aspect: .ratio16x9), .zero)
+        XCTAssertEqual(PrintCrop.rect(in: .zero, zoomFactor: 2.0, aspect: .ratio1x1), .zero)
+    }
+
+    func testPrintCropTreatsSubUnityZoomAsOne() {
+        // zoomRange's lower bound is 1×, so sub-unity factors are outside the
+        // representable domain and must clamp to the unzoomed aspect rect.
+        let sensor = CGRect(x: 0, y: 0, width: 4000, height: 3000) // 4:3
+        let crop = PrintCrop.rect(in: sensor, zoomFactor: 0.5, aspect: .ratio4x3)
+        XCTAssertEqual(crop, PrintCrop.rect(in: sensor, zoomFactor: 1.0, aspect: .ratio4x3))
+        XCTAssertEqual(crop, sensor)
+    }
+
     // MARK: - Exposure compensation
 
     func testExposureCompensationSnapsToThirds() {
