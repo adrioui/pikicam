@@ -6,7 +6,6 @@ struct GalleryView: View {
     @Environment(PikicamLibraryModel.self) private var library
     @Environment(\.dismiss) private var dismiss
     @State private var viewerPresented = false
-    @State private var chromeHidden = false
     @State private var deleteConfirmPresented = false
 
     var body: some View {
@@ -20,8 +19,7 @@ struct GalleryView: View {
                     if let latest = library.captures.first {
                         Button {
                             library.select(latest)
-                            chromeHidden = false
-                            viewerPresented = true
+                            presentViewerAfterTouchSettles()
                         } label: {
                             AsyncThumbnail(assetID: latest.assetID, library: library)
                                 .frame(width: 60, height: 50)
@@ -32,11 +30,6 @@ struct GalleryView: View {
                 }
                 ToolbarItem(placement: .bottomBar) {
                     HStack(spacing: 16) {
-                        Button { chromeHidden.toggle() } label: {
-                            Image(systemName: chromeHidden ? "eye.slash" : "eye")
-                                .foregroundStyle(.yellow)
-                        }
-                        .accessibilityIdentifier("gallery-eye-toggle")
                         Button(role: .destructive) {
                             deleteConfirmPresented = true
                         } label: {
@@ -65,7 +58,6 @@ struct GalleryView: View {
                 FullScreenViewer(
                     capture: capture,
                     library: library,
-                    chromeHidden: $chromeHidden,
                     isPresented: $viewerPresented,
                     onBackToCamera: {
                         viewerPresented = false
@@ -76,6 +68,17 @@ struct GalleryView: View {
         }
         .preferredColorScheme(.dark)
         .task { await library.refresh() }
+    }
+
+    /// Presents the DNG viewer only after the current touch has fully settled.
+    /// Without this, the touch that opens the viewer can be replayed onto the
+    /// full-screen cover's background tap gesture, immediately hiding the
+    /// viewer chrome on entry.
+    private func presentViewerAfterTouchSettles() {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(250))
+            viewerPresented = true
+        }
     }
 
     @ViewBuilder
@@ -115,8 +118,7 @@ struct GalleryView: View {
                         ForEach(Array(library.captures.enumerated()), id: \.element.id.uuid) { index, capture in
                             Button(action: {
                                 library.select(capture)
-                                chromeHidden = false
-                                viewerPresented = true
+                                presentViewerAfterTouchSettles()
                             }) {
                                 AsyncThumbnail(assetID: capture.assetID, library: library)
                                     .aspectRatio(1, contentMode: .fit)
@@ -150,13 +152,26 @@ struct GalleryView: View {
 private struct FullScreenViewer: View {
     let capture: PikicamCapture
     let library: PikicamLibraryModel
-    @Binding var chromeHidden: Bool
+    @State private var chromeHidden = false
     @Binding var isPresented: Bool
     let onBackToCamera: () -> Void
     @State private var image: UIImage?
     @State private var loadFailed = false
     @State private var loadErrorDescription: String?
     @State private var deleteConfirmPresented = false
+    /// The zero-process develop pipeline. Created once per viewer lifetime:
+    /// the actor owns a Metal-backed `CIContext`, which is too expensive to
+    /// rebuild for every DNG load.
+    @State private var developService = DevelopService()
+    /// Guards against the presenting tap being delivered to the viewer's
+    /// background tap gesture (which would immediately hide the chrome).
+    /// The gesture is only enabled after the full-screen cover has settled.
+    @State private var chromeToggleEnabled = false
+    /// Consumes the first background tap after the viewer appears.  This
+    /// absorbs the stray tap that can be replayed onto the newly-presented
+    /// cover, regardless of delivery delay.  After that the user can toggle
+    /// freely.
+    @State private var hasConsumedOpeningTap = false
 
     var body: some View {
         ZStack {
@@ -180,33 +195,53 @@ private struct FullScreenViewer: View {
             }
             Color.clear
                 .contentShape(Rectangle())
-                .onTapGesture { chromeHidden.toggle() }
+                .onTapGesture {
+                    guard chromeToggleEnabled else { return }
+                    // Consume the very first background tap after the viewer
+                    // appears.  This absorbs the stray tap that can be
+                    // replayed onto the newly-presented full-screen cover.
+                    guard hasConsumedOpeningTap else {
+                        hasConsumedOpeningTap = true
+                        return
+                    }
+                    chromeHidden.toggle()
+                }
                 .accessibilityIdentifier("viewer-background")
-        }
-        .overlay(alignment: .top) {
             if !chromeHidden {
-                HStack {
-                    Text("DNG Viewer")
+                VStack {
+                    HStack {
+                        Text("DNG Viewer")
+                        Spacer()
+                        Button { chromeHidden.toggle() } label: {
+                            Image(systemName: chromeHidden ? "eye.slash" : "eye")
+                        }
+                        .accessibilityIdentifier("viewer-chrome-toggle")
+                        Button { deleteConfirmPresented = true } label: {
+                            Image(systemName: "trash")
+                        }
+                        .accessibilityIdentifier("viewer-delete")
+                    }
+                    .padding()
                     Spacer()
-                    Button { chromeHidden.toggle() } label: {
-                        Image(systemName: chromeHidden ? "eye.slash" : "eye")
+                    Button(action: onBackToCamera) {
+                        Text("Back to Camera")
                     }
-                    .accessibilityIdentifier("viewer-chrome-toggle")
-                    Button { deleteConfirmPresented = true } label: {
-                        Image(systemName: "trash")
-                    }
-                    .accessibilityIdentifier("viewer-delete")
+                    .accessibilityIdentifier("viewer-back")
+                    .padding()
                 }
-                .padding()
             }
+
         }
-        .overlay(alignment: .bottom) {
-            if !chromeHidden {
-                Button(action: onBackToCamera) {
-                    Text("Back to Camera")
-                }
-                .accessibilityIdentifier("viewer-back")
-                .padding()
+        .onAppear {
+            // The full-screen cover animation takes ~0.35 s.  During that
+            // window the touch that opened the viewer can be replayed onto
+            // the background tap gesture, immediately hiding the chrome.
+            // We wait 0.5 s to be well past the animation before allowing
+            // background-tap toggling.  The first background tap after that
+            // is still consumed (hasConsumedOpeningTap) to absorb any
+            // deferred stray touch delivery.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                chromeToggleEnabled = true
             }
         }
         .alert("Delete capture?", isPresented: $deleteConfirmPresented) {
@@ -228,8 +263,11 @@ private struct FullScreenViewer: View {
             loadErrorDescription = nil
             do {
                 let data = try await library.loadOriginalDNG(for: capture.assetID)
-                let service = DevelopService()
-                let rendition = try await service.render(dngData: data, orientation: capture.orientation)
+                let rendition = try await developService.render(
+                    dngData: data,
+                    aspectRatio: capture.aspectRatio,
+                    zoomFactor: capture.zoomFactor
+                )
                 image = UIImage(cgImage: rendition.cgImage)
             } catch {
                 loadErrorDescription = error.localizedDescription

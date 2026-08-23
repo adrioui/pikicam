@@ -34,29 +34,27 @@ nonisolated enum CameraPosition: Equatable {
 ///
 /// Pikicam captures pure Bayer RAW single exposures, which cannot use
 /// `AVCapturePhotoSettings.flashMode` (system flash is a processed-pipeline
-/// feature). The honest RAW-compatible equivalent is the **torch**: a
-/// continuous light the sensor actually sees. The three states mirror the
-/// system Camera app's flash control: off / on / auto.
+/// feature). The honest RAW-compatible equivalent is the **torch**, used as
+/// a shutter-time pulse: `on` fires the torch for the exposure, then turns
+/// it back off — like a normal camera flash, not a constant work light.
 nonisolated enum FlashMode: Equatable, CaseIterable {
     case off
     case on
-    case auto
 
-    /// The next mode in the off → on → auto → off cycle.
+    /// The next mode in the off → on → off cycle.
     func next() -> FlashMode {
         switch self {
         case .off: return .on
-        case .on: return .auto
-        case .auto: return .off
+        case .on: return .off
         }
     }
 
-    /// The `AVCaptureDevice.TorchMode` this mode maps to.
+    /// The `AVCaptureDevice.TorchMode` this mode maps to while the torch is
+    /// actually firing during capture. `off` never fires.
     var avTorchMode: AVCaptureDevice.TorchMode {
         switch self {
         case .off: return .off
         case .on: return .on
-        case .auto: return .auto
         }
     }
 
@@ -65,7 +63,6 @@ nonisolated enum FlashMode: Equatable, CaseIterable {
         switch self {
         case .off: return "Off"
         case .on: return "On"
-        case .auto: return "Auto"
         }
     }
 }
@@ -112,17 +109,120 @@ nonisolated enum GridGeometry {
     }
 }
 
-// MARK: - FramingMode
+// MARK: - AspectRatio
 
-/// The compositional aperture shown over the full-sensor preview.
-///
-/// Framing is preview-only: `photo` shows the 4:3 sensor aperture (3:4 in
-/// portrait), `square` shows a centered 1:1 compositional aperture over the
-/// same full sensor feed. The captured DNG is always the unchanged
-/// full-sensor original; no crop is applied, encoded, or persisted.
-nonisolated enum FramingMode: CaseIterable, Sendable {
-    case photo
-    case square
+/// The output aspect ratio of the developed result. The DNG is always
+/// captured full-sensor; the aspect is applied as a non-destructive crop at
+/// develop/view time. 4:3 is the sensor-native default.
+nonisolated public enum AspectRatio: String, CaseIterable, Codable, Sendable {
+    case ratio4x3
+    case ratio16x9
+    case ratio1x1
+
+    /// The landscape width/height ratio (e.g. 4:3 → 4/3).
+    /// Use `ratio(in:)` when the extent may be portrait.
+    var ratio: CGFloat {
+        switch self {
+        case .ratio4x3: return 4.0 / 3.0
+        case .ratio16x9: return 16.0 / 9.0
+        case .ratio1x1: return 1.0
+        }
+    }
+
+    /// The width/height ratio appropriate for the given image extent.
+    /// Sensor extents are typically landscape (4032×3024); view bounds are
+    /// typically portrait (e.g. 375×812).  Returns the landscape ratio when
+    /// the extent is wider than it is tall, and the portrait ratio (height /
+    /// width) when the extent is taller than it is wide, matching the iOS
+    /// Camera app convention (the label never changes — 16:9 is always
+    /// labelled "16:9" regardless of orientation).
+    func ratio(in extent: CGRect) -> CGFloat {
+        if extent.width >= extent.height { return ratio }
+        return 1.0 / ratio
+    }
+
+    var label: String {
+        switch self {
+        case .ratio4x3: return "4:3"
+        case .ratio16x9: return "16:9"
+        case .ratio1x1: return "1:1"
+        }
+    }
+
+    func next() -> AspectRatio {
+        let all = AspectRatio.allCases
+        let index = all.firstIndex(of: self) ?? 0
+        return all[(index + 1) % all.count]
+    }
+}
+
+// MARK: - PrintCrop
+
+/// The non-destructive print crop: the intersection of the user's framing
+/// zoom and the chosen aspect ratio. The DNG stays full-sensor; this geometry
+/// is applied only when developing/viewing the result.
+nonisolated enum PrintCrop {
+
+    static func rect(in extent: CGRect, zoomFactor: CGFloat, aspect: AspectRatio) -> CGRect {
+        zoomRect(intersected: aspectRect(in: extent, aspect: aspect), in: extent, zoomFactor: zoomFactor)
+    }
+
+    /// The largest rect of `extent` matching `aspect`, centered.
+    ///
+    /// Each candidate fills one image axis: widthBound fills the width
+    /// (cropping top/bottom), heightBound fills the height (cropping left/
+    /// right). For 4:3 sensor + 16:9, widthBound fits and is chosen. For
+    /// 4:3 sensor + 1:1, heightBound fits and is chosen. Matches the iOS
+    /// Camera photo convention: the wider FOV is preserved by cropping the
+    /// shorter axis.
+    ///
+    /// The aspect ratio is adjusted for the extent's orientation (landscape
+    /// vs portrait) so the result is always correct regardless of whether
+    /// `extent` is a sensor rectangle (landscape) or a view bounds (portrait).
+    private static func aspectRect(in extent: CGRect, aspect: AspectRatio) -> CGRect {
+        let r = aspect.ratio(in: extent)
+        let widthBound = CGRect(x: 0, y: 0, width: extent.width, height: extent.width / r)
+        let heightBound = CGRect(x: 0, y: 0, width: extent.height * r, height: extent.height)
+        let fits = widthBound.height <= extent.height ? widthBound : heightBound
+        let origin = CGPoint(x: extent.midX - fits.width / 2, y: extent.midY - fits.height / 2)
+        return CGRect(x: origin.x, y: origin.y, width: fits.width, height: fits.height)
+    }
+
+    /// The centered `1/zoomFactor` rect of `aspectRect`, clamped to `extent`.
+    private static func zoomRect(intersected aspectRect: CGRect, in extent: CGRect, zoomFactor: CGFloat) -> CGRect {
+        guard zoomFactor > 1.0 else { return aspectRect }
+        let width = aspectRect.width / zoomFactor
+        let height = aspectRect.height / zoomFactor
+        let origin = CGPoint(
+            x: max(extent.minX, min(aspectRect.midX - width / 2, aspectRect.maxX - width)),
+            y: max(extent.minY, min(aspectRect.midY - height / 2, aspectRect.maxY - height))
+        )
+        return CGRect(x: origin.x, y: origin.y, width: width, height: height)
+    }
+}
+
+// MARK: - ZoomPresets
+
+/// Pure math for the quick-zoom preset chips (no AVFoundation state —
+/// testable). Presets are the meaningful digital-zoom stops of the current
+/// camera's available range: its lower bound (always 1×) plus the standard
+/// 2× and 5× stops when the range reaches them.
+nonisolated enum ZoomPresets {
+
+    /// The preset factors to surface for `range`, ascending and deduplicated.
+    /// A front camera's fixed 1× range yields exactly `[lowerBound]`.
+    static func factors(in range: ClosedRange<CGFloat>) -> [CGFloat] {
+        var factors = [range.lowerBound]
+        for candidate in [CGFloat(2.0), CGFloat(5.0)] where range.contains(candidate) {
+            factors.append(candidate)
+        }
+        return factors
+    }
+
+    /// Whether `factor` is close enough to `preset` to highlight its chip.
+    static func isSelected(_ factor: CGFloat, of preset: CGFloat) -> Bool {
+        abs(factor - preset) < 0.01
+    }
 }
 
 // MARK: - ExposureCompensation
@@ -132,8 +232,8 @@ nonisolated enum FramingMode: CaseIterable, Sendable {
 /// ... maxExposureTargetBias`; this snaps user input to discrete steps and
 /// formats the label (e.g. "+1 2/3", "-2/3", "0").
 ///
-/// Stepping happens in whole thirds (`Int`), so repeated cycling never
-/// accumulates floating-point drift; stops are computed only at the boundary
+/// Stepping happens in whole thirds (`Int`), so repeated adjustments never
+/// accumulate floating-point drift; stops are computed only at the boundary
 /// where the device needs them.
 nonisolated struct ExposureCompensation: Equatable, Sendable {
     /// The bias in whole thirds of an EV stop (each `third` == 1/3 EV).

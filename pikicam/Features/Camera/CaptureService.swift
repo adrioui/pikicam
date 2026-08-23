@@ -12,15 +12,15 @@ import UIKit
 /// happen on a dedicated serial queue, keeping them off-main and properly isolated.
 /// This is necessary because `AVCaptureSession` is not `Sendable` in Swift 6.
 actor CaptureService {
-    
+
     // MARK: - Properties
 
     /// The capture session driving the camera.
     private let session = AVCaptureSession()
-    
+
     /// The photo output used for capturing still images.
     private let photoOutput = AVCapturePhotoOutput()
-    
+
     /// The currently active wide camera device.
     private var cameraDevice: AVCaptureDevice?
 
@@ -32,15 +32,15 @@ actor CaptureService {
 
     /// The current flash (torch) mode.
     private(set) var flashMode: FlashMode = .off
-    
+
     /// Serial queue for all AVFoundation operations.
     private let serialQueue = DispatchSerialQueue(label: "com.pikicam.capture", qos: .userInitiated)
-    
+
     /// Custom executor using the serial queue.
     nonisolated var unownedExecutor: UnownedSerialExecutor {
         serialQueue.asUnownedSerialExecutor()
     }
-    
+
     /// Whether the session is currently running.
     private var isRunning = false
 
@@ -50,14 +50,8 @@ actor CaptureService {
     /// re-entering while a RAW photo is in flight.
     private var isCaptureInFlight = false
 
-    /// The exposure bias the next capture must apply, in EV stops. Owned by
-    /// the actor: its serial executor makes "set bias, then capture" atomic
-    /// with respect to other device calls, so the UI never needs a
-    /// hand-rolled task-chaining protocol to serialize EV against capture.
-    private var pendingExposureBias: Double = 0
-
     // MARK: - Initialization
-    
+
     init() {}
 
     // MARK: - Session Configuration
@@ -68,10 +62,10 @@ actor CaptureService {
 
         session.beginConfiguration()
         defer { session.commitConfiguration() }
-        
+
         // Configure for high-quality photo capture
         session.sessionPreset = .photo
-        
+
         // Select the back-wide camera (the capture default).
         guard let device = Self.selectCamera(at: .back) else {
             throw CaptureError.cameraUnavailable
@@ -79,7 +73,7 @@ actor CaptureService {
         self.cameraDevice = device
         self.cameraPosition = .back
         self.cameraInput = nil
-        
+
         // Add device input
         let input: AVCaptureDeviceInput
         do {
@@ -92,13 +86,13 @@ actor CaptureService {
         }
         session.addInput(input)
         cameraInput = input
-        
+
         // Add photo output
         guard session.canAddOutput(photoOutput) else {
             throw CaptureError.cannotAddOutput
         }
         session.addOutput(photoOutput)
-        
+
         // Enable RAW capture if available
         configureRAWOutput()
         isConfigured = true
@@ -127,7 +121,7 @@ actor CaptureService {
     func getSession() -> CaptureSessionBox {
         CaptureSessionBox(session: session)
     }
-    
+
     // MARK: - Camera Controls
 
     /// Toggles between the back and front cameras.
@@ -188,7 +182,9 @@ actor CaptureService {
         do {
             try applyVideoZoomFactor(1.0, to: device)
             if device.hasTorch {
-                try applyTorchMode(flashMode, to: device)
+                // A camera switch must never leave the torch on. The flash
+                // mode is a capture-time pulse; the preview stays dark.
+                try applyTorchMode(.off, to: device)
             } else if flashMode != .off {
                 flashMode = .off
             }
@@ -272,9 +268,12 @@ actor CaptureService {
         cameraDevice?.hasTorch ?? false
     }
 
-    /// Advances the flash mode off → on → auto → off and applies it to the
-    /// torch. RAW single exposures cannot use the processed-pipeline photo
-    /// flash, so the torch is the honest flash equivalent for pikicam.
+    /// Advances the flash mode off → on → off.
+    ///
+    /// Selecting a mode never turns the torch on or leaves it on: `on` means
+    /// "pulse the torch during the next capture", not "keep the work light
+    /// on". RAW single exposures cannot use the processed-pipeline photo
+    /// flash, so the torch pulse is the honest flash equivalent for pikicam.
     ///
     /// - Returns: the newly active `FlashMode`.
     func cycleFlash() async throws -> FlashMode {
@@ -283,50 +282,76 @@ actor CaptureService {
             throw CaptureError.torchUnavailable
         }
         flashMode = flashMode.next()
-        try applyTorchMode(flashMode, to: device)
         return flashMode
     }
 
-    /// Records the exposure bias the next capture must apply, in EV stops.
+    /// Sets the focus and exposure point of interest to the tapped location.
     ///
-    /// The actor's serial executor serializes this against `capturePhoto`, so
-    /// the bias is applied atomically with the RAW capture — there is no
-    /// window where the UI has committed a bias the capture ignores, and no
-    /// need for the caller to track an in-flight bias task.
-    ///
-    /// - Parameter stops: The requested bias; clamped to the device range at
-    ///   application time inside `capturePhoto`.
-    func setExposureBias(_ stops: Double) async {
-        pendingExposureBias = stops
-    }
-
-    /// Clears the pending exposure bias (e.g. after a camera toggle, which
-    /// resets the session to 0 EV).
-    func clearExposureBias() async {
-        pendingExposureBias = 0
-    }
-
-    /// Applies the pending exposure bias to the device, clamped to its
-    /// supported range. Runs inside `capturePhoto` after the zoom settle, so
-    /// the bias and the RAW exposure are one serialized actor turn.
-    private func applyPendingExposureBiasIfNeeded() async throws {
-        guard pendingExposureBias != 0 else { return }
+    /// Matches the system Camera app's tap-to-meter behavior: the device
+    /// focuses and meters at the same normalized point. The point comes from
+    /// `PreviewView.devicePoint(for:)`, so it is already in AVFoundation's
+    /// normalized capture-device coordinates.
+    func setFocusAndExposure(at point: CGPoint) async throws {
+        guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
         guard let device = cameraDevice else { throw CaptureError.sessionNotConfigured }
-        let range = Double(device.minExposureTargetBias)...Double(device.maxExposureTargetBias)
-        let clamped = ExposureCompensation(stops: pendingExposureBias)
-        let target = max(range.lowerBound, min(clamped.stops, range.upperBound))
-        try await applyExposureBias(Float(target), to: device)
-    }
-
-    private func applyExposureBias(_ bias: Float, to device: AVCaptureDevice) async throws {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            device.setExposureTargetBias(bias) { _ in
-                continuation.resume()
+        guard device.isFocusPointOfInterestSupported,
+              device.isExposurePointOfInterestSupported else {
+            throw CaptureError.focusExposureUnavailable
+        }
+        do {
+            try device.lockForConfiguration()
+            defer { device.unlockForConfiguration() }
+            device.focusPointOfInterest = point
+            device.exposurePointOfInterest = point
+            if device.isFocusModeSupported(.autoFocus) {
+                device.focusMode = .autoFocus
             }
+            if device.isExposureModeSupported(.autoExpose) {
+                device.exposureMode = .autoExpose
+            }
+        } catch {
+            throw CaptureError.deviceLockFailed(underlying: error)
         }
     }
 
     // MARK: - Private Camera Helpers
+
+    /// Applies exposure compensation to the current camera **live**: unlike
+    /// zoom, `exposureTargetBias` is safe to change at any time (it steers
+    /// the metering decision, not the sensor geometry), so the preview
+    /// brightens/darkens immediately — matching every standard camera app.
+    ///
+    /// The value snaps to 1/3 stops via `ExposureCompensation`, then clamps
+    /// to the device's supported bias range (which can be narrower than
+    /// ±3 EV). The applied value is returned so the UI publishes exactly
+    /// what the device holds.
+    ///
+    /// - Parameter stops: The requested bias in EV stops.
+    /// - Returns: The snapped/clamped stops actually applied.
+    /// - Throws: `CaptureError.captureInProgress`, `.sessionNotConfigured`,
+    ///   or `.deviceLockFailed`.
+    func setExposureBias(_ stops: Double) async throws -> Double {
+        guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
+        guard let device = cameraDevice else { throw CaptureError.sessionNotConfigured }
+        let snapped = ExposureCompensation(stops: stops).stops
+        let deviceRange = Double(device.minExposureTargetBias)...Double(device.maxExposureTargetBias)
+        let target = max(deviceRange.lowerBound, min(snapped, deviceRange.upperBound))
+        do {
+            try device.lockForConfiguration()
+            defer { device.unlockForConfiguration() }
+            // `exposureTargetBias` itself is get-only; the setter is this
+            // asynchronous method. Its completion fires on an arbitrary
+            // queue, so resume the actor from there.
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                device.setExposureTargetBias(Float(target)) { _ in
+                    continuation.resume()
+                }
+            }
+        } catch {
+            throw CaptureError.deviceLockFailed(underlying: error)
+        }
+        return target
+    }
 
     /// Applies a zoom factor under a configuration lock. The deferred unlock
     /// is installed only after the lock succeeds, so a thrown setter can
@@ -356,7 +381,7 @@ actor CaptureService {
     }
 
     // MARK: - Photo Capture
-    
+
     /// Captures a single Bayer RAW photo (DNG-only).
     ///
     /// Configures the capture settings to use pure Bayer format (not ProRAW),
@@ -373,7 +398,7 @@ actor CaptureService {
     ///
     /// - Returns: The captured full-sensor DNG and the capture timestamp.
     /// - Throws: `CaptureError` if capture fails.
-    func capturePhoto() async throws -> CapturedDNG {
+    func capturePhoto(aspectRatio: AspectRatio = .ratio4x3) async throws -> CapturedDNG {
         #if os(iOS)
         guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
         isCaptureInFlight = true
@@ -408,12 +433,6 @@ actor CaptureService {
                 try await Task.sleep(nanoseconds: 250_000_000)
             }
 
-            // Apply the committed exposure bias atomically with the capture:
-            // the actor serializes this against any concurrent
-            // `setExposureBias`, so the RAW exposure always reflects the
-            // latest UI value.
-            try await applyPendingExposureBiasIfNeeded()
-
             // Configure RAW-only photo settings: the sole delivered payload is the
             // Bayer DNG. No processed format is requested and no processed data
             // is retained.
@@ -422,8 +441,22 @@ actor CaptureService {
             // raises NSInvalidArgumentException ("Unsupported when capturing RAW")
             // at capture time. The default (.balanced) is used.
 
+            // Flash is a torch pulse: turn it on for the exposure and back off
+            // immediately after, so the flash never stays on after capture.
+            let shouldPulseTorch = flashMode == .on && device.hasTorch
+            if shouldPulseTorch {
+                try applyTorchMode(.on, to: device)
+            }
+
             // Use the async extension on AVCapturePhotoOutput for delegate bridging.
             let photo = try await photoOutput.capturePhoto(with: settings)
+
+            // Turning the torch back off after the exposure is best-effort: a
+            // post-capture cleanup failure must never discard a successfully
+            // captured DNG.
+            if shouldPulseTorch {
+                try? applyTorchMode(.off, to: device)
+            }
 
             guard let fileData = photo.fileDataRepresentation() else {
                 throw CaptureError.missingImageData
@@ -431,9 +464,18 @@ actor CaptureService {
             dngData = fileData
         } catch {
             // Capture (or the settle sleep) failed after the 1× switch: restore
-            // the framing zoom before propagating the original error.
+            // the framing zoom before propagating the original error. Also make
+            // sure a failed capture never leaves the torch on.
+            //
+            // Both restores are best-effort here: a restore failure must never
+            // mask the capture error that caused this path (the success path
+            // below propagates zoom-restore failures explicitly; here the
+            // original capture failure is the diagnostic that matters).
             if needsZoomReset {
-                try applyVideoZoomFactor(captureZoom, to: device)
+                try? applyVideoZoomFactor(captureZoom, to: device)
+            }
+            if flashMode == .on, cameraDevice?.hasTorch == true {
+                try? applyTorchMode(.off, to: device)
             }
             if let captureError = error as? CaptureError {
                 throw captureError
@@ -451,14 +493,20 @@ actor CaptureService {
         }
 
         let orientation = await MainActor.run { CaptureOrientation(orientation: UIDevice.current.orientation) }
-        return CapturedDNG(data: dngData, capturedAt: Date(), orientation: orientation)
+        return CapturedDNG(
+            data: dngData,
+            capturedAt: Date(),
+            orientation: orientation,
+            aspectRatio: aspectRatio,
+            zoomFactor: captureZoom
+        )
         #else
         throw CaptureError.unsupportedPlatform
         #endif
     }
-    
+
     // MARK: - Format Selection
-    
+
     /// Returns a pure-Bayer RAW pixel format the photo output currently
     /// supports, or `nil` if none does.
     ///
@@ -489,9 +537,9 @@ actor CaptureService {
             return false
         }
     }
-    
+
     // MARK: - Private Helpers
-    
+
     /// Selects the wide-angle camera at the given position.
     ///
     /// Prefers the main wide camera (.builtInWideAngleCamera) over ultra-wide or
@@ -505,11 +553,11 @@ actor CaptureService {
             mediaType: .video,
             position: position
         )
-        
+
         // Return the first wide-angle camera found
         return discoverySession.devices.first
     }
-    
+
     /// Configures the photo output for RAW capture.
     ///
     /// Sets `isAppleProRAWEnabled = false` to ensure we get pure Bayer data.
@@ -550,6 +598,7 @@ enum CaptureError: LocalizedError, Equatable {
     case unsupportedPlatform
     case sessionNotConfigured
     case torchUnavailable
+    case focusExposureUnavailable
     case deviceLockFailed(underlying: Error)
 
     static func == (lhs: CaptureError, rhs: CaptureError) -> Bool {
@@ -563,7 +612,8 @@ enum CaptureError: LocalizedError, Equatable {
              (.captureTimedOut, .captureTimedOut),
              (.unsupportedPlatform, .unsupportedPlatform),
              (.sessionNotConfigured, .sessionNotConfigured),
-             (.torchUnavailable, .torchUnavailable):
+             (.torchUnavailable, .torchUnavailable),
+             (.focusExposureUnavailable, .focusExposureUnavailable):
             return true
         case let (.inputCreationFailed(l), .inputCreationFailed(r)),
              let (.deviceLockFailed(l), .deviceLockFailed(r)),
@@ -602,6 +652,8 @@ enum CaptureError: LocalizedError, Equatable {
             return "The capture session is not configured yet."
         case .torchUnavailable:
             return "This camera has no flash (torch)."
+        case .focusExposureUnavailable:
+            return "This camera does not support tap-to-focus/exposure."
         case .deviceLockFailed(let error):
             return "The camera could not be configured: \(error.localizedDescription)"
         }

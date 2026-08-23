@@ -36,33 +36,38 @@ actor DevelopService {
 
     /// Renders a RAW DNG into a transient display rendition.
     ///
-    /// The DNG is developed with the zero-process recipe and rotated to match
-    /// the device's physical orientation. The DNG is always the full-sensor
-    /// original; no crop is applied. The result is in-memory only — it is for
-    /// transient UI display and is never encoded to JPEG or persisted.
+    /// The DNG is developed with the zero-process recipe and cropped to the
+    /// selected aspect/zoom framing. The DNG asset remains the unchanged
+    /// full-sensor original; the crop is non-destructive and applied only at
+    /// develop/view time. The result is in-memory only — it is for transient
+    /// UI display and is never encoded to JPEG or persisted.
+    ///
+    /// Orientation is **not** applied here: `CIRAWFilter` already bakes the
+    /// DNG's EXIF orientation into its output (verified empirically — a
+    /// 4032×3024 sensor buffer tagged Orientation 6 develops to a 3024×4032
+    /// upright extent), so the developed image arrives upright in the space
+    /// the user framed in. Rotating again would double-rotate every capture
+    /// whose DNG carries a non-up orientation tag.
     ///
     /// - Parameter dngData: The DNG bytes from `AVCapturePhoto.rawFileDataRepresentation()`.
-    /// - Parameter orientation: The physical orientation at capture time. Must
-    ///   be passed in by the caller (which lives on the main actor) so this
-    ///   background actor never reads `UIDevice`.
+    /// - Parameter aspectRatio: The aspect-ratio crop selected at capture.
+    /// - Parameter zoomFactor: The framing zoom selected at capture.
     /// - Returns: A transient display rendition.
     /// - Throws: `DevelopError` if processing fails.
     func render(
         dngData: Data,
-        orientation: CaptureOrientation = .up
+        aspectRatio: AspectRatio = .ratio4x3,
+        zoomFactor: CGFloat = 1.0
     ) async throws -> DNGDisplayRendition {
         let ciImage = try processor.develop(dngData: dngData)
-        let oriented = Self.apply(orientation: orientation, to: ciImage)
-        let cgImage = try renderBitmap(of: oriented)
-        return DNGDisplayRendition(ciImage: oriented, cgImage: cgImage)
-    }
-
-    private static func apply(orientation: CaptureOrientation, to image: CIImage) -> CIImage {
-        guard let transform = orientation.affineTransform, !transform.isIdentity else { return image }
-        let filter = CIFilter(name: "CIAffineTransform")
-        filter?.setValue(image, forKey: kCIInputImageKey)
-        filter?.setValue(NSValue(cgAffineTransform: transform), forKey: kCIInputTransformKey)
-        return filter?.outputImage ?? image
+        // The crop runs on the developed (already upright) extent — the same
+        // space the preview aperture occupies — so what the user framed
+        // inside the mask is exactly what this crop keeps.
+        let framed = ciImage.cropped(
+            to: PrintCrop.rect(in: ciImage.extent, zoomFactor: zoomFactor, aspect: aspectRatio)
+        )
+        let cgImage = try renderBitmap(of: framed)
+        return DNGDisplayRendition(ciImage: framed, cgImage: cgImage)
     }
 
     /// Renders the image to a display bitmap in the pipeline's color space.
@@ -79,8 +84,10 @@ actor DevelopService {
 // MARK: - CaptureOrientation
 
 /// The physical orientation the device was held in when the shutter fired.
-/// Captured on the main actor at the moment of capture and passed to the
-/// background develop pipeline so the actor never reads `UIDevice`.
+/// Captured on the main actor at the moment of capture and persisted as
+/// capture provenance. The develop pipeline does **not** consume it:
+/// `CIRAWFilter` bakes the DNG's EXIF orientation into its output, so the
+/// developed image is already upright (see `DevelopService.render`).
 nonisolated public enum CaptureOrientation: Sendable, Codable {
     case up
     case down
@@ -93,15 +100,6 @@ nonisolated public enum CaptureOrientation: Sendable, Codable {
         case .landscapeRight: self = .right
         case .portraitUpsideDown: self = .down
         default: self = .up
-        }
-    }
-
-    fileprivate var affineTransform: CGAffineTransform? {
-        switch self {
-        case .up: return nil
-        case .down: return CGAffineTransform(rotationAngle: .pi)
-        case .left: return CGAffineTransform(rotationAngle: .pi / 2)
-        case .right: return CGAffineTransform(rotationAngle: -.pi / 2)
         }
     }
 }

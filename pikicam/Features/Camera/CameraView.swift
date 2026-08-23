@@ -4,7 +4,8 @@ import SwiftUI
 // MARK: - CameraView
 
 /// Full-screen camera: live preview, shutter, and a top-right HUD cluster
-/// of quick toggles (grid, exposure, flash, self-timer, camera flip).
+/// of quick toggles (grid, flash, self-timer, camera flip) plus a 4:3 /
+/// 16:9 / 1:1 aspect strip.
 struct CameraView: View {
     @Environment(CameraViewModel.self) private var viewModel
     @Environment(PikicamLibraryModel.self) private var library
@@ -12,6 +13,13 @@ struct CameraView: View {
     @State private var zoomGestureBase: CGFloat = 1.0
     @State private var lastGestureFactor: CGFloat = 1.0
     @State private var galleryPresented = false
+    /// Whether the exposure-compensation slider is over the preview. It
+    /// appears with each tap-to-meter and auto-dismisses after a short idle.
+    @State private var showsExposureSlider = false
+    @State private var sliderDismissTask: Task<Void, Never>?
+    /// The continuous slider value while dragging; committed to the view
+    /// model (snapped to 1/3 stops) when the drag ends.
+    @State private var exposureDraftStops: Double = 0
 
     var body: some View {
         ZStack {
@@ -21,14 +29,27 @@ struct CameraView: View {
         }
         .overlay {
             if viewModel.isConfigured {
-                GridOverlayView(showsGrid: viewModel.showsGrid)
-                    .ignoresSafeArea()
-            }
-        }
-        .overlay(alignment: .center) {
-            ApertureMaskOverlay(framingMode: viewModel.framingMode)
+                FramingOverlays(
+                    showsGrid: viewModel.showsGrid,
+                    aspectRatio: viewModel.aspectRatio
+                )
                 .ignoresSafeArea()
                 .allowsHitTesting(false)
+            }
+        }
+        .overlay(alignment: .trailing) {
+            if viewModel.isConfigured,
+               showsExposureSlider,
+               viewModel.phase == .idle {
+                ExposureSliderView(stops: $exposureDraftStops) {
+                    let committed = ExposureCompensation(stops: exposureDraftStops)
+                    Task { await viewModel.setExposureCompensation(committed) }
+                }
+                .frame(height: 220)
+                .padding(.trailing, 14)
+                .padding(.bottom, 120)
+                .transition(.opacity)
+            }
         }
         .fullScreenCover(isPresented: $galleryPresented) {
             GalleryView()
@@ -53,11 +74,30 @@ struct CameraView: View {
     @ViewBuilder
     private var preview: some View {
         if let session {
-            CameraPreview(session: session)
-                .ignoresSafeArea()
-                .accessibilityIdentifier("preview-pinch-area")
+            CameraPreview(
+                session: session,
+                onTap: { point in
+                    presentExposureSlider()
+                    Task { await viewModel.setFocusAndExposure(at: point) }
+                }
+            )
+            .ignoresSafeArea()
+            .accessibilityIdentifier("preview-pinch-area")
         } else {
             Color.black.ignoresSafeArea()
+        }
+    }
+
+    /// Shows the EV slider and restarts its auto-dismiss clock. Each new
+    /// tap-to-meter re-presents it; 2.5 s of idleness hides it again.
+    private func presentExposureSlider() {
+        sliderDismissTask?.cancel()
+        exposureDraftStops = viewModel.exposureCompensation.stops
+        withAnimation(.easeInOut(duration: 0.2)) { showsExposureSlider = true }
+        sliderDismissTask = Task {
+            try? await Task.sleep(for: .milliseconds(2500))
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeInOut(duration: 0.25)) { showsExposureSlider = false }
         }
     }
 
@@ -83,30 +123,46 @@ struct CameraView: View {
             if viewModel.isConfigured {
                 Spacer()
 
-                // Mode strip
-                HStack(spacing: 24) {
-                    Spacer()
-                    Button(action: { viewModel.setFramingMode(.photo) }) {
-                        Text("PHOTO")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(viewModel.framingMode == .photo ? .yellow : .black.opacity(0.5))
-                            .clipShape(Capsule())
+                // Zoom preset chips
+                HStack(spacing: 12) {
+                    ForEach(ZoomPresets.factors(in: viewModel.zoomRange), id: \.self) { preset in
+                        Button {
+                            Task { await viewModel.setZoom(preset) }
+                        } label: {
+                            Text(ZoomMath.label(for: preset))
+                                .font(.system(size: 13, weight: .bold, design: .rounded))
+                                .foregroundStyle(
+                                    ZoomPresets.isSelected(viewModel.zoomFactor, of: preset)
+                                        ? Color.black : Color.white
+                                )
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(
+                                    ZoomPresets.isSelected(viewModel.zoomFactor, of: preset)
+                                        ? Color.yellow : Color.black.opacity(0.5)
+                                )
+                                .clipShape(Capsule())
+                        }
+                        .accessibilityIdentifier("zoom-preset-\(ZoomMath.label(for: preset))")
                     }
-                    .accessibilityIdentifier("mode-photo")
+                }
+                .padding(.bottom, 10)
 
-                    Button(action: { viewModel.setFramingMode(.square) }) {
-                        Text("SQUARE")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(viewModel.framingMode == .square ? .yellow : .black.opacity(0.5))
-                            .clipShape(Capsule())
+                // Aspect ratio strip
+                HStack(spacing: 16) {
+                    Spacer()
+                    ForEach(AspectRatio.allCases, id: \.self) { ratio in
+                        Button(action: { viewModel.setAspectRatio(ratio) }) {
+                            Text(ratio.label)
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(viewModel.aspectRatio == ratio ? .yellow : .black.opacity(0.5))
+                                .clipShape(Capsule())
+                        }
+                        .accessibilityIdentifier("mode-\(ratio.rawValue)")
                     }
-                    .accessibilityIdentifier("mode-square")
                     Spacer()
                 }
                 .padding(.horizontal, 40)
@@ -197,13 +253,6 @@ struct CameraView: View {
                     value: viewModel.showsGrid ? "On" : "Off",
                     action: { viewModel.toggleGrid() }
                 )
-                CameraHUDButton(
-                    systemImage: "plus.forwardslash.minus",
-                    identifier: "exposure-toggle",
-                    label: "EV",
-                    value: viewModel.exposureCompensation.label,
-                    action: { viewModel.cycleExposureCompensation() }
-                )
                 if viewModel.flashAvailable {
                     CameraHUDButton(
                         systemImage: flashIcon,
@@ -231,7 +280,6 @@ struct CameraView: View {
         switch viewModel.flashMode {
         case .off: return "bolt.slash"
         case .on: return "bolt.fill"
-        case .auto: return "bolt.badge.automatic"
         }
     }
 
@@ -287,36 +335,137 @@ private struct ThumbnailImage: View {
     }
 }
 
-// MARK: - ApertureMaskOverlay
+// MARK: - FramingOverlays
 
-/// Compositional aperture mask: `.square` dims bands above/below a centered
-/// 1:1 square over the full 4:3 preview; `.photo` is transparent.
-private struct ApertureMaskOverlay: View {
-    let framingMode: FramingMode
+/// The framing aids drawn over the live preview: the 3×3 grid and the
+/// aspect-ratio aperture mask.
+///
+/// One geometry source: the aperture rect is computed once here — the same
+/// `PrintCrop` math the develop pipeline applies to the DNG at 1× zoom — and
+/// handed to both overlays, so the grid is clipped exactly where the mask
+/// dims the bands outside the selected aspect ratio (the iOS Camera
+/// convention: grid lines never appear in the masked bands).
+private struct FramingOverlays: View {
+    let showsGrid: Bool
+    let aspectRatio: AspectRatio
 
     var body: some View {
         GeometryReader { proxy in
-            if framingMode == .square {
+            let bounds = CGRect(origin: .zero, size: proxy.size)
+            let aperture = PrintCrop.rect(in: bounds, zoomFactor: 1.0, aspect: aspectRatio)
+            ZStack {
+                GridOverlayView(
+                    showsGrid: showsGrid,
+                    apertureRect: aspectRatio == .ratio4x3 ? nil : aperture
+                )
+                ApertureMaskOverlay(aspectRatio: aspectRatio, apertureRect: aperture)
+            }
+        }
+    }
+}
+
+// MARK: - ApertureMaskOverlay
+
+/// Compositional aperture mask: dims the bands outside the selected aspect
+/// ratio over the full-sensor preview, matching the iOS Camera convention
+/// (the wider FOV is preserved by cropping the shorter axis).
+private struct ApertureMaskOverlay: View {
+    let aspectRatio: AspectRatio
+    /// The aperture rect in this view's coordinate space, precomputed by
+    /// `FramingOverlays` so the grid and the mask share one geometry.
+    let apertureRect: CGRect
+
+    var body: some View {
+        GeometryReader { proxy in
+            if aspectRatio != .ratio4x3 {
                 let size = proxy.size
-                let squareSize = min(size.width, size.height) * 0.9
-                let topHeight = (size.height - squareSize) / 2
                 ZStack {
-                    // Dark bands above and below the square aperture.
                     VStack(spacing: 0) {
-                        Rectangle().fill(Color.black.opacity(0.55)).frame(height: topHeight)
-                        Rectangle().fill(.clear).frame(height: squareSize)
-                        Rectangle().fill(Color.black.opacity(0.55)).frame(height: topHeight)
+                        Rectangle().fill(Color.black.opacity(0.55)).frame(height: apertureRect.minY)
+                        Rectangle().fill(.clear).frame(height: apertureRect.height)
+                        Rectangle().fill(Color.black.opacity(0.55)).frame(height: size.height - apertureRect.maxY)
                     }
-                    // Subtle outline to show the square boundary.
                     Rectangle()
                         .stroke(.white.opacity(0.25), lineWidth: 1)
-                        .frame(width: squareSize, height: squareSize)
+                        .frame(width: apertureRect.width, height: apertureRect.height)
                 }
+                .accessibilityIdentifier("aspect-overlay")
             } else {
                 Color.clear
             }
         }
-        .ignoresSafeArea()
+    }
+}
+
+// MARK: - ExposureSliderView
+
+/// Vertical EV slider shown over the preview after a tap-to-meter. Dragging
+/// moves a continuous −3…+3 stops value (top = brighter); the value is
+/// snapped to 1/3 stops and committed to the view model when the drag ends.
+private struct ExposureSliderView: View {
+    @Binding var stops: Double
+    var onCommit: () -> Void = {}
+
+    private static let range: ClosedRange<Double> =
+        Double(ExposureCompensation.minThird) * ExposureCompensation.step
+        ... Double(ExposureCompensation.maxThird) * ExposureCompensation.step
+
+    var body: some View {
+        GeometryReader { proxy in
+            let height = proxy.size.height
+            ZStack {
+                Capsule()
+                    .fill(Color.black.opacity(0.45))
+                    .frame(width: 5)
+                    .frame(maxHeight: .infinity)
+                ForEach([-3, -2, -1, 0, 1, 2, 3], id: \.self) { stop in
+                    Circle()
+                        .fill(Color.white.opacity(0.75))
+                        .frame(width: stop == 0 ? 7 : 4, height: stop == 0 ? 7 : 4)
+                        .position(x: proxy.size.width / 2, y: Self.y(for: Double(stop), in: height))
+                }
+            }
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        stops = Self.stops(forY: value.location.y, in: height)
+                    }
+                    .onEnded { _ in onCommit() }
+            )
+        }
+        .frame(width: 40)
+        .overlay(alignment: .top) {
+            Text(label)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundStyle(.yellow)
+                .padding(6)
+                .background(.black.opacity(0.55))
+                .clipShape(Capsule())
+                .offset(y: -30)
+                .allowsHitTesting(false)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityIdentifier("exposure-slider")
+        .accessibilityLabel("Exposure compensation")
+        .accessibilityValue(label)
+    }
+
+    private var label: String {
+        ExposureCompensation(stops: stops).label
+    }
+
+    /// Maps EV stops to a y position: +3 (brightest) at the top of the track.
+    private static func y(for stopValue: Double, in height: CGFloat) -> CGFloat {
+        let fraction = (stopValue - range.lowerBound) / (range.upperBound - range.lowerBound)
+        return CGFloat(1 - fraction) * height
+    }
+
+    /// Inverse of `y(for:)`: converts a drag location into continuous stops.
+    private static func stops(forY y: CGFloat, in height: CGFloat) -> Double {
+        guard height > 0 else { return 0 }
+        let fraction = 1 - Double(y / height)
+        return range.lowerBound + fraction * (range.upperBound - range.lowerBound)
     }
 }
 
