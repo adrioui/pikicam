@@ -148,13 +148,25 @@ final class SmokeLaunchTest: XCTestCase {
         XCTAssertTrue(app.otherElements["grid-overlay"].waitForNonExistence(timeout: 3),
                       "Grid overlay did not disappear after toggling the grid off.")
 
-        // Flash (torch) cycles off → on → auto → off on the back camera.
+        // Aspect ratio strip: 16:9 shows a centered aperture mask (portrait
+        // 9:16 on a portrait device), 4:3 returns to the full preview.
+        let ratio16x9 = app.buttons["mode-ratio16x9"]
+        XCTAssertTrue(ratio16x9.waitForExistence(timeout: 3),
+                      "Aspect ratio strip is missing the 16:9 control.")
+        ratio16x9.tap()
+        XCTAssertTrue(app.otherElements["aspect-overlay"].waitForExistence(timeout: 3),
+                      "16:9 did not show the aspect ratio aperture overlay.")
+        attachScreenshot(of: app, named: "03d-aspect-16x9")
+        app.buttons["mode-ratio4x3"].tap()
+        XCTAssertTrue(app.otherElements["aspect-overlay"].waitForNonExistence(timeout: 3),
+                      "4:3 did not remove the aspect ratio aperture overlay.")
+
+        // Flash (torch) cycles off → on → off on the back camera. The torch
+        // is only a capture-time pulse; selecting On never leaves it lit.
         let flashToggle = app.buttons["flash-toggle"]
         XCTAssertTrue(flashToggle.exists, "Flash control missing while on the back camera.")
         flashToggle.tap()
         waitForValue(flashToggle, "On")
-        flashToggle.tap()
-        waitForValue(flashToggle, "Auto")
         flashToggle.tap()
         waitForValue(flashToggle, "Off")
 
@@ -187,6 +199,13 @@ final class SmokeLaunchTest: XCTestCase {
         // factor and clamps back to the 1.0x minimum.
         app.pinch(withScale: 0.1, velocity: -2.0)
         waitFor(NSPredicate(format: "value == '1.0x'"), on: zoomIndicator, timeout: 5)
+
+        // Tap-to-meter: tapping the live preview sets the focus/exposure
+        // point of interest (normalized by CameraPreview) without crashing.
+        let previewTapArea = app.otherElements["preview-pinch-area"]
+        XCTAssertTrue(previewTapArea.exists, "Preview tap area missing.")
+        previewTapArea.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4)).tap()
+        attachScreenshot(of: app, named: "03f-tap-to-meter")
 
         // ---- Baseline gallery state before capture (safe delete identification) ----
         // Record whether the gallery is empty before this walkthrough's DNG.
@@ -301,7 +320,14 @@ final class SmokeLaunchTest: XCTestCase {
             chromeToggle.waitForNonExistence(timeout: 5),
             "Viewer chrome did not hide after toggling (eye control still visible)."
         )
+        // The viewer deliberately consumes the first background tap after
+        // presentation (it absorbs the stray tap that opens the cover).  If
+        // no stray tap occurred, that first tap is the one used to re-show
+        // the chrome, so tap again when needed.
         app.tap()
+        if !chromeToggle.waitForExistence(timeout: 2) {
+            app.tap()
+        }
         XCTAssertTrue(
             chromeToggle.waitForExistence(timeout: 5),
             "Viewer chrome did not reappear after tapping the viewer."

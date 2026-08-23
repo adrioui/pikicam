@@ -16,17 +16,23 @@ persistence with a provenance index. Single Xcode project, XCTest suite.
   noise reduction, sharpening, contrast, lens correction, and gamut mapping all
   set to their neutral/disabled values. Missing controls are treated as already
   absent, never as errors.
-- **Preview vs. record** — framing aids (photo/square aperture, zoom) are
-  viewfinder concerns only. The recorded DNG is always the unchanged
-  full-sensor original.
+- **Preview vs. record** — framing aids (aspect ratio, zoom) are stored as
+  per-capture metadata and applied as a non-destructive crop when the DNG is
+  developed/viewed. The recorded DNG is always the unchanged full-sensor
+  original.
 
 ## Features
 
 - Live full-screen camera preview with rule-of-thirds grid
-- Pinch zoom (1×–max) with generation-safe state
-- Exposure compensation ±3 EV in 1/3-stop steps, applied atomically with the
-  next capture
-- Flash as a continuous torch (off / on / auto)
+- Pinch zoom (1×–max) plus quick preset chips (1× / 2× / 5× within range)
+  with generation-safe state; the result is developed with the same zoomed
+  framing
+- Aspect ratio 4:3 / 16:9 / 1:1; the result is developed with the selected
+  crop
+- Tap-to-meter focus + exposure on the preview
+- Exposure compensation (±3 EV, 1/3 stops) via a live slider that appears
+  with each tap-to-meter; the preview metering shifts immediately
+- Flash as a capture-time torch pulse (off / on)
 - Self-timer (3s / 10s), tap to cancel
 - Front/back camera switching with transactional rollback
 - Volume-button shutter
@@ -55,7 +61,14 @@ library access on first launch.
 
 ## Commands
 
-Verify chain (swift-format lint → SwiftLint if installed → simulator build):
+Pre-commit gate (runs the verify chain automatically on every `git commit`):
+
+```sh
+pip3 install --user pre-commit
+python3 -m pre_commit install
+```
+
+Manual verify chain (swift-format lint → SwiftLint if installed → simulator build):
 
 ```sh
 ./scripts/verify.sh

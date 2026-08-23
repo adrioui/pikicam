@@ -5,17 +5,27 @@ import UniformTypeIdentifiers
 // MARK: - Public Value Types
 
 /// The immutable output of a capture: full-sensor DNG bytes plus the moment
-/// they were captured. Exactly one such payload becomes exactly one Photos
-/// asset with a single `.photo` DNG resource — nothing else is persisted.
+/// they were captured and the framing the user selected. Exactly one such
+/// payload becomes exactly one Photos asset with a single `.photo` DNG
+/// resource — nothing else is persisted.
 nonisolated public struct CapturedDNG: Equatable, Sendable {
     public let data: Data
     public let capturedAt: Date
     public let orientation: CaptureOrientation
+    /// The aspect ratio selected at capture time. The DNG is full-sensor;
+    /// this is the non-destructive crop applied when developing/viewing.
+    public let aspectRatio: AspectRatio
+    /// The framing zoom selected at capture time (≥ 1). The DNG is
+    /// full-sensor; this is the non-destructive crop applied when
+    /// developing/viewing.
+    public let zoomFactor: CGFloat
 
-    public init(data: Data, capturedAt: Date, orientation: CaptureOrientation = .up) {
+    public init(data: Data, capturedAt: Date, orientation: CaptureOrientation = .up, aspectRatio: AspectRatio = .ratio4x3, zoomFactor: CGFloat = 1.0) {
         self.data = data
         self.capturedAt = capturedAt
         self.orientation = orientation
+        self.aspectRatio = aspectRatio
+        self.zoomFactor = zoomFactor
     }
 }
 
@@ -52,7 +62,8 @@ nonisolated extension PhotoAssetID: CustomStringConvertible {
     public var description: String { localIdentifier }
 }
 
-/// The stable gallery read value: provenance plus current asset dimensions.
+/// The stable gallery read value: provenance plus current asset dimensions
+/// and the framing used when the photo was captured.
 nonisolated public struct PikicamCapture: Codable, Hashable, Sendable {
     public let id: CaptureID
     public let assetID: PhotoAssetID
@@ -60,14 +71,20 @@ nonisolated public struct PikicamCapture: Codable, Hashable, Sendable {
     public let pixelWidth: Int
     public let pixelHeight: Int
     public let orientation: CaptureOrientation
+    /// The aspect ratio selected at capture time.
+    public let aspectRatio: AspectRatio
+    /// The framing zoom selected at capture time.
+    public let zoomFactor: CGFloat
 
-    public init(id: CaptureID, assetID: PhotoAssetID, capturedAt: Date, pixelWidth: Int, pixelHeight: Int, orientation: CaptureOrientation) {
+    public init(id: CaptureID, assetID: PhotoAssetID, capturedAt: Date, pixelWidth: Int, pixelHeight: Int, orientation: CaptureOrientation, aspectRatio: AspectRatio = .ratio4x3, zoomFactor: CGFloat = 1.0) {
         self.id = id
         self.assetID = assetID
         self.capturedAt = capturedAt
         self.pixelWidth = pixelWidth
         self.pixelHeight = pixelHeight
         self.orientation = orientation
+        self.aspectRatio = aspectRatio
+        self.zoomFactor = zoomFactor
     }
 }
 
@@ -258,7 +275,14 @@ actor PhotoLibraryManager {
 
         let captureID = CaptureID()
         let filename = Self.originalFilename(for: captureID)
-        let pending = IndexRecord(captureID: captureID, capturedAt: dng.capturedAt, orientation: dng.orientation, state: .pending(originalFilename: filename))
+        let pending = IndexRecord(
+            captureID: captureID,
+            capturedAt: dng.capturedAt,
+            orientation: dng.orientation,
+            aspectRatio: dng.aspectRatio,
+            zoomFactor: dng.zoomFactor,
+            state: .pending(originalFilename: filename)
+        )
         _ = Self.inFlightSaveLock.withLock { Self.inFlightSaveIDs.insert(captureID.uuid.uuidString) }
         defer { _ = Self.inFlightSaveLock.withLock { Self.inFlightSaveIDs.remove(captureID.uuid.uuidString) } }
         do {
@@ -300,7 +324,14 @@ actor PhotoLibraryManager {
             throw PhotoLibraryError.indexCommitFailed(PhotoFailure(error))
         }
 
-        guard let capture = fetchCapture(captureID: captureID, assetID: assetID, capturedAt: dng.capturedAt, orientation: dng.orientation) else {
+        guard let capture = fetchCapture(
+            captureID: captureID,
+            assetID: assetID,
+            capturedAt: dng.capturedAt,
+            orientation: dng.orientation,
+            aspectRatio: dng.aspectRatio,
+            zoomFactor: dng.zoomFactor
+        ) else {
             throw PhotoLibraryError.assetUnavailable(assetID)
         }
         return capture
@@ -336,7 +367,14 @@ actor PhotoLibraryManager {
         }
     }
 
-    private func fetchCapture(captureID: CaptureID, assetID: PhotoAssetID, capturedAt: Date, orientation: CaptureOrientation) -> PikicamCapture? {
+    private func fetchCapture(
+        captureID: CaptureID,
+        assetID: PhotoAssetID,
+        capturedAt: Date,
+        orientation: CaptureOrientation,
+        aspectRatio: AspectRatio,
+        zoomFactor: CGFloat
+    ) -> PikicamCapture? {
         let result = PHAsset.fetchAssets(withLocalIdentifiers: [assetID.localIdentifier], options: nil)
         guard let asset = result.firstObject, Self.hasOriginalDNGResource(asset) else { return nil }
         return PikicamCapture(
@@ -345,7 +383,9 @@ actor PhotoLibraryManager {
             capturedAt: capturedAt,
             pixelWidth: Int(asset.pixelWidth),
             pixelHeight: Int(asset.pixelHeight),
-            orientation: orientation
+            orientation: orientation,
+            aspectRatio: aspectRatio,
+            zoomFactor: zoomFactor
         )
     }
 
@@ -418,9 +458,12 @@ actor PhotoLibraryManager {
                 capturedAt: record.capturedAt,
                 pixelWidth: Int(asset.pixelWidth),
                 pixelHeight: Int(asset.pixelHeight),
-                // Records written before orientation was persisted decode
-                // as `.up`; the DNG is still full-sensor and loads fine.
-                orientation: record.orientation ?? .up
+                // Records written before orientation/framing were persisted
+                // decode as `.up` / 4:3 / 1×; the DNG is still full-sensor
+                // and loads fine.
+                orientation: record.orientation ?? .up,
+                aspectRatio: record.aspectRatio ?? .ratio4x3,
+                zoomFactor: record.zoomFactor ?? 1.0
             ))
         }
 
@@ -826,6 +869,12 @@ nonisolated private struct IndexRecord: Codable, Equatable {
     /// Optional so indexes written before orientation was persisted decode
     /// instead of failing the whole index.
     var orientation: CaptureOrientation?
+    /// Optional so indexes written before framing metadata was persisted
+    /// decode instead of failing the whole index.
+    var aspectRatio: AspectRatio?
+    /// Optional so indexes written before framing metadata was persisted
+    /// decode instead of failing the whole index.
+    var zoomFactor: CGFloat?
     var state: State
 
     nonisolated enum State: Codable, Equatable {

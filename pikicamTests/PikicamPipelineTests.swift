@@ -43,7 +43,7 @@ final class PikicamPipelineTests: XCTestCase {
         let service = DevelopService()
         let result: DNGDisplayRendition
         do {
-            result = try await service.render(dngData: dngData, orientation: .up)
+            result = try await service.render(dngData: dngData)
         } catch let error as DevelopError {
             // Missing enhancement controls are skipped (not errors) — see
             // CIRAWZeroProcessor. A failure here is a real develop failure.
@@ -62,6 +62,45 @@ final class PikicamPipelineTests: XCTestCase {
         let rendered = renderIntoBitmap(decoded)
         XCTAssertGreaterThan(averageLuminance(of: rendered), 5.0,
                              "Zero-process frame appears black.")
+    }
+
+    /// Pins the framing-crop contract: the develop crop runs on the
+    /// **developed (already upright) extent** — the same space the preview
+    /// aperture occupies — so 16:9/1:1 selections keep exactly what the user
+    /// framed inside the mask. `CIRAWFilter` bakes the DNG's EXIF orientation
+    /// (the fixture is a landscape 4032×3024 buffer tagged Orientation 6 and
+    /// develops to an upright portrait extent), so no rotation may be applied
+    /// here; re-adding one double-rotates non-portrait captures.
+    func testZeroDevelopAppliesFramingCropInDevelopedSpace() async throws {
+        guard let dngData = try loadDNGFixture() else {
+            throw XCTSkip("DNG fixture missing — copy one into pikicamTests/Fixtures/ or run on a device.")
+        }
+
+        let service = DevelopService()
+        let fullExtent: CGRect
+        do {
+            fullExtent = try await service.render(dngData: dngData).ciImage.extent
+            // 4:3 is sensor-native: the crop must be the full developed frame.
+            XCTAssertEqual(fullExtent,
+                           PrintCrop.rect(in: fullExtent, zoomFactor: 1.0, aspect: .ratio4x3))
+        } catch let error as DevelopError {
+            throw XCTSkip("Develop failed in this environment: \(error.localizedDescription)")
+        }
+        // The fixture must be upright (CIRAWFilter baked its orientation):
+        // portrait-held captures develop taller than wide. If this ever
+        // flips, the crop-space contract below is being measured in the
+        // wrong frame.
+        XCTAssertGreaterThan(fullExtent.height, fullExtent.width,
+                             "Expected an upright developed extent, got \(fullExtent)")
+
+        for aspect in [AspectRatio.ratio16x9, .ratio1x1] {
+            let rendition = try await service.render(dngData: dngData, aspectRatio: aspect)
+            let expected = PrintCrop.rect(in: fullExtent, zoomFactor: 1.0, aspect: aspect)
+            XCTAssertEqual(rendition.ciImage.extent, expected,
+                           "\(aspect.label) crop must equal PrintCrop applied to the developed extent")
+            XCTAssertTrue(CGRect(origin: .zero, size: fullExtent.size).contains(expected),
+                          "\(aspect.label) crop must stay inside the developed frame")
+        }
     }
 
     // MARK: - Storage

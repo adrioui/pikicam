@@ -1,0 +1,31 @@
+# pikicam pre-commit hooks
+#
+# Install once per clone:
+#   pip3 install --user pre-commit
+#   python3 -m pre_commit install
+#
+# Then `git commit` runs the same checks as scripts/verify.sh before
+# creating a commit.  To bypass for a one-off commit (not recommended):
+#   SKIP=verify git commit ...
+#
+# The `verify` hook mirrors the project's native toolchain checks:
+#   1. swift-format lint (Apple toolchain)
+#   2. SwiftLint --strict (skipped automatically if not installed)
+#   3. xcodebuild build (iPhone 17 Pro simulator)
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+
+  - repo: local
+    hooks:
+      - id: verify
+        name: pikicam verify (swift-format lint + SwiftLint + xcodebuild build)
+        entry: ./scripts/verify.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true

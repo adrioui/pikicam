@@ -7,7 +7,14 @@ persistence. Single Xcode project, XCTest suite.
 
 ## Commands
 
-Verify chain (swift-format lint → SwiftLint (if installed) → xcodebuild build):
+Pre-commit gate (runs `scripts/verify.sh` automatically on `git commit`):
+
+```sh
+pip3 install --user pre-commit
+python3 -m pre_commit install
+```
+
+Manual verify chain (swift-format lint → SwiftLint (if installed) → xcodebuild build):
 
 ```sh
 ./scripts/verify.sh
@@ -25,6 +32,16 @@ Run the test suite:
 ```sh
 xcodebuild -project pikicam.xcodeproj -scheme pikicam \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test
+```
+
+On a fresh simulator, pre-grant permissions for the test host or the unit
+suite **hangs forever** (`testStorageSavesDNGSinglePhotoResourceToPhotos`
+prompts `PHPhotoLibrary.requestAuthorization`, and a modal a plain unit test
+cannot tap blocks the run — verified 2026-08-22):
+
+```sh
+xcrun simctl privacy <UDID> grant photos piki.pikicam
+xcrun simctl privacy <UDID> grant camera piki.pikicam
 ```
 
 The shared scheme's test action runs `pikicamTests` and `pikicamUITests`;

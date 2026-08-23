@@ -63,18 +63,19 @@ final class CameraViewModel {
     private(set) var cameraPosition: CameraPosition = .back
     private(set) var flashMode: FlashMode = .off
     private(set) var flashAvailable = false
-    var framingMode: FramingMode = .photo
-    var showsGrid = false
-    var exposureCompensation: ExposureCompensation = .zero
+    private(set) var aspectRatio: AspectRatio = .ratio4x3
+    private(set) var showsGrid = false
     private(set) var zoomFactor: CGFloat = 1.0
     private(set) var zoomRange: ClosedRange<CGFloat> = 1.0...1.0
+    /// The exposure bias the device currently holds, snapped to 1/3 stops.
+    private(set) var exposureCompensation: ExposureCompensation = .zero
     // Monotonic guard for pinch-zoom: rapid `.onChanged` ticks spawn
     // concurrent `setZoom` tasks, and only the newest request may publish
     // `zoomFactor` — otherwise a stale task's return overwrites a newer one.
     private var zoomGeneration = 0
 
     // Self-timer
-    var selfTimer: SelfTimerOption = .off
+    private(set) var selfTimer: SelfTimerOption = .off
     private(set) var selfTimerRemaining: Int = 0
     private var selfTimerTask: Task<Void, Never>?
     // Generation guard for capture cancellation; a new capture (or a cancel)
@@ -134,7 +135,6 @@ final class CameraViewModel {
         selfTimerTask?.cancel()
         selfTimerRemaining = 0
         cancelCapture()
-        await captureService.clearExposureBias()
         await captureService.stopSession()
         isSessionRunning = false
     }
@@ -153,9 +153,10 @@ final class CameraViewModel {
         zoomGeneration += 1 // invalidate in-flight zoom tasks from the old camera
         do {
             cameraPosition = try await captureService.toggleCamera()
+            // A freshly added input starts at 1× with zero bias; mirror that
+            // so the published state never claims the old camera's framing.
             zoomFactor = 1.0
             exposureCompensation = .zero
-            await captureService.clearExposureBias()
             await refreshCameraControlState()
         } catch {
             self.error = error
@@ -197,23 +198,34 @@ final class CameraViewModel {
         showsGrid.toggle()
     }
 
-    func setFramingMode(_ mode: FramingMode) {
+    func setAspectRatio(_ ratio: AspectRatio) {
         guard phase == .idle else { return }
-        framingMode = mode
+        aspectRatio = ratio
     }
 
-
-    /// Cycles the exposure compensation off → +1/3 → … → +3 → −3 → … and
-    /// hands the committed value to `CaptureService` for the next capture.
-    ///
-    /// `exposureCompensation` is the single source of truth: the HUD reads it,
-    /// the next tap cycles from it, and the actor applies it atomically with
-    /// the RAW capture. There is no pending/committed split to diverge.
-    func cycleExposureCompensation() {
+    /// Sets the focus and exposure point of interest to the tapped preview
+    /// location, matching the system Camera app's tap-to-meter interaction.
+    func setFocusAndExposure(at point: CGPoint) async {
         guard phase == .idle else { return }
-        exposureCompensation = exposureCompensation.next()
-        let committed = exposureCompensation
-        Task { await captureService.setExposureBias(committed.stops) }
+        do {
+            try await captureService.setFocusAndExposure(at: point)
+        } catch {
+            self.error = error
+        }
+    }
+
+    /// Applies exposure compensation **live** (the preview metering shifts
+    /// immediately). The published value is what the device actually holds —
+    /// snapped to 1/3 stops by `ExposureCompensation` — never the raw slider
+    /// input.
+    func setExposureCompensation(_ ev: ExposureCompensation) async {
+        guard phase == .idle else { return }
+        do {
+            let applied = try await captureService.setExposureBias(ev.stops)
+            exposureCompensation = ExposureCompensation(stops: applied)
+        } catch {
+            self.error = error
+        }
     }
 
     /// Cycles self-timer off → 3s → 10s → off. Cancels any in-flight countdown.
@@ -263,7 +275,7 @@ final class CameraViewModel {
             } else {
                 guard !Task.isCancelled, captureGeneration == gen, phase == .capturing else { return }
             }
-            let dng = try await captureService.capturePhoto()
+            let dng = try await captureService.capturePhoto(aspectRatio: aspectRatio)
             guard !Task.isCancelled, captureGeneration == gen else { return }
             phase = .savingDNG
             let capture = try await libraryModel.save(dng)

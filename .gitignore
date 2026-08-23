@@ -7,6 +7,7 @@ xcuserdata/
 # Build artifacts
 DerivedData/
 build/
+.build/
 *.xcuserstate
 
 # Large test fixtures (real camera DNG files — keep out of VCS)
