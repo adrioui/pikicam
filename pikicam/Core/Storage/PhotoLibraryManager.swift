@@ -197,7 +197,6 @@ actor PhotoLibraryManager {
 
     public init() {
         let (stream, continuation) = AsyncStream.makeStream(of: Void.self, bufferingPolicy: .bufferingNewest(1))
-        _ = stream
         self.invalidationStream = stream
         self.invalidationContinuation = continuation
         // The bridge captures the continuation directly (never `self`), so
@@ -436,13 +435,7 @@ actor PhotoLibraryManager {
         let storedRecords = index.records.filter { $0.state.storedAssetID != nil }
         var assetByID: [String: PHAsset] = [:]
         if !storedRecords.isEmpty {
-            let result = PHAsset.fetchAssets(
-                withLocalIdentifiers: storedRecords.compactMap { $0.state.storedAssetID?.localIdentifier },
-                options: nil
-            )
-            result.enumerateObjects { asset, _, _ in
-                assetByID[asset.localIdentifier] = asset
-            }
+            assetByID = fetchAssetsByLocalIdentifier(storedRecords.compactMap { $0.state.storedAssetID?.localIdentifier })
         }
 
         var captures: [PikicamCapture] = []

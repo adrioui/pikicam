@@ -428,8 +428,9 @@ final class PikicamPipelineTests: XCTestCase {
         let context = CIContext()
         let extent = image.extent.integral
         guard let cgImage = context.createCGImage(image, from: extent),
-              let data = cgImage.dataProvider?.data,
-              let bytes = CFDataGetBytePtr(data) else {
+            let data = cgImage.dataProvider?.data,
+            let bytes = CFDataGetBytePtr(data)
+        else {
             return []
         }
         return Array(UnsafeBufferPointer(start: bytes, count: CFDataGetLength(data)))

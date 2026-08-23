@@ -13,7 +13,8 @@ struct GridOverlayView: View {
 
     /// The aperture rect in the parent's coordinate space. When nil the grid
     /// fills the containing view; when provided the grid is clipped to that
-    /// rect so Square's masked bands never show grid lines.
+    /// rect so the masked bands outside the selected aspect ratio never show
+    /// grid lines.
     var apertureRect: CGRect? = nil
 
     var body: some View {
