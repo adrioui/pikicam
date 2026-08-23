@@ -22,9 +22,9 @@ import Foundation
 ///
 /// The capture is kept alive until `didFinishCaptureFor` fires: the output
 /// retains it via `objc_setAssociatedObject`, and that callback clears the
-/// association. The continuation is the only mutable state; both finish
-/// callbacks arrive on AVFoundation's serial delegate queue, and the timeout
-/// task shares the same isolated instance.
+/// association. Both finish callbacks arrive on AVFoundation's serial
+/// delegate queue; the timeout task does not, so a lock serializes every
+/// resume path — a continuation resumed twice is a runtime crash.
 nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
     /// How long to wait for AVFoundation's capture callbacks before failing
     /// with `.captureTimedOut`. AVFoundation normally fires
@@ -33,6 +33,7 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
     /// deadlocks with `isCaptureInFlight` stuck true.
     private static let captureTimeout: Duration = .seconds(15)
 
+    private let lock = NSLock()
     private var continuation: CheckedContinuation<AVCapturePhoto, Error>?
     private var photo: AVCapturePhoto?
     private var processingError: Error?
@@ -49,15 +50,19 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
     }
 
     private func failWithTimeout() {
-        guard let continuation else { return }
-        self.continuation = nil
-        timeoutTask = nil
-        continuation.resume(throwing: CaptureError.captureTimedOut)
+        lock.withLock {
+            guard let continuation else { return }
+            self.continuation = nil
+            timeoutTask = nil
+            continuation.resume(throwing: CaptureError.captureTimedOut)
+        }
     }
 
-    nonisolated func photoOutput(_ output: AVCapturePhotoOutput,
-                                  didFinishProcessingPhoto photo: AVCapturePhoto,
-                                  error: Error?) {
+    nonisolated func photoOutput(
+        _ output: AVCapturePhotoOutput,
+        didFinishProcessingPhoto photo: AVCapturePhoto,
+        error: Error?
+    ) {
         if let error = error {
             processingError = error
         } else {
@@ -65,25 +70,35 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
         }
     }
 
-    nonisolated func photoOutput(_ output: AVCapturePhotoOutput,
-                                  didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
-                                  error: Error?) {
+    nonisolated func photoOutput(
+        _ output: AVCapturePhotoOutput,
+        didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
+        error: Error?
+    ) {
         let key = Unmanaged.passUnretained(self).toOpaque()
         defer {
-            continuation = nil
             timeoutTask?.cancel()
             timeoutTask = nil
             objc_setAssociatedObject(output, key, nil, .OBJC_ASSOCIATION_ASSIGN)
         }
 
+        // Take the continuation under the lock so a timeout firing on another
+        // executor cannot resume it after this point.
+        let continuation: CheckedContinuation<AVCapturePhoto, Error>? = lock.withLock {
+            let pending = self.continuation
+            self.continuation = nil
+            return pending
+        }
+        guard let continuation else { return }
+
         if let error = error ?? processingError {
             // Translate the delegate failure into a typed CaptureError so no
             // arbitrary Error crosses the capture boundary.
-            continuation?.resume(throwing: CaptureError.captureFailed(underlying: error))
+            continuation.resume(throwing: CaptureError.captureFailed(underlying: error))
         } else if let photo {
-            continuation?.resume(returning: photo)
+            continuation.resume(returning: photo)
         } else {
-            continuation?.resume(throwing: CaptureError.missingImageData)
+            continuation.resume(throwing: CaptureError.missingImageData)
         }
     }
 }
