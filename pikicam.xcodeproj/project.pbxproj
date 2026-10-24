@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0B8E190815D2E82E4F62124C /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 98B3374C413622E12D6607E8 /* IMG_1361.DNG */; };
+		2421CA08CA8B7C8E357AF69A /* CameraRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2017C071B41CC9007F7F577E /* CameraRecording.swift */; };
 		2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887529D123CA8228FAD6A638 /* PikicamApp.swift */; };
 		375A37A0A499260885F0C053 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */; };
 		3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B9A346F804B0BB91E8939 /* CameraEngine.swift */; };
+		43C7084595061D15C3D8706B /* CameraSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8D53C969EF986048AD7C03 /* CameraSupport.swift */; };
 		612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */; };
 		69E3DD46349D8EA6B9EB4423 /* WalkSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */; };
 		76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CF9A0660C9DEBB114750C83 /* Assets.xcassets */; };
@@ -41,6 +43,7 @@
 
 /* Begin PBXFileReference section */
 		08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */ = {isa = PBXFileReference; path = "fixture-bayer-rich.dng"; sourceTree = "<group>"; };
+		2017C071B41CC9007F7F577E /* CameraRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRecording.swift; sourceTree = "<group>"; };
 		22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScreen.swift; sourceTree = "<group>"; };
 		2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkSmokeUITests.swift; sourceTree = "<group>"; };
 		35DD3B3E04FF2F30821162B4 /* pikicam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +55,7 @@
 		887529D123CA8228FAD6A638 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
 		98B3374C413622E12D6607E8 /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
 		A76B9A346F804B0BB91E8939 /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
+		BA8D53C969EF986048AD7C03 /* CameraSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSupport.swift; sourceTree = "<group>"; };
 		E07EF371F48A630494030106 /* pikicamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveScreen.swift; sourceTree = "<group>"; };
@@ -139,7 +143,9 @@
 				E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */,
 				859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */,
 				A76B9A346F804B0BB91E8939 /* CameraEngine.swift */,
+				2017C071B41CC9007F7F577E /* CameraRecording.swift */,
 				22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */,
+				BA8D53C969EF986048AD7C03 /* CameraSupport.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -293,7 +299,9 @@
 				612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */,
 				F1422961B00FB1F370B2FD21 /* BNWDeveloper.swift in Sources */,
 				3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */,
+				2421CA08CA8B7C8E357AF69A /* CameraRecording.swift in Sources */,
 				81A30DFE03410B195350628D /* CameraScreen.swift in Sources */,
+				43C7084595061D15C3D8706B /* CameraSupport.swift in Sources */,
 				2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */,
 				DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */,
 				E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */,
