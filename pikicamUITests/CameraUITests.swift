@@ -15,9 +15,9 @@ final class CameraUITests: XCTestCase {
         let badge = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH '[ RAW'")).firstMatch
         XCTAssertTrue(badge.waitForExistence(timeout: 10), "status badge")
         XCTAssertTrue(app.buttons["Shutter"].exists, "shutter actuator")
-        XCTAssertTrue(app.buttons["PHOTO MODE"].exists, "mode strip photo")
-        XCTAssertTrue(app.buttons["VIDEO MODE"].exists, "mode strip video")
-        XCTAssertTrue(app.buttons["SCAN MODE"].exists, "mode strip scan")
+        XCTAssertTrue(app.buttons["camera.mode.photo"].exists, "mode strip photo")
+        XCTAssertTrue(app.buttons["camera.mode.video"].exists, "mode strip video")
+        XCTAssertTrue(app.buttons["camera.mode.scan"].exists, "mode strip scan")
         XCTAssertTrue(app.buttons["CROP"].exists, "crop chip")
     }
 
@@ -35,7 +35,7 @@ final class CameraUITests: XCTestCase {
     @MainActor
     func testLensRailSwitches() {
         let app = launchApp()
-        XCTAssertTrue(app.buttons["26 MILLIMETRE LENS"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["camera.lens.wide"].waitForExistence(timeout: 10))
     }
 
     @MainActor
