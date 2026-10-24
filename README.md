@@ -1,61 +1,70 @@
 # pikicam
 
-An iOS camera that does exactly three things — shoot a photo, apply
+An iOS camera that does three things — shoot a photo, apply
 black-and-white, record video — and is "working" only when the human
-acceptance walk passes on the physical device.
+acceptance walk passes on a physical iPhone. One look, one archive, one
+grammar; chrome is naked by construction.
 
-## The three verbs
+## What & why
 
-- **SHOOT PHOTO.** One tap, one capture: a Bayer DNG when the hardware
-  offers it (untouched sensor file), otherwise HEIC. It lands in Apple
-  Photos.
-- **APPLY BLACK-AND-WHITE.** The BNW toggle develops the capture
-  through the real RAW decoder with saturation zeroed and saves the
-  monochrome rendition; the DNG bytes are never modified.
-- **RECORD VIDEO.** One file, with audio. Backgrounding mid-recording
-  saves the clip recorded so far instead of losing it.
+iOS defaults to fused, tone-mapped photos; pikicam captures one honest
+frame per press (Bayer DNG where the sensor offers it), develops
+black-and-white through a single derived look (the CIE P3 luminance
+row — one definition shared by stills AND video), and keeps every
+capture in a pikicam-only album. Every claim is measured: frame
+arithmetic, audio pass-through, parity bands, and budgets live in
+committed artifacts with provenance.
 
-## Working means one thing
+## Quick start
 
-`docs/WALK.md` holds the eight-step acceptance walk (launch, shoot,
-BNW, video, archive BACK, background-save, permission denial, naive
-user) and the measured budgets: launch-to-preview **0.20 s** (< 2 s),
-shutter-to-capture **0.21 s** (< 1 s), save 0.18 s. A human runs the
-walk before every ship; no test result substitutes for it.
+Requirements: Mac with Xcode 26, an unlocked iPhone (12 mini tested)
+connected by cable, Developer Mode enabled.
+
+    xcodegen generate
+    scripts/verify.sh
+
+That builds for the device, runs the real-pipeline test suite on it
+(camera → Photos, mono develop, record, playback, flip), and lints.
+The device is the only verification target — never a simulator.
+
+## Using the app
+
+- **PHOTO**: tap the shutter — a DNG (or HEIC where RAW is unavailable)
+  lands in Apple Photos, in the pikicam album.
+- **BNW**: tap `[ BNW OFF ]` to toggle — shots and clips render through
+  the same monochrome look (video via the composition path).
+- **VIDEO**: switch the mode strip to VIDEO, tap to record (MM:SS
+  readout), tap the square to stop — the clip saves with audio and
+  plays in-app from the archive.
+- **Flip** the arrow button for the front camera; the archive (grid,
+  bottom-left) pages swipe-style with prefetch; BACK always returns to
+  the camera.
 
 ## What the code does not say
 
-- The app was rebuilt because the previous one failed the walk at its
-  first step: every capture deadlocked at save (a blocking wait nested
-  inside PhotoKit's performChanges) and the archive opened as a trap
-  door with no way back. `docs/DIAGNOSIS.md` records the seven findings.
-- Strict Swift concurrency is not negotiable here — the PhotoKit save
-  crashed (SIGTRAP) until the write moved to a nonisolated helper; the
-  fix is structural, visible in `CameraEngine.performPhotoWrite`.
-- Photo-library denial is a banner with OPEN SETTINGS, never a broken
-  camera: the shutter keeps working, saving resumes when access is
-  granted. Camera and mic permissions are asked only when first needed.
-- The entire skin is one file (`Support/Skin.swift`): system
-  monospace, four sizes, black/white/grey, 1px rules, radius 0, motion
-  0 ms, text states. `pikicamTests/SkinTests.swift` fails the build on
-  any stray color, font size, radius, or animation. Deliberate HIG
-  deviations and their reasons: `docs/SKIN.md`.
-- The record state is inverted TEXT (REC 0:08), not a red dot — the
-  greyscale test passes by construction.
-- `.gitignore` is an allow-list: `/*` blocks every top-level path, each
-  `!` exception carries its reason.
-- Free provisioning re-trusts roughly weekly (see WALK.md operator
-  notes); the symptom is a launch refusal, not a bug.
+Why-decisions live in `docs/`, not inline: the [DIAGNOSIS](docs/DIAGNOSIS.md)
+that rebuilt this app, the [WALK](docs/WALK.md) (ship gate + budgets),
+[SKIN](docs/SKIN.md) (token table, deviations, panel claim),
+[TEARDOWN](docs/TEARDOWN.md) (grammar + anti-patterns),
+[HEALTH](docs/HEALTH.md) (failure taxonomy), and
+[artifacts](docs/artifacts/) (ffprobe byte-truth, frame-time decision,
+parity). Tests enforce the skin and the look; nothing is a claim
+without a judge.
 
-## Verify
+## Honest non-goals
 
-    xcodegen generate
-    scripts/verify.sh    # device build + real-pipeline suite + lint
+No scan modes, numeric lines, manual dials, calibration documents,
+probe apps, design-token matrices, journal crash recovery, viewer
+develop panels. Deleted one commit each — `git log` is the record.
 
-Device only (iPhone 12 mini, iOS 26.6.2). Never a simulator.
+## Verify & contribute
 
-## Non-goals
+    scripts/verify.sh          # device suite + lint; the only gate
 
-Scan modes, numeric lines, manual dials, calibration docs, probe apps,
-design-token matrices, journal crash recovery, viewer develop panels.
-Deleted, one commit each, walk intact — `git log` is the record.
+Commits: conventional `type(scope): description`, atomic, every commit
+launchable. Skin rules and the banned-construct greps are enforced by
+`pikicamTests` — review doesn't carry them.
+
+## License
+
+Proprietary — no license chosen yet.
