@@ -22,6 +22,49 @@ enum CameraProbes {
         return output
     }
 
+    static func attachedOutputProbe() -> JSONValue {
+        let session = AVCaptureSession()
+        session.sessionPreset = .photo
+        guard
+            let device = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .back
+            ).devices.first,
+            let input = try? AVCaptureDeviceInput(device: device), session.canAddInput(input)
+        else {
+            return .dict(["error": "attach failed"])
+        }
+        session.addInput(input)
+        let output = AVCapturePhotoOutput()
+        guard session.canAddOutput(output) else {
+            return .dict(["error": "output failed"])
+        }
+        session.addOutput(output)
+        session.startRunning()
+        let data = outputProbe(output: output, device: device)
+        session.stopRunning()
+        return data
+    }
+
+    static func formatSummary(_ format: AVCaptureDevice.Format) -> JSONValue {
+        let fd = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
+        var rates: [Double] = []
+        for range in format.videoSupportedFrameRateRanges {
+            rates.append(range.maxFrameRate)
+        }
+        return .dict([
+            "dimensions": "\(fd.width)x\(fd.height)",
+            "maxPhotoDimensionsCount": format.supportedMaxPhotoDimensions.count,
+            "minISO": Double(format.minISO),
+            "maxISO": Double(format.maxISO),
+            "minExposureDuration": format.minExposureDuration.seconds,
+            "maxExposureDuration": format.maxExposureDuration.seconds,
+            "isVideoHDRSupported": format.isVideoHDRSupported,
+            "isVideoBinned": format.isVideoBinned,
+            "videoFieldOfView": Double(format.videoFieldOfView),
+            "maxFrameRate": rates.max() ?? 0,
+        ])
+    }
+
     static func dumpDeviceCapabilities() -> JSONValue {
         let types: [AVCaptureDevice.DeviceType] = [
             .builtInUltraWideCamera, .builtInWideAngleCamera, .builtInTelephotoCamera,
@@ -29,93 +72,94 @@ enum CameraProbes {
         let session = AVCaptureDevice.DiscoverySession(deviceTypes: types, mediaType: .video, position: .unspecified)
         var devices: [JSONValue] = []
         for device in session.devices {
-            let f = device.activeFormat
-            let dims = CMVideoFormatDescriptionGetDimensions(f.formatDescription)
-
-            let photoOutput = attachedOutput(for: device)
-            let rawFormats = photoOutput?.availableRawPhotoPixelFormatTypes ?? []
-            let bayer = rawFormats.filter { AVCapturePhotoOutput.isBayerRAWPixelFormat($0) }
-            let proRAW = rawFormats.filter { AVCapturePhotoOutput.isAppleProRAWPixelFormat($0) }
-
-            var maxDimsText = "none"
-            var dimsCount = 0
-            for d in f.supportedMaxPhotoDimensions {
-                dimsCount += 1
-                if maxDimsText == "none" {
-                    maxDimsText = "\(Int(d.width))x\(Int(d.height))"
-                }
-            }
-
-            var formats: [JSONValue] = []
-            for format in device.formats {
-                let fd = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
-                var rates: [Double] = []
-                for range in format.videoSupportedFrameRateRanges {
-                    rates.append(range.maxFrameRate)
-                }
-                formats.append(.dict([
-                    "dimensions": "\(fd.width)x\(fd.height)",
-                    "maxPhotoDimensionsCount": format.supportedMaxPhotoDimensions.count,
-                    "minISO": Double(format.minISO),
-                    "maxISO": Double(format.maxISO),
-                    "minExposureDuration": format.minExposureDuration.seconds,
-                    "maxExposureDuration": format.maxExposureDuration.seconds,
-                    "isVideoHDRSupported": format.isVideoHDRSupported,
-                    "isVideoBinned": format.isVideoBinned,
-                    "videoFieldOfView": Double(format.videoFieldOfView),
-                    "maxFrameRate": rates.max() ?? 0,
-                ]))
-            }
-
-            var flashModes: [String] = []
-            if let photoOutput {
-                for mode in photoOutput.supportedFlashModes {
-                    flashModes.append("\(mode.rawValue)")
-                }
-            }
-
-            var info: [String: JSONValue] = [:]
-            info["uniqueID"] = .string(device.uniqueID)
-            info["deviceType"] = .string(device.deviceType.rawValue)
-            info["position"] = .string("\(device.position.rawValue)")
-            info["modelID"] = .string(device.modelID)
-            info["hasFlash"] = .bool(device.hasFlash)
-            info["flashAvailable"] = .bool(device.isFlashAvailable)
-            info["hasTorch"] = .bool(device.hasTorch)
-            info["supportedFlashModes"] = .array(flashModes.map { .string($0) })
-            info["activeFormatFOV"] = .double(Double(f.videoFieldOfView))
-            info["activeFormatDimensions"] = .string("\(dims.width)x\(dims.height)")
-            info["activeFormatMaxPhotoDimensions"] = .string(maxDimsText)
-            info["activeFormatMaxPhotoDimensionsCount"] = .int(dimsCount)
-            info["activeFormatMinISO"] = .double(Double(f.minISO))
-            info["activeFormatMaxISO"] = .double(Double(f.maxISO))
-            info["activeFormatMinExposureDuration"] = .double(f.minExposureDuration.seconds)
-            info["activeFormatMaxExposureDuration"] = .double(f.maxExposureDuration.seconds)
-            info["availableRawPhotoPixelFormatTypes"] = .array(rawFormats.map { .string(fourCCString($0)) })
-            info["bayerRAWFormats"] = .array(bayer.map { .string(fourCCString($0)) })
-            info["appleProRAWFormats"] = .array(proRAW.map { .string(fourCCString($0)) })
-            info["gdcSupported"] = .bool(device.isGeometricDistortionCorrectionSupported)
-            info["gdcEnabled"] = .bool(device.isGeometricDistortionCorrectionEnabled)
-            info["centerStageControlMode"] = .string("\(AVCaptureDevice.centerStageControlMode.rawValue)")
-            info["centerStageEnabled"] = .bool(AVCaptureDevice.isCenterStageEnabled)
-            info["autoVideoHDR"] = .bool(device.automaticallyAdjustsVideoHDREnabled)
-            info["videoHDREnabled"] = .bool(device.isVideoHDREnabled)
-            info["activeFormatVideoHDRSupported"] = .bool(f.isVideoHDRSupported)
-            info["lowLightBoostSupported"] = .bool(device.isLowLightBoostSupported)
-            info["autoLowLightBoost"] = .bool(device.automaticallyEnablesLowLightBoostWhenAvailable)
-            info["activeColorSpace"] = .string("\(device.activeColorSpace.rawValue)")
-            info["globalToneMappingSupported"] = .bool(f.isGlobalToneMappingSupported)
-            info["globalToneMappingEnabled"] = .bool(device.isGlobalToneMappingEnabled)
-            info["autoFocusRangeRestrictionSupported"] = .bool(device.isAutoFocusRangeRestrictionSupported)
-            info["lockFocusCustomLensPositionSupported"] = .bool(device.isLockingFocusWithCustomLensPositionSupported)
-            info["lensAperture"] = .double(Double(device.lensAperture))
-            info["minAvailableVideoZoomFactor"] = .double(Double(device.minAvailableVideoZoomFactor))
-            info["maxAvailableVideoZoomFactor"] = .double(Double(device.maxAvailableVideoZoomFactor))
-            info["formatsCount"] = .int(device.formats.count)
-            info["formats"] = .array(formats)
-            devices.append(.dict(info))
+            devices.append(deviceInfo(device))
         }
         return .dictionary(["devices": .array(devices)])
+    }
+
+    static func deviceInfo(_ device: AVCaptureDevice) -> JSONValue {
+        var info = scalarDeviceInfo(device)
+        info["formatsCount"] = .int(device.formats.count)
+        info["formats"] = .array(device.formats.map { formatSummary($0) })
+        return .dict(info)
+    }
+
+    private static func scalarDeviceInfo(_ device: AVCaptureDevice) -> [String: JSONValue] {
+        let f = device.activeFormat
+        let dims = CMVideoFormatDescriptionGetDimensions(f.formatDescription)
+
+        let photoOutput = attachedOutput(for: device)
+        let rawFormats = photoOutput?.availableRawPhotoPixelFormatTypes ?? []
+        let bayer = rawFormats.filter { AVCapturePhotoOutput.isBayerRAWPixelFormat($0) }
+        let proRAW = rawFormats.filter { AVCapturePhotoOutput.isAppleProRAWPixelFormat($0) }
+
+        var maxDimsText = "none"
+        var dimsCount = 0
+        for d in f.supportedMaxPhotoDimensions {
+            dimsCount += 1
+            if maxDimsText == "none" {
+                maxDimsText = "\(Int(d.width))x\(Int(d.height))"
+            }
+        }
+
+        var flashModes: [String] = []
+        if let photoOutput {
+            for mode in photoOutput.supportedFlashModes {
+                flashModes.append("\(mode.rawValue)")
+            }
+        }
+
+        var info = basicDeviceInfo(device)
+        info["supportedFlashModes"] = .array(flashModes.map { .string($0) })
+        info["activeFormatFOV"] = .double(Double(f.videoFieldOfView))
+        info["activeFormatDimensions"] = .string("\(dims.width)x\(dims.height)")
+        info["activeFormatMaxPhotoDimensions"] = .string(maxDimsText)
+        info["activeFormatMaxPhotoDimensionsCount"] = .int(dimsCount)
+        info["activeFormatMinISO"] = .double(Double(f.minISO))
+        info["activeFormatMaxISO"] = .double(Double(f.maxISO))
+        info["activeFormatMinExposureDuration"] = .double(f.minExposureDuration.seconds)
+        info["activeFormatMaxExposureDuration"] = .double(f.maxExposureDuration.seconds)
+        info["availableRawPhotoPixelFormatTypes"] = .array(rawFormats.map { .string(fourCCString($0)) })
+        info["bayerRAWFormats"] = .array(bayer.map { .string(fourCCString($0)) })
+        info["appleProRAWFormats"] = .array(proRAW.map { .string(fourCCString($0)) })
+        info.merge(determinismDeviceInfo(device, format: f), uniquingKeysWith: { _, new in new })
+        return info
+    }
+
+    private static func basicDeviceInfo(_ device: AVCaptureDevice) -> [String: JSONValue] {
+        [
+            "uniqueID": .string(device.uniqueID),
+            "deviceType": .string(device.deviceType.rawValue),
+            "position": .string("\(device.position.rawValue)"),
+            "modelID": .string(device.modelID),
+            "hasFlash": .bool(device.hasFlash),
+            "flashAvailable": .bool(device.isFlashAvailable),
+            "hasTorch": .bool(device.hasTorch),
+            "lensAperture": .double(Double(device.lensAperture)),
+            "minAvailableVideoZoomFactor": .double(Double(device.minAvailableVideoZoomFactor)),
+            "maxAvailableVideoZoomFactor": .double(Double(device.maxAvailableVideoZoomFactor)),
+            "autoFocusRangeRestrictionSupported": .bool(device.isAutoFocusRangeRestrictionSupported),
+            "lockFocusCustomLensPositionSupported": .bool(device.isLockingFocusWithCustomLensPositionSupported),
+        ]
+    }
+
+    private static func determinismDeviceInfo(
+        _ device: AVCaptureDevice, format f: AVCaptureDevice.Format
+    ) -> [String: JSONValue] {
+        [
+            "gdcSupported": .bool(device.isGeometricDistortionCorrectionSupported),
+            "gdcEnabled": .bool(device.isGeometricDistortionCorrectionEnabled),
+            "centerStageControlMode": .string("\(AVCaptureDevice.centerStageControlMode.rawValue)"),
+            "centerStageEnabled": .bool(AVCaptureDevice.isCenterStageEnabled),
+            "autoVideoHDR": .bool(device.automaticallyAdjustsVideoHDREnabled),
+            "videoHDREnabled": .bool(device.isVideoHDREnabled),
+            "activeFormatVideoHDRSupported": .bool(f.isVideoHDRSupported),
+            "lowLightBoostSupported": .bool(device.isLowLightBoostSupported),
+            "autoLowLightBoost": .bool(device.automaticallyEnablesLowLightBoostWhenAvailable),
+            "activeColorSpace": .string("\(device.activeColorSpace.rawValue)"),
+            "globalToneMappingSupported": .bool(f.isGlobalToneMappingSupported),
+            "globalToneMappingEnabled": .bool(device.isGlobalToneMappingEnabled),
+        ]
     }
 
     static func rawBayerFormat(from output: AVCapturePhotoOutput) -> OSType? {
@@ -131,7 +175,8 @@ enum CameraProbes {
         out["isBayer"] = .bool(AVCapturePhotoOutput.isBayerRAWPixelFormat(bayer))
         out["isAppleProRAW"] = .bool(AVCapturePhotoOutput.isAppleProRAWPixelFormat(bayer))
         out["defaultPhotoQualityPrioritization"] = .string("\(settings.photoQualityPrioritization.rawValue)")
-        out["defaultMaxPhotoDimensions"] = .string("\(settings.maxPhotoDimensions.width)x\(settings.maxPhotoDimensions.height)")
+        out["defaultMaxPhotoDimensions"] = .string(
+            "\(settings.maxPhotoDimensions.width)x\(settings.maxPhotoDimensions.height)")
         out["autoStillImageStabilization"] = .bool(settings.isAutoStillImageStabilizationEnabled)
         out["autoRedEyeReduction"] = .bool(settings.isAutoRedEyeReductionEnabled)
         out["autoContentAwareDistortionCorrection"] = .bool(settings.isAutoContentAwareDistortionCorrectionEnabled)
@@ -181,64 +226,5 @@ enum CameraProbes {
         out["supportedFlashModes"] = .array(output.supportedFlashModes.map { .string("\($0.rawValue)") })
         out["deviceZoomFactor"] = .double(Double(device.videoZoomFactor))
         return .dict(out)
-    }
-
-    static func videoFormatsProbe() -> JSONValue {
-        let types: [AVCaptureDevice.DeviceType] = [
-            .builtInUltraWideCamera, .builtInWideAngleCamera, .builtInTelephotoCamera,
-        ]
-        let session = AVCaptureDevice.DiscoverySession(deviceTypes: types, mediaType: .video, position: .back)
-        var deviceOut: [JSONValue] = []
-        for device in session.devices {
-            var formats: [JSONValue] = []
-            for format in device.formats {
-                let fd = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
-                var fpsMax = 0.0
-                var fpsMin = 0.0
-                for range in format.videoSupportedFrameRateRanges {
-                    fpsMax = max(fpsMax, range.maxFrameRate)
-                    if fpsMin == 0 { fpsMin = range.minFrameRate }
-                    fpsMin = min(fpsMin, range.minFrameRate)
-                }
-                formats.append(.dict([
-                    "dims": "\(fd.width)x\(fd.height)",
-                    "fpsMax": fpsMax,
-                    "fpsMin": fpsMin,
-                    "videoHDR": format.isVideoHDRSupported,
-                    "binned": format.isVideoBinned,
-                ]))
-            }
-            deviceOut.append(.dictionary([
-                "uniqueID": .string(device.uniqueID),
-                "formats": .array(formats),
-                "activeIsVideoHDRSupported": .bool(device.activeFormat.isVideoHDRSupported),
-            ]))
-        }
-
-        let proRes = proResWriterProbe()
-        let hlgKey = AVVideoTransferFunction_ITU_R_2100_HLG
-        return .dictionary([
-            "devices": .array(deviceOut),
-            "proResWriter": proRes,
-            "hlgTransferFunctionKey": .string(hlgKey),
-        ])
-    }
-
-    static func proResWriterProbe() -> JSONValue {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let url = docs.appendingPathComponent("prores-probe.mov")
-        try? FileManager.default.removeItem(at: url)
-        do {
-            let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
-            let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
-                AVVideoCodecKey: AVVideoCodecType.proRes422HQ,
-                AVVideoWidthKey: 1920,
-                AVVideoHeightKey: 1080,
-            ])
-            writer.add(input)
-            return .dict(["writerCreated": true, "inputAccepted": true])
-        } catch {
-            return .dict(["writerCreated": false, "error": "\(error)"])
-        }
     }
 }

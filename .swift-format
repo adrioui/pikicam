@@ -1,11 +1,9 @@
 {
   "version": 1,
+  "tabWidth": 4,
+  "indentation": { "spaces": 4 },
   "lineLength": 120,
-  "indentation": {
-    "spaces": 4
-  },
+  "maximumBlankLines": 2,
   "respectsExistingLineBreaks": true,
-  "semicolons": "never",
-  "lineBreakBeforeEachArgument": false,
-  "respectsTrailingNewlines": true
+  "prioritizeKeepingFunctionOutputTogether": true
 }

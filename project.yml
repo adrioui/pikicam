@@ -5,16 +5,7 @@
 #
 #   xcodegen generate        # overwrites pikicam.xcodeproj deterministically
 #
-# Do not edit project.pbxproj by hand — edit this file and regenerate. The
-# directory-based `sources` below mean every .swift file under pikicam/ and
-# pikicamTests/ is compiled automatically; there is no file list to forget.
-#
-# History: between 2026-08 and 2026-10 the checked-in pbxproj was hand-edited
-# while this file lagged, which silently orphaned pikicam/Core/Design/*.swift
-# and pikicamTests/DesignLintTests.swift — they were in no target and never
-# compiled, so the design lint reported success having run zero tests. The
-# settings below were ported back from that pbxproj so regenerating loses
-# nothing. Keep them in sync by regenerating, never by hand-editing.
+# Do not edit project.pbxproj by hand — edit this file and regenerate.
 
 name: pikicam
 options:
@@ -25,10 +16,13 @@ options:
 
 settings:
   base:
-    SWIFT_VERSION: "5.0"
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
+    GCC_TREAT_WARNINGS_AS_ERRORS: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
     GENERATE_INFOPLIST_FILE: YES
-    # Device signing (v2 §2): the iPhone 12 mini is the verification target.
-    DEVELOPMENT_TEAM: GV4GK5XGN5
+    DEVELOPMENT_TEAM: V7BF8622ZR
     CODE_SIGN_STYLE: Automatic
 
 targets:
@@ -37,29 +31,27 @@ targets:
     platform: iOS
     sources:
       - path: pikicam
-        excludes:
-          - "Resources/Info.plist"   # redundant: GENERATE_INFOPLIST_FILE=YES
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicam
+        # TEMPORARY (DECISIONS D7): Xcode account session is dead pending owner
+        # re-auth; piki.pikicamProbes has a cached profile so tests can run.
+        # Revert to piki.pikicam once the owner signs back into Xcode.
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbes
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        MARKETING_VERSION: "1.0"
+        MARKETING_VERSION: "2.0"
         CURRENT_PROJECT_VERSION: 1
+        TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
-        # iPhone only (owner ruling 2026-10-02: iPad out of scope).
-        TARGETED_DEVICE_FAMILY: "1"
-        # Both orientations on iPhone (owner ruling 2026-10-02). The camera
-        # layout must be designed for landscape, not just tolerated.
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_NSCameraUsageDescription: pikicam needs camera access to capture DNG raw photos with zero computational processing.
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: pikicam accesses your photo library to show and manage the DNG photos you capture.
         INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: pikicam saves the DNG photos you capture to your photo library.
-    scheme:
-      testTargets:
-        - pikicamTests
+        INFOPLIST_KEY_UIAppFonts: "SpaceMono-Regular.ttf SpaceMono-Bold.ttf"
+        MTL_COMPILER_FLAGS: -fcikernel
+        MTLLINKER_FLAGS: -cikernel
 
   pikicamTests:
     type: bundle.unit-test
@@ -83,14 +75,21 @@ targets:
       - target: pikicam
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamUITests
+        # TEMPORARY (DECISIONS D7): shared cached profile until owner re-auth.
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbesUITests
         TEST_TARGET_NAME: pikicam
 
-  # ------------------------------------------------------------------
-  # v2 §14 — probe target (Phase 0). Committed probe files, never links
-  # app sources, excluded from the main test action. Runs the §1
-  # claims-under-test ledger on the connected iPhone 12 mini.
-  # ------------------------------------------------------------------
+  pikicamDeviceTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: pikicamDeviceTests
+    dependencies:
+      - target: pikicam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamDeviceTests
+
   pikicamProbes:
     type: application
     platform: iOS
@@ -103,6 +102,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbes
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+        GCC_TREAT_WARNINGS_AS_ERRORS: NO
         SWIFT_OBJC_BRIDGING_HEADER: Probes/pikicamProbes/ProbesBridgingHeader.h
         TARGETED_DEVICE_FAMILY: "1"
         MARKETING_VERSION: "1.0"
@@ -134,10 +135,20 @@ schemes:
         pikicamUITests: [test]
     test:
       config: Debug
-      gatherCoverageData: false
+      gatherCoverageData: true
       targets:
         - pikicamTests
         - pikicamUITests
+
+  pikicam-device:
+    build:
+      targets:
+        pikicam: all
+        pikicamDeviceTests: [test]
+    test:
+      config: Debug
+      targets:
+        - pikicamDeviceTests
 
   pikicamProbes:
     build:

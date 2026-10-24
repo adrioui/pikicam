@@ -21,7 +21,8 @@ enum PhotoKitProbes {
     static func makeSmallHEIC(from dng: Data?) async -> Data? {
         let image: CIImage?
         if let dng, let filter = CIRAWFilter(imageData: dng, identifierHint: "com.adobe.raw-image"),
-           let output = filter.outputImage {
+            let output = filter.outputImage
+        {
             image = output.transformed(by: CGAffineTransform(scaleX: 0.05, y: 0.05))
         } else {
             image = CIImage(color: CIColor(red: 0.2, green: 0.5, blue: 0.8))
@@ -44,66 +45,120 @@ enum PhotoKitProbes {
     }
 
     static func probeShapes(dng: Data, heic: Data) async -> [ShapeResult] {
-        var results: [ShapeResult] = []
         let supports = PHAssetCreationRequest.supportsAssetResourceTypes(
             [PHAssetResourceType.photo, .fullSizePhoto, .alternatePhoto, .adjustmentData]
                 .map { NSNumber(value: $0.rawValue) }
         )
-
-        for shape in ["A", "B", "C"] {
+        var results: [ShapeResult] = []
+        for (name, configure) in shapeVariants() {
             var result = ShapeResult()
-            result.shape = shape
+            result.shape = name
             result.supportsResourceTypes = supports
-
-            let adjustment = try? JSONEncoder().encode([
-                "pikicam.probe": "adjustment-v1", "shape": shape,
-            ])
-
-            do {
-                var localID = ""
-                try await PHPhotoLibrary.shared().performChanges {
-                    let request = PHAssetCreationRequest.forAsset()
-                    request.creationDate = Date()
-                    switch shape {
-                    case "A":
-                        request.addResource(with: .photo, data: dng, options: resourceOptions("PIKI_shapeA.dng", UTType.rawImage.identifier))
-                        request.addResource(with: .fullSizePhoto, data: heic, options: resourceOptions("PIKI_shapeA_full.heic", "public.heic"))
-                        if let adjustment {
-                            request.addResource(with: .adjustmentData, data: adjustment, options: nil)
-                        }
-                    case "B":
-                        request.addResource(with: .photo, data: heic, options: resourceOptions("PIKI_shapeB.heic", "public.heic"))
-                        request.addResource(with: .alternatePhoto, data: dng, options: resourceOptions("PIKI_shapeB_alt.dng", UTType.rawImage.identifier))
-                    case "C":
-                        request.addResource(with: .photo, data: dng, options: resourceOptions("PIKI_shapeC.dng", UTType.rawImage.identifier))
-                        request.addResource(with: .alternatePhoto, data: heic, options: resourceOptions("PIKI_shapeC_alt.heic", "public.heic"))
-                    default:
-                        break
-                    }
-                    localID = request.placeholderForCreatedAsset?.localIdentifier ?? ""
-                }
-                result.creationSucceeded = true
-
-                let assets = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil)
-                if let asset = assets.firstObject, assets.count == 1 {
-                    let resources = PHAssetResource.assetResources(for: asset)
-                    result.resources = resources.map { "\($0.type.rawValue):\($0.uniformTypeIdentifier ?? "?"):\($0.originalFilename ?? "?")" }
-
-                    result.currentRenderMeanDiff = currentRenderMeanDiff(asset: asset, heic: heic)
-                    result.dngBytesMatch = await dngBytesRoundTrip(asset: asset, dng: dng, shape: shape)
-
-                    try await PHPhotoLibrary.shared().performChanges {
-                        PHAssetChangeRequest.deleteAssets([asset] as NSArray)
-                    }
-                } else {
-                    result.fetchError = "fetch count \(assets.count)"
-                }
-            } catch {
-                result.creationError = "\(error)"
-            }
+            await runShapeVariant(name: name, configure: configure, dng: dng, heic: heic, into: &result)
             results.append(result)
         }
         return results
+    }
+
+    private static func shapeVariants() -> [(String, (PHAssetCreationRequest, Data, Data) -> Void)] {
+        controlVariants() + fullShapeVariants()
+    }
+
+    private static func controlVariants() -> [(String, (PHAssetCreationRequest, Data, Data) -> Void)] {
+        let variants: [(String, (PHAssetCreationRequest, Data, Data) -> Void)] = [
+            (
+                "control-dng-only",
+                { request, dngData, _ in
+                    request.addResource(
+                        with: .photo, data: dngData,
+                        options: resourceOptions("PIKI_ctrl.dng", UTType.rawImage.identifier))
+                }
+            ),
+            (
+                "control-heic-only",
+                { request, _, heicData in
+                    request.addResource(
+                        with: .photo, data: heicData, options: resourceOptions("PIKI_ctrl.heic", "public.heic"))
+                }
+            ),
+        ]
+        return variants
+    }
+
+    private static func fullShapeVariants() -> [(String, (PHAssetCreationRequest, Data, Data) -> Void)] {
+        [
+            ("A-full", addShapeAResources(adjustment: true)),
+            ("A-no-adjustment", addShapeAResources(adjustment: false)),
+            ("B-full", addShapeBResources),
+            ("C-full", addShapeCResources),
+        ]
+    }
+
+    private static func addShapeAResources(adjustment: Bool) -> (PHAssetCreationRequest, Data, Data) -> Void {
+        { request, dngData, heicData in
+            request.addResource(
+                with: .photo, data: dngData, options: resourceOptions("PIKI_A.dng", UTType.rawImage.identifier))
+            request.addResource(
+                with: .fullSizePhoto, data: heicData,
+                options: resourceOptions("PIKI_A_full.heic", "public.heic"))
+            if adjustment, let data = try? JSONEncoder().encode(["pikicam.probe": "v1"]) {
+                request.addResource(with: .adjustmentData, data: data, options: nil)
+            }
+        }
+    }
+
+    private static func addShapeBResources(_ request: PHAssetCreationRequest, _ dng: Data, _ heic: Data) {
+        request.addResource(
+            with: .photo, data: heic, options: resourceOptions("PIKI_B.heic", "public.heic"))
+        request.addResource(
+            with: .alternatePhoto, data: dng,
+            options: resourceOptions("PIKI_B_alt.dng", UTType.rawImage.identifier))
+    }
+
+    private static func addShapeCResources(_ request: PHAssetCreationRequest, _ dng: Data, _ heic: Data) {
+        request.addResource(
+            with: .photo, data: dng, options: resourceOptions("PIKI_C.dng", UTType.rawImage.identifier))
+        request.addResource(
+            with: .alternatePhoto, data: heic,
+            options: resourceOptions("PIKI_C_alt.heic", "public.heic"))
+    }
+
+    private static func runShapeVariant(
+        name: String,
+        configure: @escaping (PHAssetCreationRequest, Data, Data) -> Void,
+        dng: Data,
+        heic: Data,
+        into result: inout ShapeResult
+    ) async {
+        do {
+            var localID = ""
+            try await PHPhotoLibrary.shared().performChanges {
+                let request = PHAssetCreationRequest.forAsset()
+                request.creationDate = Date()
+                configure(request, dng, heic)
+                localID = request.placeholderForCreatedAsset?.localIdentifier ?? ""
+            }
+            result.creationSucceeded = true
+
+            let assets = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil)
+            if let asset = assets.firstObject, assets.count == 1 {
+                let resources = PHAssetResource.assetResources(for: asset)
+                result.resources = resources.map {
+                    "\($0.type.rawValue):\($0.uniformTypeIdentifier ?? "?"):\($0.originalFilename ?? "?")"
+                }
+
+                result.currentRenderMeanDiff = currentRenderMeanDiff(asset: asset, heic: heic)
+                result.dngBytesMatch = await dngBytesRoundTrip(asset: asset, dng: dng, shape: name)
+
+                try await PHPhotoLibrary.shared().performChanges {
+                    PHAssetChangeRequest.deleteAssets([asset] as NSArray)
+                }
+            } else {
+                result.fetchError = "fetch count \(assets.count)"
+            }
+        } catch {
+            result.creationError = "\(error)"
+        }
     }
 
     static func resourceOptions(_ filename: String, _ uti: String) -> PHAssetResourceCreationOptions {
@@ -115,7 +170,8 @@ enum PhotoKitProbes {
 
     static func currentRenderMeanDiff(asset: PHAsset, heic: Data) -> Double {
         guard let refHeic = CGImageSourceCreateWithData(heic as CFData, nil),
-              let refImage = CGImageSourceCreateImageAtIndex(refHeic, 0, nil) else { return -1 }
+            let refImage = CGImageSourceCreateImageAtIndex(refHeic, 0, nil)
+        else { return -1 }
         let expectation = expectationBox()
         var meanDiff = -1.0
         let options = PHImageRequestOptions()
@@ -163,11 +219,13 @@ enum PhotoKitProbes {
 
     static func meanAbsDiff(_ a: CGImage, _ b: CGImage) -> Double {
         let size = 64
-        guard let context = CGContext(
-            data: nil, width: size, height: size, bitsPerComponent: 8, bytesPerRow: size * 4,
-            space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-        ) else { return -1 }
+        guard
+            let context = CGContext(
+                data: nil, width: size, height: size, bitsPerComponent: 8, bytesPerRow: size * 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            )
+        else { return -1 }
         context.draw(a, in: CGRect(x: 0, y: 0, width: size, height: size))
         guard let aData = context.data else { return -1 }
         let aBytes = Data(bytes: aData, count: size * size * 4)

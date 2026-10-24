@@ -21,6 +21,34 @@
                ReferencedContainer = "container:pikicam.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7378676BAA3C6C9569A26882"
+               BuildableName = "pikicamTests.xctest"
+               BlueprintName = "pikicamTests"
+               ReferencedContainer = "container:pikicam.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "118AA81D1E832CEA7BC60F21"
+               BuildableName = "pikicamUITests.xctest"
+               BlueprintName = "pikicamUITests"
+               ReferencedContainer = "container:pikicam.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -28,6 +56,7 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "NO">
       <MacroExpansion>
          <BuildableReference
@@ -47,6 +76,17 @@
                BlueprintIdentifier = "7378676BAA3C6C9569A26882"
                BuildableName = "pikicamTests.xctest"
                BlueprintName = "pikicamTests"
+               ReferencedContainer = "container:pikicam.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "118AA81D1E832CEA7BC60F21"
+               BuildableName = "pikicamUITests.xctest"
+               BlueprintName = "pikicamUITests"
                ReferencedContainer = "container:pikicam.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -74,8 +114,6 @@
             ReferencedContainer = "container:pikicam.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -93,8 +131,6 @@
             ReferencedContainer = "container:pikicam.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

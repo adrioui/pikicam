@@ -1,118 +1,20 @@
 import SwiftUI
-import UIKit
 
-/// The root view of the pikicam application.
-///
-/// Manages the top-level navigation and permission flow.
-/// Shows a permission-granting interstitial before the camera view
-/// becomes active.
 struct RootView: View {
-    @Environment(CameraViewModel.self) private var viewModel
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var didRequestPermissions = false
+    let dependencies: Dependencies
 
     var body: some View {
-        Group {
-            if !didRequestPermissions {
-                PermissionsView(onComplete: {
-                    didRequestPermissions = true
-                })
-            } else if !viewModel.hasRequiredAuth {
-                PermissionsDeniedView()
-            } else {
-                CameraView()
+        ZStack {
+            Color(hex: 0x080808).ignoresSafeArea()
+            VStack(spacing: UGrid.small) {
+                Text("PIKICAM")
+                    .pikicamType(.display)
+                    .foregroundStyle(InkColor.muslin)
+                Text("REBUILD SKELETON — PHASE 1")
+                    .pikicamType(.label)
+                    .foregroundStyle(InkColor.ash)
             }
         }
-        .task {
-            if viewModel.hasRequiredAuth {
-                didRequestPermissions = true
-            }
-        }
-        .onChange(of: scenePhase) { _, phase in
-            // The camera view stays mounted while backgrounded, so its
-            // onDisappear never fires. Stop the session when the app leaves
-            // the foreground (AVFoundation interrupts capture anyway) and
-            // start it again when the app returns.
-            switch phase {
-            case .active:
-                // Re-read access before deciding anything. A user sent to
-                // Settings by `PermissionsDeniedView` grants it there and
-                // comes back authorized, but the published status still says
-                // denied — without this the denial screen is permanent for
-                // the life of the process.
-                viewModel.refreshAuthorizationStatuses()
-                if viewModel.hasRequiredAuth {
-                    Task { await viewModel.start() }
-                }
-            case .background, .inactive:
-                Task { await viewModel.stop() }
-            default:
-                break
-            }
-        }
+        .tint(InkColor.gesso)
     }
-}
-
-/// Shown on first launch to request camera and photo library permissions.
-struct PermissionsView: View {
-    let onComplete: () -> Void
-    @Environment(CameraViewModel.self) private var viewModel
-
-    var body: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "camera.aperture")
-                .font(.system(size: 72))
-                .foregroundStyle(.tint)
-
-            Text("Welcome to pikicam")
-                .font(.largeTitle.bold())
-
-            Text("Honest photographs, one Bayer exposure at a time.\nNo AI. No computation. Just light.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
-
-            Button("Continue") {
-                Task {
-                    _ = await viewModel.requestAllPermissions()
-                    onComplete()
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-        }
-        .padding()
-    }
-}
-
-/// Shown when the user has denied required permissions.
-struct PermissionsDeniedView: View {
-    var body: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 72))
-                .foregroundStyle(.yellow)
-
-            Text("Permissions Required")
-                .font(.largeTitle.bold())
-
-            Text("pikicam needs camera and photo library access to function.\nPlease grant these permissions in Settings.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
-
-            Button("Open Settings") {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-        }
-        .padding()
-    }
-}
-
-#Preview("Permissions") {
-    PermissionsView(onComplete: {})
 }

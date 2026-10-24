@@ -38,8 +38,8 @@ struct CameraCaptureEventProbeView: View {
 final class RotationCoordinatorProbe {
     init(device: AVCaptureDevice, previewLayer: AVCaptureVideoPreviewLayer) {
         let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
-        let _ = coordinator.videoRotationAngleForHorizonLevelPreview
-        let _ = coordinator.videoRotationAngleForHorizonLevelCapture
+        _ = coordinator.videoRotationAngleForHorizonLevelPreview
+        _ = coordinator.videoRotationAngleForHorizonLevelCapture
     }
 }
 
@@ -51,21 +51,23 @@ final class ReadinessCoordinatorProbe: NSObject, AVCapturePhotoOutputReadinessCo
         coordinator = AVCapturePhotoOutputReadinessCoordinator(photoOutput: output)
         super.init()
         coordinator.delegate = self
-        let _ = coordinator.captureReadiness
+        _ = coordinator.captureReadiness
         let settings = AVCapturePhotoSettings()
         coordinator.startTrackingCaptureRequest(using: settings)
     }
 
-    func readinessCoordinator(_ readinessCoordinator: AVCapturePhotoOutputReadinessCoordinator,
-                              captureReadinessDidChange captureReadiness: AVCapturePhotoOutput.CaptureReadiness) {
-        let _ = captureReadiness
+    func readinessCoordinator(
+        _ readinessCoordinator: AVCapturePhotoOutputReadinessCoordinator,
+        captureReadinessDidChange captureReadiness: AVCapturePhotoOutput.CaptureReadiness
+    ) {
+        _ = captureReadiness
     }
 }
 
 /// Claim: deferred-start APIs exist on AVCaptureSession (research 07).
 final class DeferredStartProbe {
     init(session: AVCaptureSession) {
-        let _ = session.automaticallyRunsDeferredStart
+        _ = session.automaticallyRunsDeferredStart
     }
 }
 
@@ -73,9 +75,9 @@ final class DeferredStartProbe {
 final class WBTemperatureTintProbe {
     init(device: AVCaptureDevice) {
         let tAndT = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: 5600, tint: 0)
-        let _ = try? device.lockForConfiguration()
+        _ = try? device.lockForConfiguration()
         let gains = device.deviceWhiteBalanceGains(for: tAndT)
-        let _ = gains
+        _ = gains
         device.unlockForConfiguration()
     }
 }
@@ -86,7 +88,7 @@ final class CIContextOptionProbe {
     init() {
         let options: [CIContextOption: Any] = [.memoryTarget: 1024]
         let context = CIContext(options: options)
-        let _ = context
+        _ = context
     }
 
     func encodeHeif10(of image: CIImage, colorSpace: CGColorSpace, context: CIContext) async throws -> Data? {

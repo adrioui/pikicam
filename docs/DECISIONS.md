@@ -74,6 +74,9 @@ proves the symbol or it does not.
 | D5 | `muter` is not a Homebrew formula; built from source (`github.com/muter-mutation-testing/muter`, `swift build -c release`). | Upstream packaging. | None. |
 | D6 | Code comments are omitted per owner instruction ("the code itself is the documentation"), superseding v2 §14's "non-obvious why with a source" comment policy, except where a contract (e.g. `@unchecked Sendable` proof) makes a one-line comment unavoidable. | Owner instruction (2026-10-24). | Owner reverses. |
 
+| D7 | `piki.pikicam` and `piki.pikicamProbes` temporarily share bundle identifiers (app → `piki.pikicamProbes`, UI-test runner → `piki.pikicamProbesUITests`) so device builds can use the already-minted personal-team profiles | The Xcode account session for the Personal Team expired and cannot refresh headlessly ("No Accounts" from `xcodebuild -allowProvisioningUpdates`); the probe profiles are cached and still valid. The app installs over the probe app on the device while this holds. | Owner re-authenticates Xcode (Settings → Accounts) → revert both identifiers to `piki.pikicam` / `piki.pikicamUITests` in `project.yml`. |
+| D8 | Periphery scope: the spec-mandated Phase 1 Domain vocabulary (§6.1) plus Fakes and not-yet-wired Support wrappers carry `// periphery:ignore` file markers and a `.periphery.yml` `report_exclude` | The vocabulary is built ahead of its Phase 2-4 consumers by design ("Domain shapes" is a Phase 1 deliverable); periphery guards dead code inside features as they land, with the scope shrinking each phase. `retain_assign_only_properties` matches the Dependencies-factory pattern v2 §6.5 prescribes. | Remove markers as consumers land; at DoD (§17) the app code must be warning-free with no markers left. |
+
 ## Tooling record (Phase 0 attestation)
 
 | Tool | Version | Source |
