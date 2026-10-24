@@ -67,3 +67,17 @@ public struct Provenance: Codable, Hashable, Sendable {
         self.capturedAt = capturedAt
     }
 }
+
+extension Provenance {
+    static let placeholder = Provenance(
+        deviceUniqueID: "", deviceType: "", lensKind: .wide, lensAperture: 0,
+        activeFormatDescription: "", bayerFormatFourCC: "", rawWidth: 0, rawHeight: 0,
+        iso: 0, exposureDuration: 0, lensPosition: 0, whiteBalanceGains: [],
+        whiteBalanceTemperature: 0, whiteBalanceTint: 0, exposureModeWasManual: false,
+        determinism: DeviceDeterminism(
+            geometricDistortionCorrection: .notSupported, centerStage: .notSupported,
+            videoHDR: .notSupported, lowLightBoost: .notSupported, colorSpace: ""
+        ),
+        zeroShutterLag: false, iOSVersion: "", appVersion: "", capturedAt: Date(timeIntervalSince1970: 0)
+    )
+}

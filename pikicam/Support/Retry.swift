@@ -2,11 +2,13 @@
 import Foundation
 
 extension RetryPolicy {
-    func run(_ operation: @Sendable () async throws(E) -> Void, clock: any Clock<Duration>) async throws(E) {
+    func run<A: Sendable>(
+        _ operation: @escaping @Sendable () async throws(E) -> A,
+        clock: any Clock<Duration>
+    ) async throws(E) -> A {
         for attempt in 0..<max(attempts, 1) {
             do {
-                try await operation()
-                return
+                return try await operation()
             } catch {
                 if attempt >= attempts - 1 || attempt >= backoff.count {
                     throw error
@@ -18,5 +20,14 @@ extension RetryPolicy {
                 }
             }
         }
+        fatalError("retry loop invariant: attempts >= 1 always returns or throws")
     }
+}
+
+func retrying<E: Error, A: Sendable>(
+    _ policy: RetryPolicy<E>,
+    clock: any Clock<Duration>,
+    _ operation: @escaping @Sendable () async throws(E) -> A
+) async throws(E) -> A {
+    try await policy.run(operation, clock: clock)
 }
