@@ -101,4 +101,17 @@ Device: iPhone 12 mini (iPhone13,1), iOS 26.6.2, Developer Mode on, udid
 
 ## Phase entries
 
-(One entry per completed phase lands here; see §16 of PROMPT-v2.)
+| Date | Phase | Entry |
+|---|---|---|
+| 2026-10-24 | 0 | Attestation complete: probes run on-device, ledger L1-L12 resolved (L9 pending re-probe), 25 fixtures captured and SHA-registered, dng_validate built, synthetic generator clean. |
+| 2026-10-24 | A | EDR headroom + determinism readbacks measured; PTC/shutter/WB deferred to owner-assisted recapture (face-up session) — CALIBRATION.md records method and pending tier. |
+| 2026-10-24 | 1 | Skeleton: delete list applied, Swift 6 complete-concurrency project, Domain/Support/DesignSystem/Fakes, suite green on device, gates (lint/format/periphery-scope D8) clean. |
+| 2026-10-24 | 2 | Capture core: actor-on-queue client, typed-Result photo boundary (IFD0 single-IFD + SubIFD walking), determinism transaction, speed-only settings. D7 resolved (owner re-auth). |
+| 2026-10-24 | 3 | Develop core: DNGInspector, neutral recipe with readback, PikicamLook Metal CI kernel (exposure/mono/filmic/gamut/dither), HEIC 10-bit export proven on-device from the Bayer fixture. |
+| 2026-10-24 | 4 | Library/journal/flows: FileJournal crash-recovery round-trip, AdjustmentCodec foreign rejection, PhotoKitLibrary album saves, CaptureFlow/RecoveryFlow/EditFlow + SaveRetry. 11 flow tests green. |
+| 2026-10-24 | 5-7 | Camera UI zones on MM tokens, library/viewer screens, permissions gate, settings; UI tests green on device in fake mode. |
+| 2026-10-24 | 8 | Two-writer recording client (untouched master + PikicamLook rendition, HLG-tagged) and slit-scan MTLTexture assembler with drop counting; mode-aware dock actuators. |
+| 2026-10-24 | 9-10 | Oracles (reference-diff bracket with dark-scene skip, colorcheck, p3-luminance, fuzz corpus smoke 0/50 crashes), inversion README, docs set, allow-list gitignore, conventional history pushed to main. |
+
+Standing open items: owner-assisted recapture (face-up fixtures + chart),
+PhotoKit 3300 re-probe, soak/ladder, VoiceOver pass — DEVICE-CHECKLIST.md.

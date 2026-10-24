@@ -44,6 +44,8 @@
 # Why: deltaE2000 per ColorChecker patch (Tier 1 calibration).
 !/scripts/p3-luminance.py
 # Why: derives the mono kernel luminance constants from the P3 primaries.
+!/scripts/fuzz-corpus.py
+# Why: deterministic parser fuzz (50-variant smoke per run, full in CI).
 
 !/pikicam/
 # Why: the app is the product; all sources, assets, fonts, haptics.
