@@ -54,6 +54,8 @@ pikicamTests/Fixtures/*.DNG
 !/docs/artifacts/export
 !/docs/artifacts/export/*.txt
 !/docs/artifacts/export/REPORT.md
+!/docs/artifacts/parity
+!/docs/artifacts/parity/REPORT.md
 
 !/README.md
 # Why: front door + inversion documentation.
@@ -64,7 +66,8 @@ pikicamTests/Fixtures/*.DNG
 /fixtures/*
 # Why: fixture payloads are device-specific multi-MB DNGs (blocked), but the
 # SHA register and probe JSON are reproducibility evidence.
-!/fixtures/device/SHA256SUMS.txt
-!/fixtures/device/probe-results.json
+!/fixtures/parity
+# Why: slot for the owner's controlled parity pair; payloads stay local
+# (multi-MB), the oracle consumes them in place.
 
 .DS_Store

@@ -68,6 +68,12 @@ extension CameraEngine {
                 }
                 clipMessage = "Mono export failed; saved the untouched clip."
             }
+            if ProcessInfo.processInfo.arguments.contains("-pikicam.dumpclip") {
+                let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let sourceDest = docs.appendingPathComponent("last-source-clip.mov")
+                try? FileManager.default.removeItem(at: sourceDest)
+                try? FileManager.default.copyItem(at: url, to: sourceDest)
+            }
             await saveClip(url)
         } else {
             clipMessage = "Recording failed."
