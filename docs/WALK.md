@@ -56,6 +56,8 @@ walk remains the ship gate; these numbers say the skin cost no budget.
 12. The archive lists ONLY pikicam captures (album fetch; nothing
     foreign).
 13. 10-minute record soak: no drops, thermal state recorded.
+14. Flip to the FRONT camera -> shoot -> photo appears in Photos; front
+    video records with audio. Flip back returns the rear camera.
 
 Steps 9-12 are covered by the device smoke suite plus the parity
 artifacts; step 13 is a human soak (start record, wait 10 min, stop,

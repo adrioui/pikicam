@@ -50,7 +50,7 @@ brutalist text states already speak.
 
 ## pikicam MODE × STATE grid (what each control does in every state)
 
-| State | Shutter | Mode strip | BNW chip | Archive btn | Readout |
+| State | Shutter | Mode strip | BNW chip | Flip btn | Archive btn | Readout |
 |---|---|---|---|---|---|
 | PHOTO idle | capture | PHOTO/VIDEO | BNW OFF/ON | opens archive | N SAVED |
 | PHOTO capturing | disabled (in-flight guard) | live | live | opens archive | N SAVED |
@@ -61,7 +61,7 @@ brutalist text states already speak.
 | VIDEO post-stop export | disabled until file ready | live | live | opens archive | SAVING CLIP |
 | camera denied (launch) | — | — | — | — | DENIED + OPEN SETTINGS |
 
-Adopted from the baseline: center verb control; corner review path;
+The FLIP control sits opposite the archive (baseline grammar, adopted). Adopted: center verb control; corner review path;
 tap-to-focus stays (free from engine). Rejected from the baseline: icon
 toggles, hidden chevron drawer (we have nothing to hide — three verbs),
 pinch zoom (photo framing is the walk's, not ours to re-add), volume
