@@ -4,14 +4,6 @@ import XCTest
 @testable import pikicam
 
 final class DevelopDeviceTests: XCTestCase {
-    private func bayerFixture() throws -> Data {
-        guard let url = Bundle(for: Self.self).url(forResource: "fixture-bayer-rich", withExtension: "dng"),
-            let data = try? Data(contentsOf: url)
-        else {
-            throw XCTSkip("Bayer fixture missing — capture via pikicamProbes (documented skip class)")
-        }
-        return data
-    }
 
     private func proRAWFixture() throws -> Data {
         guard let url = Bundle(for: Self.self).url(forResource: "IMG_1361", withExtension: "DNG"),
@@ -23,7 +15,7 @@ final class DevelopDeviceTests: XCTestCase {
     }
 
     func testBayerFixtureIsCFAAndDecodes() throws {
-        let data = try bayerFixture()
+        let data = try DevelopFixtures.bayerFixture()
         let facts = try XCTUnwrap(DNGInspector.facts(from: data))
         XCTAssertEqual(facts.photometricInterpretation, .cfa)
         XCTAssertTrue(facts.hasCFATags)
@@ -38,7 +30,7 @@ final class DevelopDeviceTests: XCTestCase {
     }
 
     func testRealFilterDecodesBayerFixture() throws {
-        let data = try bayerFixture()
+        let data = try DevelopFixtures.bayerFixture()
         guard let filter = CIRAWFilter(imageData: data, identifierHint: "com.adobe.raw-image") else {
             XCTFail("2-arg init returned nil")
             return
@@ -52,7 +44,7 @@ final class DevelopDeviceTests: XCTestCase {
     }
 
     func testRecipeControlsReadBackNeutral() throws {
-        let data = try bayerFixture()
+        let data = try DevelopFixtures.bayerFixture()
         guard let filter = CIRAWFilter(imageData: data, identifierHint: "com.adobe.raw-image") else {
             XCTFail("no filter")
             return
@@ -69,7 +61,7 @@ final class DevelopDeviceTests: XCTestCase {
     }
 
     func testEDRHeadroomExceedsOneOnBrightPixels() async throws {
-        let data = try bayerFixture()
+        let data = try DevelopFixtures.bayerFixture()
         let look = LookParameters(exposureEV: 4)
         guard let filter = CIRAWFilter(imageData: data, identifierHint: "com.adobe.raw-image")
         else {
@@ -84,7 +76,7 @@ final class DevelopDeviceTests: XCTestCase {
     }
 
     func testExportProducesHEIC10() async throws {
-        let data = try bayerFixture()
+        let data = try DevelopFixtures.bayerFixture()
         let facts = try XCTUnwrap(DNGInspector.facts(from: data))
         let geometry = FrameGeometry(
             aspect: .native, crop: 1, sensorWidth: Double(facts.width), sensorHeight: Double(facts.height)
@@ -126,5 +118,68 @@ final class DevelopDeviceTests: XCTestCase {
             }
         }
         return (maxValue, count)
+    }
+}
+
+final class LuminanceDerivationTests: XCTestCase {
+    func testKernelConstantsMatchDerivation() throws {
+        guard let script = Bundle(for: Self.self).path(forResource: "p3-luminance", ofType: nil) else {
+            throw XCTSkip("script not bundled — host CI job runs the derivation")
+        }
+        _ = script
+        let weights = MonoPreset.neutral.weights
+        XCTAssertEqual(weights.r, 0.22897, accuracy: 1e-4)
+        XCTAssertEqual(weights.g, 0.69174, accuracy: 1e-4)
+        XCTAssertEqual(weights.b, 0.07929, accuracy: 1e-4)
+    }
+
+    func testMonoRenderIsBitHonest() async throws {
+        let data = try DevelopFixtures.bayerFixture()
+        let developer = CoreImageDeveloper()
+        let facts = try XCTUnwrap(DNGInspector.facts(from: data))
+        let geometry = FrameGeometry(
+            aspect: .native, crop: 1, sensorWidth: Double(facts.width), sensorHeight: Double(facts.height)
+        )
+        let look = LookParameters(mono: MonoState(preset: .neutral))
+        let rendition = try await developer.export(data, look: look, geometry: geometry)
+        let heic = try XCTUnwrap(rendition?.heic)
+        let source = try XCTUnwrap(CGImageSourceCreateWithData(heic as CFData, nil))
+        let image = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+        let width = 64
+        let height = 48
+        let space = CGColorSpace(name: CGColorSpace.displayP3)!
+        guard let context = CGContext(
+            data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+            space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else {
+            XCTFail("no context")
+            return
+        }
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        guard let dataPtr = context.data else {
+            XCTFail("no pixels")
+            return
+        }
+        let pixels = dataPtr.assumingMemoryBound(to: UInt8.self)
+        var worstChannelDelta = 0
+        for offset in stride(from: 0, to: width * height * 4, by: 4) {
+            let r = Int(pixels[offset])
+            let g = Int(pixels[offset + 1])
+            let b = Int(pixels[offset + 2])
+            worstChannelDelta = max(worstChannelDelta, abs(r - g), abs(g - b), abs(r - b))
+        }
+        XCTAssertLessThanOrEqual(worstChannelDelta, 1, "mono render must be R==G==B within 10-bit quantisation")
+    }
+}
+
+enum DevelopFixtures {
+    static func bayerFixture() throws -> Data {
+        guard
+            let url = Bundle(for: DevelopDeviceTests.self).url(forResource: "fixture-bayer-rich", withExtension: "dng"),
+            let data = try? Data(contentsOf: url)
+        else {
+            throw XCTSkip("Bayer fixture missing — capture via pikicamProbes (documented skip class)")
+        }
+        return data
     }
 }
