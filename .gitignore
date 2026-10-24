@@ -1,28 +1,83 @@
-# macOS
+# Allow-list gitignore: "*" blocks everything; "!" re-allows one path with a reason.
+
+*
+
+!/.gitignore
+# Why: the allow-list itself must be versioned so every clone agrees on what is source.
+
+!/project.yml
+# Why: XcodeGen source of truth; pikicam.xcodeproj is generated from it.
+
+!/pikicam.xcodeproj/
+!/pikicam.xcodeproj/project.xcworkspace/
+!/pikicam.xcodeproj/xcshareddata/
+# Why: the generated project, workspace and SHARED schemes are committed so a
+# clean clone passes `git diff --exit-code` determinism and CI can build
+# without xcodegen; xcuserdata stays blocked by "*".
+
+!/.swiftlint.yml
+# Why: strict lint is a gate; the config must not drift per machine.
+!/.swift-format
+# Why: same for formatting.
+!/.periphery.yml
+# Why: dead-code scope is a reviewed decision (D8), not local taste.
+
+!/fixtures/
+!/fixtures/device/SHA256SUMS.txt
+!/fixtures/device/probe-results.json
+# Why: fixture payloads are device-specific multi-MB DNGs (blocked), but their
+# SHA256 register and the probe JSON are the reproducibility evidence.
+
+!/scripts/
+!/scripts/verify.sh
+# Why: the local verification entry point (device suite + lint + oracles).
+!/scripts/make-synthetic-bayer.py
+# Why: regenerates the dng_validate-clean parser fixture deterministically.
+!/scripts/calibrate.py
+# Why: Phase A analysis over the captured flat series.
+!/scripts/reference-diff.py
+# Why: LibRaw/RawTherapee bracket oracle for the develop pipeline.
+!/scripts/colorcheck.py
+# Why: deltaE2000 per ColorChecker patch (Tier 1 calibration).
+!/scripts/p3-luminance.py
+# Why: derives the mono kernel luminance constants from the P3 primaries.
+
+!/pikicam/
+# Why: the app is the product; all sources, assets, fonts, haptics.
+
+!/pikicamTests/
+# Why: unit + develop tests mirror the app tree.
+pikicamTests/Fixtures/*.DNG
+# Why not: multi-MB device captures; SHA-registered outside git.
+
+!/pikicamUITests/
+# Why: XCUITest suite (fake-mode journeys on device).
+
+!/pikicamDeviceTests/
+# Why: probe assertions that need real hardware.
+
+!/Probes/
+# Why: the claims ledger is re-provable only if the probe app ships.
+
+!/README.md
+# Why: inversion documentation (intent/decisions/constraints/gotchas).
+!/AGENTS.md
+# Why: operating contract for coding agents (<= 80 lines).
+!/docs/
+!/docs/DECISIONS.md
+# Why: claims ledger + deviations with reversal conditions.
+!/docs/CALIBRATION.md
+# Why: measured numbers and the method behind each.
+!/docs/INTEROP.md
+# Why: independent-decoder matrix for DNG/HEIC outputs.
+!/docs/DEVICE-CHECKLIST.md
+# Why: owner-physical verification items.
+!/docs/COLOR.md
+# Why: working-space choices and curve/gamut citations.
+
 .DS_Store
-
-# Xcode user-specific state
-xcuserdata/
-
-# Build artifacts
-DerivedData/
 build/
 .build/
+DerivedData/
+xcuserdata/
 *.xcuserstate
-
-# Large test fixtures (real camera DNG files — keep out of VCS)
-pikicamTests/Fixtures/*.DNG
-
-# Agent runtime session state
-.pi-glla/
-
-# Device fixtures are git-ignored (v2 §4.3); SHA256SUMS.txt + probe-results.json are committed.
-fixtures/device/*.dng
-fixtures/device/*.mov
-
-# Working corpus (kept locally, not part of the shipped repository)
-docs/workflow/
-docs/design-source/
-docs/PROMPT-v2.md
-.agents/
-.github/
