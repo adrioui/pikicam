@@ -1,0 +1,1160 @@
+{
+  "records" : [
+    {
+      "data" : {
+        "actorOnDispatchSerialQueue" : true,
+        "ciContextMemoryTarget" : true,
+        "deferredStart" : true,
+        "heif10RepresentationAsync" : true,
+        "onCameraCaptureEvent" : true,
+        "readinessCoordinator" : true,
+        "rotationCoordinator" : true,
+        "wbTemperatureTint" : true
+      },
+      "name" : "compileProbes",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "devices" : [
+          {
+            "activeColorSpace" : "string(\"1\")",
+            "activeFormatDimensions" : "string(\"1920x1080\")",
+            "activeFormatFOV" : "double(107.44999694824219)",
+            "activeFormatMaxExposureDuration" : "double(1.0)",
+            "activeFormatMaxISO" : "double(2304.0)",
+            "activeFormatMaxPhotoDimensions" : "string(\"1920x1080\")",
+            "activeFormatMaxPhotoDimensionsCount" : "int(2)",
+            "activeFormatMinExposureDuration" : "double(4.2e-05)",
+            "activeFormatMinISO" : "double(24.0)",
+            "activeFormatVideoHDRSupported" : "bool(true)",
+            "appleProRAWFormats" : "array([])",
+            "autoFocusRangeRestrictionSupported" : "bool(false)",
+            "autoLowLightBoost" : "bool(false)",
+            "autoVideoHDR" : "bool(true)",
+            "availableRawPhotoPixelFormatTypes" : "array([pikicamProbes.JSONValue.string(\"rgg4\")])",
+            "bayerRAWFormats" : "array([pikicamProbes.JSONValue.string(\"rgg4\")])",
+            "centerStageControlMode" : "string(\"1\")",
+            "centerStageEnabled" : "bool(false)",
+            "deviceType" : "string(\"AVCaptureDeviceTypeBuiltInUltraWideCamera\")",
+            "flashAvailable" : "bool(true)",
+            "formats" : "array([pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"dimensions\": pikicamProbes.JSONValue.string(\"192x144\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"192x144\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(97.3894271850586), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"352x288\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2304.0)]), pikicamProbes.JSONValue.dictionary([\"dimensions\": pikicamProbes.JSONValue.string(\"352x288\"), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(97.3894271850586)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"dimensions\": pikicamProbes.JSONValue.string(\"480x360\"), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(24.0), \"dimensions\": pikicamProbes.JSONValue.string(\"480x360\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"dimensions\": pikicamProbes.JSONValue.string(\"960x540\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"dimensions\": pikicamProbes.JSONValue.string(\"960x540\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1024x768\"), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1024x768\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\")]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(240.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxISO\": pikicamProbes.JSONValue.double(768.0), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(768.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxFrameRate\": pikicamProbes.JSONValue.double(240.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"dimensions\": pikicamProbes.JSONValue.string(\"1440x1080\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1440x1080\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(24.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0)]), pikicamProbes.JSONValue.dictionary([\"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\")]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"maxISO\": pikicamProbes.JSONValue.double(2304.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"videoFieldOfView\": pikicamProbes.JSONValue.double(68.5324478149414), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(768.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(768.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"videoFieldOfView\": pikicamProbes.JSONValue.double(68.5324478149414), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"minISO\": pikicamProbes.JSONValue.double(24.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(240.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxISO\": pikicamProbes.JSONValue.double(768.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxISO\": pikicamProbes.JSONValue.double(768.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(240.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(102.29981231689453), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"2592x1944\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"maxISO\": pikicamProbes.JSONValue.double(1536.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxISO\": pikicamProbes.JSONValue.double(1536.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062), \"dimensions\": pikicamProbes.JSONValue.string(\"2592x1944\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062), \"maxISO\": pikicamProbes.JSONValue.double(1536.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"3264x2448\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"3264x2448\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(1536.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\")]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\")]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(107.44999694824219), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(0.5), \"minExposureDuration\": pikicamProbes.JSONValue.double(5e-05), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"dimensions\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(4.2e-05), \"minISO\": pikicamProbes.JSONValue.double(24.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(104.89028930664062), \"dimensions\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"maxISO\": pikicamProbes.JSONValue.double(2304.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)])])",
+            "formatsCount" : "int(52)",
+            "gdcEnabled" : "bool(true)",
+            "gdcSupported" : "bool(true)",
+            "globalToneMappingEnabled" : "bool(false)",
+            "globalToneMappingSupported" : "bool(true)",
+            "hasFlash" : "bool(true)",
+            "hasTorch" : "bool(true)",
+            "lensAperture" : "double(2.4000000953674316)",
+            "lockFocusCustomLensPositionSupported" : "bool(false)",
+            "lowLightBoostSupported" : "bool(false)",
+            "maxAvailableVideoZoomFactor" : "double(189.0)",
+            "minAvailableVideoZoomFactor" : "double(1.0)",
+            "modelID" : "string(\"com.apple.avfoundation.avcapturedevice.built-in_video:5\")",
+            "position" : "string(\"1\")",
+            "supportedFlashModes" : "array([pikicamProbes.JSONValue.string(\"0\"), pikicamProbes.JSONValue.string(\"1\"), pikicamProbes.JSONValue.string(\"2\")])",
+            "uniqueID" : "string(\"com.apple.avfoundation.avcapturedevice.built-in_video:5\")",
+            "videoHDREnabled" : "bool(true)"
+          },
+          {
+            "activeColorSpace" : "string(\"1\")",
+            "activeFormatDimensions" : "string(\"1920x1080\")",
+            "activeFormatFOV" : "double(70.29109191894531)",
+            "activeFormatMaxExposureDuration" : "double(1.0)",
+            "activeFormatMaxISO" : "double(3168.0)",
+            "activeFormatMaxPhotoDimensions" : "string(\"1920x1080\")",
+            "activeFormatMaxPhotoDimensionsCount" : "int(2)",
+            "activeFormatMinExposureDuration" : "double(1.4e-05)",
+            "activeFormatMinISO" : "double(33.0)",
+            "activeFormatVideoHDRSupported" : "bool(true)",
+            "appleProRAWFormats" : "array([])",
+            "autoFocusRangeRestrictionSupported" : "bool(true)",
+            "autoLowLightBoost" : "bool(false)",
+            "autoVideoHDR" : "bool(true)",
+            "availableRawPhotoPixelFormatTypes" : "array([pikicamProbes.JSONValue.string(\"rgg4\")])",
+            "bayerRAWFormats" : "array([pikicamProbes.JSONValue.string(\"rgg4\")])",
+            "centerStageControlMode" : "string(\"1\")",
+            "centerStageEnabled" : "bool(false)",
+            "deviceType" : "string(\"AVCaptureDeviceTypeBuiltInWideAngleCamera\")",
+            "flashAvailable" : "bool(true)",
+            "formats" : "array([pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"192x144\")]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"192x144\"), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(60.91105270385742), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"352x288\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(60.91105270385742), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"dimensions\": pikicamProbes.JSONValue.string(\"352x288\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"480x360\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"480x360\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"minExposureDuration\": pikicamProbes.JSONValue.double(2e-05)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"dimensions\": pikicamProbes.JSONValue.string(\"960x540\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"960x540\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1024x768\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(33.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1024x768\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(240.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(1320.0), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(1320.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxFrameRate\": pikicamProbes.JSONValue.double(240.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"dimensions\": pikicamProbes.JSONValue.string(\"1440x1080\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(65.35665130615234), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1440x1080\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(33.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0)]), pikicamProbes.JSONValue.dictionary([\"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\")]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(38.78413772583008), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(1320.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(1320.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(38.78413772583008), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"minISO\": pikicamProbes.JSONValue.double(33.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(240.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(1320.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxISO\": pikicamProbes.JSONValue.double(1320.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(240.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.5e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2e-05), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"2592x1944\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"dimensions\": pikicamProbes.JSONValue.string(\"2592x1944\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"3264x2448\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"3264x2448\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\")]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\")]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(70.29109191894531), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"maxISO\": pikicamProbes.JSONValue.double(3168.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(5808.0), \"dimensions\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(1.4e-05), \"minISO\": pikicamProbes.JSONValue.double(33.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(67.80220031738281), \"dimensions\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"maxISO\": pikicamProbes.JSONValue.double(5808.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)])])",
+            "formatsCount" : "int(52)",
+            "gdcEnabled" : "bool(false)",
+            "gdcSupported" : "bool(false)",
+            "globalToneMappingEnabled" : "bool(false)",
+            "globalToneMappingSupported" : "bool(true)",
+            "hasFlash" : "bool(true)",
+            "hasTorch" : "bool(true)",
+            "lensAperture" : "double(1.600000023841858)",
+            "lockFocusCustomLensPositionSupported" : "bool(true)",
+            "lowLightBoostSupported" : "bool(false)",
+            "maxAvailableVideoZoomFactor" : "double(189.0)",
+            "minAvailableVideoZoomFactor" : "double(1.0)",
+            "modelID" : "string(\"com.apple.avfoundation.avcapturedevice.built-in_video:0\")",
+            "position" : "string(\"1\")",
+            "supportedFlashModes" : "array([pikicamProbes.JSONValue.string(\"0\"), pikicamProbes.JSONValue.string(\"1\"), pikicamProbes.JSONValue.string(\"2\")])",
+            "uniqueID" : "string(\"com.apple.avfoundation.avcapturedevice.built-in_video:0\")",
+            "videoHDREnabled" : "bool(true)"
+          },
+          {
+            "activeColorSpace" : "string(\"1\")",
+            "activeFormatDimensions" : "string(\"1920x1080\")",
+            "activeFormatFOV" : "double(73.29196166992188)",
+            "activeFormatMaxExposureDuration" : "double(1.0)",
+            "activeFormatMaxISO" : "double(2208.0)",
+            "activeFormatMaxPhotoDimensions" : "string(\"1920x1080\")",
+            "activeFormatMaxPhotoDimensionsCount" : "int(2)",
+            "activeFormatMinExposureDuration" : "double(2.1e-05)",
+            "activeFormatMinISO" : "double(23.0)",
+            "activeFormatVideoHDRSupported" : "bool(true)",
+            "appleProRAWFormats" : "array([])",
+            "autoFocusRangeRestrictionSupported" : "bool(false)",
+            "autoLowLightBoost" : "bool(false)",
+            "autoVideoHDR" : "bool(true)",
+            "availableRawPhotoPixelFormatTypes" : "array([pikicamProbes.JSONValue.string(\"bgg4\")])",
+            "bayerRAWFormats" : "array([pikicamProbes.JSONValue.string(\"bgg4\")])",
+            "centerStageControlMode" : "string(\"1\")",
+            "centerStageEnabled" : "bool(false)",
+            "deviceType" : "string(\"AVCaptureDeviceTypeBuiltInWideAngleCamera\")",
+            "flashAvailable" : "bool(true)",
+            "formats" : "array([pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"dimensions\": pikicamProbes.JSONValue.string(\"192x144\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"192x144\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(68.58161926269531), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"352x288\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0)]), pikicamProbes.JSONValue.dictionary([\"dimensions\": pikicamProbes.JSONValue.string(\"352x288\"), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(68.58161926269531)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"480x360\"), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(23.0), \"dimensions\": pikicamProbes.JSONValue.string(\"480x360\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"640x480\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"960x540\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"dimensions\": pikicamProbes.JSONValue.string(\"960x540\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1024x768\"), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1024x768\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\")]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(920.0), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(920.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"1280x720\"), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"1440x1080\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1440x1080\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(23.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0)]), pikicamProbes.JSONValue.dictionary([\"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\")]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188)]), pikicamProbes.JSONValue.dictionary([\"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"maxISO\": pikicamProbes.JSONValue.double(2208.0)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(920.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(920.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1080\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"maxFrameRate\": pikicamProbes.JSONValue.double(120.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"minISO\": pikicamProbes.JSONValue.double(23.0)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.2e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"dimensions\": pikicamProbes.JSONValue.string(\"1920x1440\"), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"isVideoBinned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(59.34393310546875), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"dimensions\": pikicamProbes.JSONValue.string(\"3088x2316\"), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"dimensions\": pikicamProbes.JSONValue.string(\"3088x2316\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(59.34393310546875)]), pikicamProbes.JSONValue.dictionary([\"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"dimensions\": pikicamProbes.JSONValue.string(\"3088x2316\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(59.34393310546875), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false)]), pikicamProbes.JSONValue.dictionary([\"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05)]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(2), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188)]), pikicamProbes.JSONValue.dictionary([\"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0)]), pikicamProbes.JSONValue.dictionary([\"maxFrameRate\": pikicamProbes.JSONValue.double(60.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(false), \"dimensions\": pikicamProbes.JSONValue.string(\"3840x2160\"), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1)]), pikicamProbes.JSONValue.dictionary([\"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"dimensions\": pikicamProbes.JSONValue.string(\"4032x3024\")]), pikicamProbes.JSONValue.dictionary([\"maxExposureDuration\": pikicamProbes.JSONValue.double(1.0), \"maxPhotoDimensionsCount\": pikicamProbes.JSONValue.int(1), \"videoFieldOfView\": pikicamProbes.JSONValue.double(73.29196166992188), \"isVideoHDRSupported\": pikicamProbes.JSONValue.bool(true), \"maxFrameRate\": pikicamProbes.JSONValue.double(30.0), \"minISO\": pikicamProbes.JSONValue.double(23.0), \"maxISO\": pikicamProbes.JSONValue.double(2208.0), \"isVideoBinned\": pikicamProbes.JSONValue.bool(false), \"minExposureDuration\": pikicamProbes.JSONValue.double(2.1e-05), \"dimensions\": pikicamProbes.JSONValue.string(\"4032x3024\")])])",
+            "formatsCount" : "int(49)",
+            "gdcEnabled" : "bool(false)",
+            "gdcSupported" : "bool(false)",
+            "globalToneMappingEnabled" : "bool(false)",
+            "globalToneMappingSupported" : "bool(true)",
+            "hasFlash" : "bool(true)",
+            "hasTorch" : "bool(false)",
+            "lensAperture" : "double(2.200000047683716)",
+            "lockFocusCustomLensPositionSupported" : "bool(false)",
+            "lowLightBoostSupported" : "bool(false)",
+            "maxAvailableVideoZoomFactor" : "double(189.0)",
+            "minAvailableVideoZoomFactor" : "double(1.0)",
+            "modelID" : "string(\"com.apple.avfoundation.avcapturedevice.built-in_video:1\")",
+            "position" : "string(\"2\")",
+            "supportedFlashModes" : "array([pikicamProbes.JSONValue.string(\"0\"), pikicamProbes.JSONValue.string(\"1\"), pikicamProbes.JSONValue.string(\"2\")])",
+            "uniqueID" : "string(\"com.apple.avfoundation.avcapturedevice.built-in_video:1\")",
+            "videoHDREnabled" : "bool(true)"
+          }
+        ]
+      },
+      "name" : "deviceDiscovery",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "devices" : [
+          {
+            "activeIsVideoHDRSupported" : true,
+            "formats" : [
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              }
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:5"
+          },
+          {
+            "activeIsVideoHDRSupported" : true,
+            "formats" : [
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              }
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:0"
+          }
+        ],
+        "hlgTransferFunctionKey" : "ITU_R_2100_HLG",
+        "proResWriter" : {
+          "inputAccepted" : true,
+          "writerCreated" : true
+        }
+      },
+      "name" : "videoFormats",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "autoContentAwareDistortionCorrection" : "bool(false)",
+        "autoRedEyeReduction" : "bool(false)",
+        "autoStillImageStabilization" : "bool(false)",
+        "autoVirtualDeviceFusion" : "bool(false)",
+        "defaultMaxPhotoDimensions" : "string(\"0x0\")",
+        "defaultPhotoQualityPrioritization" : "string(\"1\")",
+        "isAppleProRAW" : "bool(false)",
+        "isBayer" : "bool(true)",
+        "pixelFormat" : "string(\"bgg4\")",
+        "qualityExceptionReason" : "string(\"*** -[AVCapturePhotoSettings setPhotoQualityPrioritization:] Unsupported when capturing RAW\")",
+        "readbackAfterQualityAttempt" : "string(\"1\")",
+        "setBalancedException" : "string(\"NSExceptionName(_rawValue: NSInvalidArgumentException)\")",
+        "setQualityException" : "string(\"NSExceptionName(_rawValue: NSInvalidArgumentException)\")",
+        "setSpeedAccepted" : "bool(true)",
+        "speedReadback" : "string(\"1\")"
+      },
+      "name" : "photoSettingsDetached",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "modernClass" : "string(\"CIRAWFilter\")",
+        "modernIsCIRAWFilterClass" : "bool(true)",
+        "modernNativeSize" : "string(\"4032.0x3024.0\")",
+        "modernOutputNotNil" : "bool(true)",
+        "modernSupportedDecoderVersions" : "array([pikicamProbes.JSONValue.string(\"6.dng\"), pikicamProbes.JSONValue.string(\"7.dng\"), pikicamProbes.JSONValue.string(\"8.dng\")])",
+        "staticModelsContainThisDevice" : "bool(true)",
+        "staticSupportedCameraModelsCount" : "int(941)"
+      },
+      "name" : "cirawInitModern",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "isaTopIsCIRAWFilter" : "bool(false)",
+        "respondsToBoostSetter" : "bool(false)",
+        "respondsToDecoderVersionSetter" : "bool(false)",
+        "respondsToHighlightRecoverySetter" : "bool(false)",
+        "runtimeClass" : "string(\"CIRAWFilterImpl\")"
+      },
+      "name" : "cirawInitDeprecated",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "baselineExposureDefault" : "string(\"-0.30221677\")",
+        "controls" : "array([pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"boostAmount\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"assigned\": pikicamProbes.JSONValue.bool(true), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"neutral\": pikicamProbes.JSONValue.string(\"1.0\"), \"readback\": pikicamProbes.JSONValue.string(\"1.0000\"), \"name\": pikicamProbes.JSONValue.string(\"boostShadowAmount\")]), pikicamProbes.JSONValue.dictionary([\"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"name\": pikicamProbes.JSONValue.string(\"shadowBias\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"name\": pikicamProbes.JSONValue.string(\"localToneMapAmount\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"name\": pikicamProbes.JSONValue.string(\"contrastAmount\")]), pikicamProbes.JSONValue.dictionary([\"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"name\": pikicamProbes.JSONValue.string(\"sharpnessAmount\")]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"detailAmount\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\")]), pikicamProbes.JSONValue.dictionary([\"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"name\": pikicamProbes.JSONValue.string(\"luminanceNoiseReductionAmount\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"name\": pikicamProbes.JSONValue.string(\"colorNoiseReductionAmount\"), \"assigned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"name\": pikicamProbes.JSONValue.string(\"moireReductionAmount\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"1\"), \"name\": pikicamProbes.JSONValue.string(\"extendedDynamicRangeAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"1.0\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"false\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"readback\": pikicamProbes.JSONValue.string(\"false\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"isLensCorrectionEnabled\")]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"isGamutMappingEnabled\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"false\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"neutral\": pikicamProbes.JSONValue.string(\"false\")]), pikicamProbes.JSONValue.dictionary([\"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"name\": pikicamProbes.JSONValue.string(\"exposure\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\")])])",
+        "decoderVersionReadback" : "string(\"8.dng\")",
+        "decoderVersionSet" : "string(\"8.dng\")",
+        "decoderVersions" : "array([pikicamProbes.JSONValue.string(\"6.dng\"), pikicamProbes.JSONValue.string(\"7.dng\"), pikicamProbes.JSONValue.string(\"8.dng\")])",
+        "highlightRecoveryAssigned" : "bool(true)",
+        "highlightRecoveryReadback" : "string(\"false\")",
+        "isDraftModeEnabledDefault" : "string(\"false\")",
+        "neutralTemperatureDefault" : "string(\"5201.2573\")",
+        "neutralTintDefault" : "string(\"6.358185\")",
+        "orientationDefault" : "string(\"6\")",
+        "scaleFactorDefault" : "string(\"1.0\")"
+      },
+      "name" : "cirawControlsProRAW",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "edrLadder" : [
+          {
+            "above1" : 0,
+            "below0" : 0,
+            "edr" : 0,
+            "max" : 1,
+            "mean" : 0.31352691082760714,
+            "min" : 0.006549835205078125,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x142324120> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 1948,
+            "below0" : 0,
+            "edr" : 1,
+            "max" : 1.3310546875,
+            "mean" : 0.28737627726907256,
+            "min" : 0.005565643310546875,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x142324120> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 2324,
+            "below0" : 0,
+            "edr" : 2,
+            "max" : 1.5634765625,
+            "mean" : 0.25617929851817595,
+            "min" : 0.004581451416015625,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x142324120> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          }
+        ]
+      },
+      "name" : "edrHeadroom",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "bytes" : "int(84671)",
+        "depth" : "int(10)",
+        "pixelHeight" : "int(404)",
+        "pixelWidth" : "int(303)",
+        "profileName" : "string(\"Display P3\")"
+      },
+      "name" : "heif10",
+      "status" : "ok"
+    },
+    {
+      "name" : "cameraPermission",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "captures" : "array([pikicamProbes.JSONValue.dictionary([\"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"fileBytes\": pikicamProbes.JSONValue.int(11968544), \"duration\": pikicamProbes.JSONValue.double(1.4e-05), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(33.0), \"error\": pikicamProbes.JSONValue.string(\"\"), \"success\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"flat_iso33_exp14\")]), pikicamProbes.JSONValue.dictionary([\"success\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(0.0001869440321068127), \"name\": pikicamProbes.JSONValue.string(\"flat_iso33_exp186\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(33.0), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"fileBytes\": pikicamProbes.JSONValue.int(8180147)]), pikicamProbes.JSONValue.dictionary([\"fileBytes\": pikicamProbes.JSONValue.int(8177505), \"iso\": pikicamProbes.JSONValue.double(33.0), \"name\": pikicamProbes.JSONValue.string(\"flat_iso33_exp2496\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"success\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(0.002496290795739501), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"error\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"success\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(0.03333333333333333), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"fileBytes\": pikicamProbes.JSONValue.int(8309285), \"iso\": pikicamProbes.JSONValue.double(33.0), \"name\": pikicamProbes.JSONValue.string(\"flat_iso33_exp33333\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"isRaw\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(1188.0), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"fileBytes\": pikicamProbes.JSONValue.int(8270723), \"name\": pikicamProbes.JSONValue.string(\"flat_iso1188_exp14\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"success\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"isRaw\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(0.0001869440321068127), \"fileBytes\": pikicamProbes.JSONValue.int(9260508), \"iso\": pikicamProbes.JSONValue.double(1188.0), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"name\": pikicamProbes.JSONValue.string(\"flat_iso1188_exp186\"), \"success\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"fileBytes\": pikicamProbes.JSONValue.int(9738131), \"success\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"flat_iso1188_exp2496\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"duration\": pikicamProbes.JSONValue.double(0.002496290795739501), \"error\": pikicamProbes.JSONValue.string(\"\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(1188.0), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\")]), pikicamProbes.JSONValue.dictionary([\"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"flat_iso1188_exp33333\"), \"duration\": pikicamProbes.JSONValue.double(0.03333333333333333), \"error\": pikicamProbes.JSONValue.string(\"\"), \"iso\": pikicamProbes.JSONValue.double(1188.0), \"fileBytes\": pikicamProbes.JSONValue.int(9756902), \"success\": pikicamProbes.JSONValue.bool(true), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\")]), pikicamProbes.JSONValue.dictionary([\"isRaw\": pikicamProbes.JSONValue.bool(true), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"fileBytes\": pikicamProbes.JSONValue.int(9994722), \"success\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"flat_iso2343_exp14\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"iso\": pikicamProbes.JSONValue.double(2343.0), \"duration\": pikicamProbes.JSONValue.double(1.4e-05)]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"flat_iso2343_exp186\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"success\": pikicamProbes.JSONValue.bool(true), \"fileBytes\": pikicamProbes.JSONValue.int(11284556), \"duration\": pikicamProbes.JSONValue.double(0.0001869440321068127), \"error\": pikicamProbes.JSONValue.string(\"\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"iso\": pikicamProbes.JSONValue.double(2343.0), \"isRaw\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"iso\": pikicamProbes.JSONValue.double(2343.0), \"name\": pikicamProbes.JSONValue.string(\"flat_iso2343_exp2496\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"fileBytes\": pikicamProbes.JSONValue.int(9756656), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"success\": pikicamProbes.JSONValue.bool(true), \"error\": pikicamProbes.JSONValue.string(\"\"), \"duration\": pikicamProbes.JSONValue.double(0.002496290795739501), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\")]), pikicamProbes.JSONValue.dictionary([\"fileBytes\": pikicamProbes.JSONValue.int(9818231), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"iso\": pikicamProbes.JSONValue.double(2343.0), \"name\": pikicamProbes.JSONValue.string(\"flat_iso2343_exp33333\"), \"duration\": pikicamProbes.JSONValue.double(0.03333333333333333), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"success\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"duration\": pikicamProbes.JSONValue.double(1.4e-05), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"success\": pikicamProbes.JSONValue.bool(true), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"error\": pikicamProbes.JSONValue.string(\"\"), \"iso\": pikicamProbes.JSONValue.double(3498.0), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"fileBytes\": pikicamProbes.JSONValue.int(10190549), \"name\": pikicamProbes.JSONValue.string(\"flat_iso3498_exp14\")]), pikicamProbes.JSONValue.dictionary([\"fileBytes\": pikicamProbes.JSONValue.int(12739724), \"error\": pikicamProbes.JSONValue.string(\"\"), \"success\": pikicamProbes.JSONValue.bool(true), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(3498.0), \"duration\": pikicamProbes.JSONValue.double(0.0001869440321068127), \"name\": pikicamProbes.JSONValue.string(\"flat_iso3498_exp186\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\")]), pikicamProbes.JSONValue.dictionary([\"isRaw\": pikicamProbes.JSONValue.bool(true), \"error\": pikicamProbes.JSONValue.string(\"\"), \"iso\": pikicamProbes.JSONValue.double(3498.0), \"success\": pikicamProbes.JSONValue.bool(true), \"fileBytes\": pikicamProbes.JSONValue.int(9779754), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"name\": pikicamProbes.JSONValue.string(\"flat_iso3498_exp2496\"), \"duration\": pikicamProbes.JSONValue.double(0.002496290795739501), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\")]), pikicamProbes.JSONValue.dictionary([\"error\": pikicamProbes.JSONValue.string(\"\"), \"success\": pikicamProbes.JSONValue.bool(true), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"iso\": pikicamProbes.JSONValue.double(3498.0), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(0.03333333333333333), \"name\": pikicamProbes.JSONValue.string(\"flat_iso3498_exp33333\"), \"fileBytes\": pikicamProbes.JSONValue.int(9869814)]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"flat_iso4653_exp14\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"duration\": pikicamProbes.JSONValue.double(1.4e-05), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(4653.0), \"success\": pikicamProbes.JSONValue.bool(true), \"fileBytes\": pikicamProbes.JSONValue.int(10453308)]), pikicamProbes.JSONValue.dictionary([\"iso\": pikicamProbes.JSONValue.double(4653.0), \"success\": pikicamProbes.JSONValue.bool(true), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"fileBytes\": pikicamProbes.JSONValue.int(13076410), \"error\": pikicamProbes.JSONValue.string(\"\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"duration\": pikicamProbes.JSONValue.double(0.0001869440321068127), \"name\": pikicamProbes.JSONValue.string(\"flat_iso4653_exp186\")]), pikicamProbes.JSONValue.dictionary([\"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"fileBytes\": pikicamProbes.JSONValue.int(10198971), \"duration\": pikicamProbes.JSONValue.double(0.002496290795739501), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"name\": pikicamProbes.JSONValue.string(\"flat_iso4653_exp2496\"), \"success\": pikicamProbes.JSONValue.bool(true), \"error\": pikicamProbes.JSONValue.string(\"\"), \"iso\": pikicamProbes.JSONValue.double(4653.0)]), pikicamProbes.JSONValue.dictionary([\"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"name\": pikicamProbes.JSONValue.string(\"flat_iso4653_exp33333\"), \"iso\": pikicamProbes.JSONValue.double(4653.0), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"duration\": pikicamProbes.JSONValue.double(0.03333333333333333), \"success\": pikicamProbes.JSONValue.bool(true), \"error\": pikicamProbes.JSONValue.string(\"\"), \"fileBytes\": pikicamProbes.JSONValue.int(10147806)]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"flat_iso5808_exp14\"), \"iso\": pikicamProbes.JSONValue.double(5808.0), \"success\": pikicamProbes.JSONValue.bool(true), \"error\": pikicamProbes.JSONValue.string(\"\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"duration\": pikicamProbes.JSONValue.double(1.4e-05), \"fileBytes\": pikicamProbes.JSONValue.int(11520800), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\")]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"flat_iso5808_exp186\"), \"success\": pikicamProbes.JSONValue.bool(true), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"fileBytes\": pikicamProbes.JSONValue.int(9823700), \"iso\": pikicamProbes.JSONValue.double(5808.0), \"error\": pikicamProbes.JSONValue.string(\"\"), \"duration\": pikicamProbes.JSONValue.double(0.0001869440321068127), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\")]), pikicamProbes.JSONValue.dictionary([\"fileBytes\": pikicamProbes.JSONValue.int(9831865), \"name\": pikicamProbes.JSONValue.string(\"flat_iso5808_exp2496\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"duration\": pikicamProbes.JSONValue.double(0.002496290795739501), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"iso\": pikicamProbes.JSONValue.double(5808.0), \"success\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"error\": pikicamProbes.JSONValue.string(\"\"), \"fileBytes\": pikicamProbes.JSONValue.int(9814668), \"duration\": pikicamProbes.JSONValue.double(0.03333333333333333), \"name\": pikicamProbes.JSONValue.string(\"flat_iso5808_exp33333\"), \"success\": pikicamProbes.JSONValue.bool(true), \"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"iso\": pikicamProbes.JSONValue.double(5808.0), \"isRaw\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"rawDims\": pikicamProbes.JSONValue.string(\"4032x3024\"), \"success\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"fixture-bayer-rich\"), \"fileBytes\": pikicamProbes.JSONValue.int(10096077)]), pikicamProbes.JSONValue.dictionary([\"pixelFormat\": pikicamProbes.JSONValue.string(\"rgg4\"), \"error\": pikicamProbes.JSONValue.string(\"\"), \"isRaw\": pikicamProbes.JSONValue.bool(true), \"fileBytes\": pikicamProbes.JSONValue.int(9440578), \"flashEnabled\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"flash-raw-probe\"), \"success\": pikicamProbes.JSONValue.bool(true)])])",
+        "determinism" : "dictionary([\"centerStageModeSetException\": pikicamProbes.JSONValue.string(\"string(\\\"\\\")\"), \"videoHDR\": pikicamProbes.JSONValue.string(\"bool(false)\"), \"centerStageControlMode\": pikicamProbes.JSONValue.string(\"string(\\\"1\\\")\"), \"wideColorAutoConfig\": pikicamProbes.JSONValue.string(\"bool(false)\"), \"lowLightBoost\": pikicamProbes.JSONValue.string(\"bool(false)\"), \"activeColorSpace\": pikicamProbes.JSONValue.string(\"string(\\\"1\\\")\"), \"zoomFactor\": pikicamProbes.JSONValue.string(\"string(\\\"1.0\\\")\"), \"maxPhotoDimensions\": pikicamProbes.JSONValue.string(\"string(\\\"4032x3024\\\")\"), \"centerStageEnabled\": pikicamProbes.JSONValue.string(\"bool(false)\"), \"gdcEnabled\": pikicamProbes.JSONValue.string(\"bool(false)\")])"
+      },
+      "name" : "captureSeries",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "availableRawPhotoPixelFormatTypes" : "array([pikicamProbes.JSONValue.string(\"rgg4\")])",
+        "bayerRAWFormats" : "array([pikicamProbes.JSONValue.string(\"rgg4\")])",
+        "deviceZoomFactor" : "double(1.0)",
+        "isAutoDeferredPhotoDeliveryEnabledDefault" : "bool(false)",
+        "isContentAwareDistortionCorrectionSupported" : "bool(false)",
+        "isFastCapturePrioritizationSupported" : "bool(false)",
+        "isResponsiveCaptureSupported" : "bool(true)",
+        "isZeroShutterLagEnabledDefault" : "bool(true)",
+        "isZeroShutterLagSupported" : "bool(true)",
+        "livePhotoSupported" : "bool(true)",
+        "maxPhotoDimensions" : "string(\"4032x3024\")",
+        "maxPhotoQualityPrioritization" : "string(\"2\")",
+        "stillImageStabilizationSupported" : "bool(true)",
+        "supportedFlashModes" : "array([pikicamProbes.JSONValue.string(\"0\"), pikicamProbes.JSONValue.string(\"1\"), pikicamProbes.JSONValue.string(\"2\")])",
+        "virtualDeviceFusionSupported" : "bool(false)"
+      },
+      "name" : "photoOutputAttached",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "baselineExposureDefault" : "string(\"4.4594316\")",
+        "controls" : "array([pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"boostAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\")]), pikicamProbes.JSONValue.dictionary([\"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"1.0\"), \"name\": pikicamProbes.JSONValue.string(\"boostShadowAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"1.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"name\": pikicamProbes.JSONValue.string(\"shadowBias\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"localToneMapAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"name\": pikicamProbes.JSONValue.string(\"contrastAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"assigned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"name\": pikicamProbes.JSONValue.string(\"sharpnessAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"name\": pikicamProbes.JSONValue.string(\"detailAmount\")]), pikicamProbes.JSONValue.dictionary([\"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"name\": pikicamProbes.JSONValue.string(\"luminanceNoiseReductionAmount\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"colorNoiseReductionAmount\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"exception\": pikicamProbes.JSONValue.string(\"\")]), pikicamProbes.JSONValue.dictionary([\"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"moireReductionAmount\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\")]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"1\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"readback\": pikicamProbes.JSONValue.string(\"1.0\"), \"name\": pikicamProbes.JSONValue.string(\"extendedDynamicRangeAmount\"), \"assigned\": pikicamProbes.JSONValue.bool(true)]), pikicamProbes.JSONValue.dictionary([\"neutral\": pikicamProbes.JSONValue.string(\"false\"), \"name\": pikicamProbes.JSONValue.string(\"isLensCorrectionEnabled\"), \"exception\": pikicamProbes.JSONValue.string(\"\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"readback\": pikicamProbes.JSONValue.string(\"false\")]), pikicamProbes.JSONValue.dictionary([\"exception\": pikicamProbes.JSONValue.string(\"\"), \"neutral\": pikicamProbes.JSONValue.string(\"false\"), \"readback\": pikicamProbes.JSONValue.string(\"false\"), \"assigned\": pikicamProbes.JSONValue.bool(true), \"name\": pikicamProbes.JSONValue.string(\"isGamutMappingEnabled\")]), pikicamProbes.JSONValue.dictionary([\"exception\": pikicamProbes.JSONValue.string(\"\"), \"readback\": pikicamProbes.JSONValue.string(\"0.0000\"), \"name\": pikicamProbes.JSONValue.string(\"exposure\"), \"neutral\": pikicamProbes.JSONValue.string(\"0.0\"), \"assigned\": pikicamProbes.JSONValue.bool(true)])])",
+        "decoderVersionReadback" : "string(\"8.dng\")",
+        "decoderVersionSet" : "string(\"8.dng\")",
+        "decoderVersions" : "array([pikicamProbes.JSONValue.string(\"6.dng\"), pikicamProbes.JSONValue.string(\"7.dng\"), pikicamProbes.JSONValue.string(\"7\"), pikicamProbes.JSONValue.string(\"8.dng\"), pikicamProbes.JSONValue.string(\"8\")])",
+        "highlightRecoveryAssigned" : "bool(true)",
+        "highlightRecoveryReadback" : "string(\"false\")",
+        "isDraftModeEnabledDefault" : "string(\"false\")",
+        "neutralTemperatureDefault" : "string(\"6119.491\")",
+        "neutralTintDefault" : "string(\"-2.7607365\")",
+        "orientationDefault" : "string(\"6\")",
+        "scaleFactorDefault" : "string(\"1.0\")"
+      },
+      "name" : "cirawControlsBayer",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "edrLadder" : [
+          {
+            "above1" : 4,
+            "below0" : 0,
+            "edr" : 0,
+            "max" : 1.0009765625,
+            "mean" : 0.27593044363925245,
+            "min" : 0,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x142324120> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 254182,
+            "below0" : 0,
+            "edr" : 1,
+            "max" : 2.04296875,
+            "mean" : 0.3142467862113364,
+            "min" : -0,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x142324120> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 254210,
+            "below0" : 0,
+            "edr" : 2,
+            "max" : 2.03125,
+            "mean" : 0.31425884918892383,
+            "min" : 0,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x142324120> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          }
+        ]
+      },
+      "name" : "edrHeadroomBayer",
+      "status" : "ok"
+    },
+    {
+      "name" : "photoKitPermission",
+      "status" : "ok"
+    },
+    {
+      "data" : [
+        {
+          "creationError" : "Error Domain=PHPhotosErrorDomain Code=3300 \"(null)\"",
+          "creationSucceeded" : false,
+          "currentRenderMeanDiff" : -1,
+          "dngBytesMatch" : false,
+          "fetchError" : "",
+          "resources" : [
+
+          ],
+          "shape" : "A",
+          "supportsResourceTypes" : true
+        },
+        {
+          "creationError" : "Error Domain=PHPhotosErrorDomain Code=3300 \"(null)\"",
+          "creationSucceeded" : false,
+          "currentRenderMeanDiff" : -1,
+          "dngBytesMatch" : false,
+          "fetchError" : "",
+          "resources" : [
+
+          ],
+          "shape" : "B",
+          "supportsResourceTypes" : true
+        },
+        {
+          "creationError" : "Error Domain=PHPhotosErrorDomain Code=3300 \"(null)\"",
+          "creationSucceeded" : false,
+          "currentRenderMeanDiff" : -1,
+          "dngBytesMatch" : false,
+          "fetchError" : "",
+          "resources" : [
+
+          ],
+          "shape" : "C",
+          "supportsResourceTypes" : true
+        }
+      ],
+      "name" : "photoKitShapes",
+      "status" : "ok"
+    },
+    {
+      "name" : "trap-probe",
+      "status" : "crash-expected"
+    },
+    {
+      "data" : true,
+      "name" : "trapProbeSurvived",
+      "status" : "ok"
+    },
+    {
+      "name" : "done",
+      "status" : "ok"
+    }
+  ],
+  "startedAt" : "2026-10-24T10:20:36Z"
+}

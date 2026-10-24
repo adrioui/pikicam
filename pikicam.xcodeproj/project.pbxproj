@@ -12,28 +12,48 @@
 		0B8E190815D2E82E4F62124C /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 98B3374C413622E12D6607E8 /* IMG_1361.DNG */; };
 		0C828BC6D80E551BE655F7E7 /* RAWProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F5FF39D3606D6F3B79D433 /* RAWProcessor.swift */; };
 		0CA1AE3FA39599A2FC1EF10F /* PhotoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153A3D142F0E47DD3193AE28 /* PhotoCapture.swift */; };
+		1B6370A173577BEC1A14FAC3 /* CaptureAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */; };
+		28ED2FBA5386221C9A101FCA /* WhiteBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */; };
 		2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887529D123CA8228FAD6A638 /* PikicamApp.swift */; };
+		2DC96402AB338CAA139C2F1F /* CIRAWProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */; };
 		375A37A0A499260885F0C053 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */; };
+		38DFFEA14B955EAB429B24DC /* Exposure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DBB0E1DE56A438E6C373FF /* Exposure.swift */; };
 		3FF2F5D486805CEAA775786D /* PikicamLibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50B3EF4FF7FD24B865856E1 /* PikicamLibraryModel.swift */; };
 		456EDAA6FAF7D046028C53D2 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFA6346CE68D122C15867BE /* CameraPreview.swift */; };
+		50CDB03EA96802020A32899C /* PhotoKitProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */; };
 		5AF429DE4B98FA3B406CBC4C /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E827F3C4DA24E8BE02352D /* CameraViewModel.swift */; };
 		6428DB10BC43B1489190B41C /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB4357035A5495BDB61B65C /* PreviewView.swift */; };
 		69F906E0757C36642A183B5C /* CameraControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491E468D3F998D4686F44E4E /* CameraControls.swift */; };
 		6AB168AE8619593F376F8D2C /* VolumeButtonCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE01AF37250B8C795F21342 /* VolumeButtonCaptureView.swift */; };
 		6B023888CF2043B00960ABE9 /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958DD9596515EAFDAB5267BF /* GalleryView.swift */; };
+		731A3F73AF8700766E394A93 /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */; };
 		74B716FB686B6EB1CA6F55C6 /* PhotoLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F2AAD9D1B8B2FD2CABE116 /* PhotoLibraryManager.swift */; };
 		76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CF9A0660C9DEBB114750C83 /* Assets.xcassets */; };
 		77051CF961562005C7CB4DB5 /* CameraControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E73C7E74ACA8824B5766A4 /* CameraControlTests.swift */; };
+		7B0528A58961F31CE0D6348E /* Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96239A3ECC56F3051890D21D /* Capabilities.swift */; };
 		7FC82FBACECCE1D1B9025CCA /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CBA93A29C6C41F581F516 /* Room.swift */; };
 		85BE6A36B113926F9C71FF6A /* ZoomIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C6FBD49F72487F204BEEE8 /* ZoomIndicatorView.swift */; };
+		8A5B8B55E31FF7B2E1F23219 /* CompileProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */; };
+		8CC168732F5D8E4CA64BD8BD /* ProbeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */; };
+		8E44C00D67FB58F5EEB1E006 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = B196CB6431C9550E2E7F87F6 /* OFL.txt */; };
 		8FCDB6E917C1C2B9FF128250 /* CaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79BDC887D5EB155BD379EB6 /* CaptureService.swift */; };
+		9319638C03690CBFE6FE3A0C /* CameraProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */; };
+		938BDEC7C044D0F646B6497E /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */; };
 		963646486F8CDFC265AA84B5 /* PikicamPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42574C87898CEBA848C4D57 /* PikicamPipelineTests.swift */; };
+		B110C4B5DA61D01E075639FD /* IDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660528AC98C489C4D856464 /* IDs.swift */; };
 		B3D74898869BB61BFB06E782 /* DevelopService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D98C75100CE51B04DB51B /* DevelopService.swift */; };
+		B4C3812B6DF765050F2BD243 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */; };
+		C1BA02DD60AB40D8D3F97E8D /* ProbeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */; };
 		C398F12570BF152EDB36DFD3 /* SmokeLaunchTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF49032A9888690126AF8AD /* SmokeLaunchTest.swift */; };
 		C4AABE4FA18F8FC9F8B1B88D /* GridOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9060D28C2A971E5134FD235 /* GridOverlayView.swift */; };
+		C558A2C5D4268D3F70B7FC7E /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */; };
 		C7A0DEEFDF3562914A1EF0E1 /* CIRAWZeroProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B694F1AA9AC1F280CDF54231 /* CIRAWZeroProcessor.swift */; };
+		CAD68F1664BE24935F1FE457 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */; };
+		CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */; };
 		DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9400A1986D8108D34D521A2 /* RootView.swift */; };
+		E105647A3F9036E1926FB503 /* Focus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66C6932B9E473D82CE38CB6 /* Focus.swift */; };
 		F457BB1169963A9E7FC1B663 /* ControlIDRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142B989CD7BC10167399513B /* ControlIDRegistry.swift */; };
+		FE5EAD67229E1969D29138BF /* ProbeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19A85566866AEDF721E8144 /* ProbeApp.swift */; };
 		FE7B7E3A4DEA5E80AE50B9CB /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85851F50E9585A51C73C9E9 /* CameraView.swift */; };
 		FF3D40BDED50C8724A4E2C2E /* ShutterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A02F74B89B7BAC0A9E326D /* ShutterButton.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +66,13 @@
 			remoteGlobalIDString = 1A8385446D59EF8FBD83D345;
 			remoteInfo = pikicam;
 		};
+		64F0D7D4D8AF47FB4A965DC4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D75033E17EA0CC4B5D8DA931 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A5B546C7EDACAE5DDDCCD85;
+			remoteInfo = pikicamProbes;
+		};
 		6E99A9CF4A60B1E8C87A55C1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D75033E17EA0CC4B5D8DA931 /* Project object */;
@@ -56,34 +83,58 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSupport.swift; sourceTree = "<group>"; };
+		07DBB0E1DE56A438E6C373FF /* Exposure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exposure.swift; sourceTree = "<group>"; };
+		1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
 		142B989CD7BC10167399513B /* ControlIDRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlIDRegistry.swift; sourceTree = "<group>"; };
 		14A02F74B89B7BAC0A9E326D /* ShutterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterButton.swift; sourceTree = "<group>"; };
 		14F5FF39D3606D6F3B79D433 /* RAWProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAWProcessor.swift; sourceTree = "<group>"; };
 		153A3D142F0E47DD3193AE28 /* PhotoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCapture.swift; sourceTree = "<group>"; };
 		28F2AAD9D1B8B2FD2CABE116 /* PhotoLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryManager.swift; sourceTree = "<group>"; };
 		2A3D98C75100CE51B04DB51B /* DevelopService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopService.swift; sourceTree = "<group>"; };
+		2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
 		30E73C7E74ACA8824B5766A4 /* CameraControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlTests.swift; sourceTree = "<group>"; };
 		35DD3B3E04FF2F30821162B4 /* pikicam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpaceMono-Bold.ttf"; sourceTree = "<group>"; };
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		491E468D3F998D4686F44E4E /* CameraControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControls.swift; sourceTree = "<group>"; };
 		57C6FBD49F72487F204BEEE8 /* ZoomIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomIndicatorView.swift; sourceTree = "<group>"; };
 		5CFA6346CE68D122C15867BE /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeUITests.swift; sourceTree = "<group>"; };
+		625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
 		6CF9A0660C9DEBB114750C83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
 		722CBA93A29C6C41F581F516 /* Room.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
+		78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoKitProbes.swift; sourceTree = "<group>"; };
 		7932F405BC8CA1D3860FB336 /* CameraHUDButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraHUDButton.swift; sourceTree = "<group>"; };
+		8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraProbes.swift; sourceTree = "<group>"; };
 		887529D123CA8228FAD6A638 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
+		8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamProbesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		958DD9596515EAFDAB5267BF /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		96239A3ECC56F3051890D21D /* Capabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capabilities.swift; sourceTree = "<group>"; };
+		9660528AC98C489C4D856464 /* IDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDs.swift; sourceTree = "<group>"; };
 		98B3374C413622E12D6607E8 /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
 		9BE01AF37250B8C795F21342 /* VolumeButtonCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeButtonCaptureView.swift; sourceTree = "<group>"; };
+		A1DEEC6C66660AC9680CF8B9 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
 		A5E827F3C4DA24E8BE02352D /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		B196CB6431C9550E2E7F87F6 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
+		B19A85566866AEDF721E8144 /* ProbeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeApp.swift; sourceTree = "<group>"; };
 		B694F1AA9AC1F280CDF54231 /* CIRAWZeroProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRAWZeroProcessor.swift; sourceTree = "<group>"; };
 		B9060D28C2A971E5134FD235 /* GridOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridOverlayView.swift; sourceTree = "<group>"; };
 		BEF49032A9888690126AF8AD /* SmokeLaunchTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeLaunchTest.swift; sourceTree = "<group>"; };
 		C79BDC887D5EB155BD379EB6 /* CaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureService.swift; sourceTree = "<group>"; };
+		C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicamProbes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureAgent.swift; sourceTree = "<group>"; };
+		CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBalance.swift; sourceTree = "<group>"; };
 		DEB4357035A5495BDB61B65C /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompileProbes.swift; sourceTree = "<group>"; };
 		E07EF371F48A630494030106 /* pikicamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRAWProbes.swift; sourceTree = "<group>"; };
 		E50B3EF4FF7FD24B865856E1 /* PikicamLibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamLibraryModel.swift; sourceTree = "<group>"; };
+		E66C6932B9E473D82CE38CB6 /* Focus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Focus.swift; sourceTree = "<group>"; };
+		EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRequest.swift; sourceTree = "<group>"; };
+		EAFE175C489BFB6A82EDB6FA /* ProbesBridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProbesBridgingHeader.h; sourceTree = "<group>"; };
 		F388684D92D8B8ABA4E57070 /* DesignLintTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignLintTests.swift; sourceTree = "<group>"; };
 		F42574C87898CEBA848C4D57 /* PikicamPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamPipelineTests.swift; sourceTree = "<group>"; };
 		F85851F50E9585A51C73C9E9 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
@@ -91,6 +142,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		00F7A769CF0BAB9E43B779CD /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				3DB6155561D16C762FBD11B5 /* Fonts */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
 		0449976460DF3CED20E65081 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,6 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				35DD3B3E04FF2F30821162B4 /* pikicam.app */,
+				C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */,
+				8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */,
 				E07EF371F48A630494030106 /* pikicamTests.xctest */,
 				477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */,
 			);
@@ -115,8 +176,18 @@
 				577127E007D104BC27D49682 /* pikicam */,
 				5EF8105C75BC74200C590770 /* pikicamTests */,
 				80C963D35FB8C9802FDC7291 /* pikicamUITests */,
+				18B503B6183B216D06A282D6 /* Probes */,
 				0E7906C069C7D0D19EC12D0B /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		18B503B6183B216D06A282D6 /* Probes */ = {
+			isa = PBXGroup;
+			children = (
+				D072F94358A3940D8B70DB4E /* pikicamProbes */,
+				68A9C5D861631A578C25CC38 /* pikicamProbesUITests */,
+			);
+			path = Probes;
 			sourceTree = "<group>";
 		};
 		2957D7C404FCE99567C83CFD /* Views */ = {
@@ -146,12 +217,24 @@
 			path = Camera;
 			sourceTree = "<group>";
 		};
+		3DB6155561D16C762FBD11B5 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B196CB6431C9550E2E7F87F6 /* OFL.txt */,
+				40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */,
+				2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		577127E007D104BC27D49682 /* pikicam */ = {
 			isa = PBXGroup;
 			children = (
 				6CF9A0660C9DEBB114750C83 /* Assets.xcassets */,
 				A6745F97BB471094FF3AFFCD /* App */,
 				6E8CD2F002A0D6CCD7A6E0C5 /* Core */,
+				00F7A769CF0BAB9E43B779CD /* DesignSystem */,
+				A28705B6CB4D8593D87F0411 /* Domain */,
 				C1BA4C8AA1C42E4BB9B5AD4F /* Features */,
 				0449976460DF3CED20E65081 /* Resources */,
 			);
@@ -167,6 +250,14 @@
 				D2A1959CAA9E50F5A1A3F196 /* Fixtures */,
 			);
 			path = pikicamTests;
+			sourceTree = "<group>";
+		};
+		68A9C5D861631A578C25CC38 /* pikicamProbesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */,
+			);
+			path = pikicamProbesUITests;
 			sourceTree = "<group>";
 		};
 		6BB2D0AC443A3182A93ED9A6 /* Gallery */ = {
@@ -195,6 +286,20 @@
 			path = pikicamUITests;
 			sourceTree = "<group>";
 		};
+		A28705B6CB4D8593D87F0411 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */,
+				96239A3ECC56F3051890D21D /* Capabilities.swift */,
+				EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */,
+				07DBB0E1DE56A438E6C373FF /* Exposure.swift */,
+				E66C6932B9E473D82CE38CB6 /* Focus.swift */,
+				9660528AC98C489C4D856464 /* IDs.swift */,
+				CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
 		A6745F97BB471094FF3AFFCD /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,6 +317,24 @@
 				6BB2D0AC443A3182A93ED9A6 /* Gallery */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		D072F94358A3940D8B70DB4E /* pikicamProbes */ = {
+			isa = PBXGroup;
+			children = (
+				8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */,
+				CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */,
+				E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */,
+				DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */,
+				A1DEEC6C66660AC9680CF8B9 /* ExceptionCatcher.h */,
+				71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */,
+				78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */,
+				B19A85566866AEDF721E8144 /* ProbeApp.swift */,
+				EAFE175C489BFB6A82EDB6FA /* ProbesBridgingHeader.h */,
+				04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */,
+				FAB7A71B122210E14DF82BFD /* Fixtures */,
+			);
+			path = pikicamProbes;
 			sourceTree = "<group>";
 		};
 		D2A1959CAA9E50F5A1A3F196 /* Fixtures */ = {
@@ -247,6 +370,14 @@
 				14F5FF39D3606D6F3B79D433 /* RAWProcessor.swift */,
 			);
 			path = Develop;
+			sourceTree = "<group>";
+		};
+		FAB7A71B122210E14DF82BFD /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */,
+			);
+			path = Fixtures;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -288,6 +419,42 @@
 			productReference = 35DD3B3E04FF2F30821162B4 /* pikicam.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5A5B546C7EDACAE5DDDCCD85 /* pikicamProbes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D62F58A4D5D5F1726CDB050D /* Build configuration list for PBXNativeTarget "pikicamProbes" */;
+			buildPhases = (
+				B75316379AB5D3C472135DE1 /* Sources */,
+				D70C2C8BD2322D0575C3FA53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pikicamProbes;
+			packageProductDependencies = (
+			);
+			productName = pikicamProbes;
+			productReference = C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */;
+			productType = "com.apple.product-type.application";
+		};
+		63B97B7DC81536EC458513DF /* pikicamProbesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB0BA58EE2E69A8A52AA8AAE /* Build configuration list for PBXNativeTarget "pikicamProbesUITests" */;
+			buildPhases = (
+				09D56C0A8A6D79540F4C0A24 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8C17E39C460FFBFC63AB2A58 /* PBXTargetDependency */,
+			);
+			name = pikicamProbesUITests;
+			packageProductDependencies = (
+			);
+			productName = pikicamProbesUITests;
+			productReference = 8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		7378676BAA3C6C9569A26882 /* pikicamTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 86DA1961FBBA57AEDD55715F /* Build configuration list for PBXNativeTarget "pikicamTests" */;
@@ -317,7 +484,26 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					118AA81D1E832CEA7BC60F21 = {
+						DevelopmentTeam = GV4GK5XGN5;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 1A8385446D59EF8FBD83D345;
+					};
+					1A8385446D59EF8FBD83D345 = {
+						DevelopmentTeam = GV4GK5XGN5;
+						ProvisioningStyle = Automatic;
+					};
+					5A5B546C7EDACAE5DDDCCD85 = {
+						DevelopmentTeam = GV4GK5XGN5;
+						ProvisioningStyle = Automatic;
+					};
+					63B97B7DC81536EC458513DF = {
+						DevelopmentTeam = GV4GK5XGN5;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 5A5B546C7EDACAE5DDDCCD85;
+					};
+					7378676BAA3C6C9569A26882 = {
+						DevelopmentTeam = GV4GK5XGN5;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -338,6 +524,8 @@
 				1A8385446D59EF8FBD83D345 /* pikicam */,
 				7378676BAA3C6C9569A26882 /* pikicamTests */,
 				118AA81D1E832CEA7BC60F21 /* pikicamUITests */,
+				5A5B546C7EDACAE5DDDCCD85 /* pikicamProbes */,
+				63B97B7DC81536EC458513DF /* pikicamProbesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -348,7 +536,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */,
+				8E44C00D67FB58F5EEB1E006 /* OFL.txt in Resources */,
 				375A37A0A499260885F0C053 /* PrivacyInfo.xcprivacy in Resources */,
+				731A3F73AF8700766E394A93 /* SpaceMono-Bold.ttf in Resources */,
+				C558A2C5D4268D3F70B7FC7E /* SpaceMono-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,9 +551,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D70C2C8BD2322D0575C3FA53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				938BDEC7C044D0F646B6497E /* IMG_1361.DNG in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		09D56C0A8A6D79540F4C0A24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1BA02DD60AB40D8D3F97E8D /* ProbeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1B63EEE29DDEFAF4C9163BE3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -379,13 +586,19 @@
 				69F906E0757C36642A183B5C /* CameraControls.swift in Sources */,
 				0191AC198B0368F4F3591914 /* CameraHUDButton.swift in Sources */,
 				456EDAA6FAF7D046028C53D2 /* CameraPreview.swift in Sources */,
+				B4C3812B6DF765050F2BD243 /* CameraSettings.swift in Sources */,
 				FE7B7E3A4DEA5E80AE50B9CB /* CameraView.swift in Sources */,
 				5AF429DE4B98FA3B406CBC4C /* CameraViewModel.swift in Sources */,
+				7B0528A58961F31CE0D6348E /* Capabilities.swift in Sources */,
+				CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */,
 				8FCDB6E917C1C2B9FF128250 /* CaptureService.swift in Sources */,
 				F457BB1169963A9E7FC1B663 /* ControlIDRegistry.swift in Sources */,
 				B3D74898869BB61BFB06E782 /* DevelopService.swift in Sources */,
+				38DFFEA14B955EAB429B24DC /* Exposure.swift in Sources */,
+				E105647A3F9036E1926FB503 /* Focus.swift in Sources */,
 				6B023888CF2043B00960ABE9 /* GalleryView.swift in Sources */,
 				C4AABE4FA18F8FC9F8B1B88D /* GridOverlayView.swift in Sources */,
+				B110C4B5DA61D01E075639FD /* IDs.swift in Sources */,
 				0CA1AE3FA39599A2FC1EF10F /* PhotoCapture.swift in Sources */,
 				74B716FB686B6EB1CA6F55C6 /* PhotoLibraryManager.swift in Sources */,
 				2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */,
@@ -396,7 +609,23 @@
 				DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */,
 				FF3D40BDED50C8724A4E2C2E /* ShutterButton.swift in Sources */,
 				6AB168AE8619593F376F8D2C /* VolumeButtonCaptureView.swift in Sources */,
+				28ED2FBA5386221C9A101FCA /* WhiteBalance.swift in Sources */,
 				85BE6A36B113926F9C71FF6A /* ZoomIndicatorView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B75316379AB5D3C472135DE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DC96402AB338CAA139C2F1F /* CIRAWProbes.swift in Sources */,
+				9319638C03690CBFE6FE3A0C /* CameraProbes.swift in Sources */,
+				1B6370A173577BEC1A14FAC3 /* CaptureAgent.swift in Sources */,
+				8A5B8B55E31FF7B2E1F23219 /* CompileProbes.swift in Sources */,
+				CAD68F1664BE24935F1FE457 /* ExceptionCatcher.m in Sources */,
+				50CDB03EA96802020A32899C /* PhotoKitProbes.swift in Sources */,
+				FE5EAD67229E1969D29138BF /* ProbeApp.swift in Sources */,
+				8CC168732F5D8E4CA64BD8BD /* ProbeSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,6 +642,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8C17E39C460FFBFC63AB2A58 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A5B546C7EDACAE5DDDCCD85 /* pikicamProbes */;
+			targetProxy = 64F0D7D4D8AF47FB4A965DC4 /* PBXContainerItemProxy */;
+		};
 		BEFFC53E84A69942B60D8622 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1A8385446D59EF8FBD83D345 /* pikicam */;
@@ -517,8 +751,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GV4GK5XGN5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -574,6 +810,88 @@
 			};
 			name = Debug;
 		};
+		8C2A198FEB0EDA9C64A50F74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Probe app captures Bayer RAW photos on the connected device to verify capture claims.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Probe app saves its own probe assets to verify PhotoKit behaviour.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Probe app verifies PhotoKit resource shapes by creating and deleting its own assets.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbes;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = Probes/pikicamProbes/ProbesBridgingHeader.h;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		96907FFC940C4C4FECF5A396 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbesUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = pikicamProbes;
+			};
+			name = Release;
+		};
+		A7696E650B24E784A48989BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbesUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = pikicamProbes;
+			};
+			name = Debug;
+		};
+		B5C5EC291900597EBA93AAAA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Probe app captures Bayer RAW photos on the connected device to verify capture claims.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Probe app saves its own probe assets to verify PhotoKit behaviour.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Probe app verifies PhotoKit resource shapes by creating and deleting its own assets.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbes;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = Probes/pikicamProbes/ProbesBridgingHeader.h;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 		CD049D3BA49259F512E7B688 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -607,8 +925,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = GV4GK5XGN5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -689,6 +1009,24 @@
 			buildConfigurations = (
 				7CD85B0A0797881190155581 /* Debug */,
 				20FF96AED061F314E8CBD1DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D62F58A4D5D5F1726CDB050D /* Build configuration list for PBXNativeTarget "pikicamProbes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5C5EC291900597EBA93AAAA /* Debug */,
+				8C2A198FEB0EDA9C64A50F74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DB0BA58EE2E69A8A52AA8AAE /* Build configuration list for PBXNativeTarget "pikicamProbesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7696E650B24E784A48989BF /* Debug */,
+				96907FFC940C4C4FECF5A396 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -15,3 +15,7 @@ pikicamTests/Fixtures/*.DNG
 
 # Agent runtime session state
 .pi-glla/
+
+# Device fixtures are git-ignored (v2 §4.3); SHA256SUMS.txt + probe-results.json are committed.
+fixtures/device/*.dng
+fixtures/device/*.mov

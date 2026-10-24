@@ -1,0 +1,3540 @@
+{
+  "records" : [
+    {
+      "data" : {
+        "actorOnDispatchSerialQueue" : true,
+        "ciContextMemoryTarget" : true,
+        "deferredStart" : true,
+        "heif10RepresentationAsync" : true,
+        "onCameraCaptureEvent" : true,
+        "readinessCoordinator" : true,
+        "rotationCoordinator" : true,
+        "wbTemperatureTint" : true
+      },
+      "name" : "compileProbes",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "devices" : [
+          {
+            "activeColorSpace" : "1",
+            "activeFormatDimensions" : "1920x1080",
+            "activeFormatFOV" : 107.44999694824219,
+            "activeFormatMaxExposureDuration" : 1,
+            "activeFormatMaxISO" : 2304,
+            "activeFormatMaxPhotoDimensions" : "1920x1080",
+            "activeFormatMaxPhotoDimensionsCount" : 2,
+            "activeFormatMinExposureDuration" : 4.2e-05,
+            "activeFormatMinISO" : 24,
+            "activeFormatVideoHDRSupported" : true,
+            "appleProRAWFormats" : [
+
+            ],
+            "autoFocusRangeRestrictionSupported" : false,
+            "autoLowLightBoost" : false,
+            "autoVideoHDR" : true,
+            "availableRawPhotoPixelFormatTypes" : [
+              "rgg4"
+            ],
+            "bayerRAWFormats" : [
+              "rgg4"
+            ],
+            "centerStageControlMode" : "1",
+            "centerStageEnabled" : false,
+            "deviceType" : "AVCaptureDeviceTypeBuiltInUltraWideCamera",
+            "flashAvailable" : true,
+            "formats" : [
+              {
+                "dimensions" : "192x144",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "192x144",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "352x288",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 97.3894271850586
+              },
+              {
+                "dimensions" : "352x288",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 97.3894271850586
+              },
+              {
+                "dimensions" : "480x360",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "480x360",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "960x540",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "960x540",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1024x768",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1024x768",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 240,
+                "maxISO" : 768,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 240,
+                "maxISO" : 768,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1440x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1440x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 120,
+                "maxISO" : 768,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 68.5324478149414
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 120,
+                "maxISO" : 768,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 68.5324478149414
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 240,
+                "maxISO" : 768,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 240,
+                "maxISO" : 768,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 102.29981231689453
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "2592x1944",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 1536,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "2592x1944",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 1536,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "3264x2448",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 1536,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "3264x2448",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 1536,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 0.5,
+                "maxFrameRate" : 60,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 5e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 107.44999694824219
+              },
+              {
+                "dimensions" : "4032x3024",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              },
+              {
+                "dimensions" : "4032x3024",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2304,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 4.2e-05,
+                "minISO" : 24,
+                "videoFieldOfView" : 104.89028930664062
+              }
+            ],
+            "formatsCount" : 52,
+            "gdcEnabled" : true,
+            "gdcSupported" : true,
+            "globalToneMappingEnabled" : false,
+            "globalToneMappingSupported" : true,
+            "hasFlash" : true,
+            "hasTorch" : true,
+            "lensAperture" : 2.4000000953674316,
+            "lockFocusCustomLensPositionSupported" : false,
+            "lowLightBoostSupported" : false,
+            "maxAvailableVideoZoomFactor" : 189,
+            "minAvailableVideoZoomFactor" : 1,
+            "modelID" : "com.apple.avfoundation.avcapturedevice.built-in_video:5",
+            "position" : "1",
+            "supportedFlashModes" : [
+              "0",
+              "1",
+              "2"
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:5",
+            "videoHDREnabled" : true
+          },
+          {
+            "activeColorSpace" : "1",
+            "activeFormatDimensions" : "1920x1080",
+            "activeFormatFOV" : 70.29109191894531,
+            "activeFormatMaxExposureDuration" : 1,
+            "activeFormatMaxISO" : 3168,
+            "activeFormatMaxPhotoDimensions" : "1920x1080",
+            "activeFormatMaxPhotoDimensionsCount" : 2,
+            "activeFormatMinExposureDuration" : 1.4e-05,
+            "activeFormatMinISO" : 33,
+            "activeFormatVideoHDRSupported" : true,
+            "appleProRAWFormats" : [
+
+            ],
+            "autoFocusRangeRestrictionSupported" : true,
+            "autoLowLightBoost" : false,
+            "autoVideoHDR" : true,
+            "availableRawPhotoPixelFormatTypes" : [
+              "rgg4"
+            ],
+            "bayerRAWFormats" : [
+              "rgg4"
+            ],
+            "centerStageControlMode" : "1",
+            "centerStageEnabled" : false,
+            "deviceType" : "AVCaptureDeviceTypeBuiltInWideAngleCamera",
+            "flashAvailable" : true,
+            "formats" : [
+              {
+                "dimensions" : "192x144",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "192x144",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "352x288",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 60.91105270385742
+              },
+              {
+                "dimensions" : "352x288",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 60.91105270385742
+              },
+              {
+                "dimensions" : "480x360",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "480x360",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "960x540",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "960x540",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1024x768",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "1024x768",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 240,
+                "maxISO" : 1320,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 240,
+                "maxISO" : 1320,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1440x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "1440x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 65.35665130615234
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 120,
+                "maxISO" : 1320,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 38.78413772583008
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 120,
+                "maxISO" : 1320,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 38.78413772583008
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 240,
+                "maxISO" : 1320,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 240,
+                "maxISO" : 1320,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.5e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "2592x1944",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "2592x1944",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "3264x2448",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "3264x2448",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 3168,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 70.29109191894531
+              },
+              {
+                "dimensions" : "4032x3024",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 5808,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              },
+              {
+                "dimensions" : "4032x3024",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 5808,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 1.4e-05,
+                "minISO" : 33,
+                "videoFieldOfView" : 67.80220031738281
+              }
+            ],
+            "formatsCount" : 52,
+            "gdcEnabled" : false,
+            "gdcSupported" : false,
+            "globalToneMappingEnabled" : false,
+            "globalToneMappingSupported" : true,
+            "hasFlash" : true,
+            "hasTorch" : true,
+            "lensAperture" : 1.600000023841858,
+            "lockFocusCustomLensPositionSupported" : true,
+            "lowLightBoostSupported" : false,
+            "maxAvailableVideoZoomFactor" : 189,
+            "minAvailableVideoZoomFactor" : 1,
+            "modelID" : "com.apple.avfoundation.avcapturedevice.built-in_video:0",
+            "position" : "1",
+            "supportedFlashModes" : [
+              "0",
+              "1",
+              "2"
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:0",
+            "videoHDREnabled" : true
+          },
+          {
+            "activeColorSpace" : "1",
+            "activeFormatDimensions" : "1920x1080",
+            "activeFormatFOV" : 73.29196166992188,
+            "activeFormatMaxExposureDuration" : 1,
+            "activeFormatMaxISO" : 2208,
+            "activeFormatMaxPhotoDimensions" : "1920x1080",
+            "activeFormatMaxPhotoDimensionsCount" : 2,
+            "activeFormatMinExposureDuration" : 2.1e-05,
+            "activeFormatMinISO" : 23,
+            "activeFormatVideoHDRSupported" : true,
+            "appleProRAWFormats" : [
+
+            ],
+            "autoFocusRangeRestrictionSupported" : false,
+            "autoLowLightBoost" : false,
+            "autoVideoHDR" : true,
+            "availableRawPhotoPixelFormatTypes" : [
+              "bgg4"
+            ],
+            "bayerRAWFormats" : [
+              "bgg4"
+            ],
+            "centerStageControlMode" : "1",
+            "centerStageEnabled" : false,
+            "deviceType" : "AVCaptureDeviceTypeBuiltInWideAngleCamera",
+            "flashAvailable" : true,
+            "formats" : [
+              {
+                "dimensions" : "192x144",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "192x144",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "352x288",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 68.58161926269531
+              },
+              {
+                "dimensions" : "352x288",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 68.58161926269531
+              },
+              {
+                "dimensions" : "480x360",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "480x360",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "640x480",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "960x540",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "960x540",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1024x768",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1024x768",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 120,
+                "maxISO" : 920,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1280x720",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 120,
+                "maxISO" : 920,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1440x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1440x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 120,
+                "maxISO" : 920,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1080",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 120,
+                "maxISO" : 920,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "1920x1440",
+                "isVideoBinned" : true,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.2e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "3088x2316",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 59.34393310546875
+              },
+              {
+                "dimensions" : "3088x2316",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 59.34393310546875
+              },
+              {
+                "dimensions" : "3088x2316",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 59.34393310546875
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 2,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "3840x2160",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : false,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 60,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "4032x3024",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              },
+              {
+                "dimensions" : "4032x3024",
+                "isVideoBinned" : false,
+                "isVideoHDRSupported" : true,
+                "maxExposureDuration" : 1,
+                "maxFrameRate" : 30,
+                "maxISO" : 2208,
+                "maxPhotoDimensionsCount" : 1,
+                "minExposureDuration" : 2.1e-05,
+                "minISO" : 23,
+                "videoFieldOfView" : 73.29196166992188
+              }
+            ],
+            "formatsCount" : 49,
+            "gdcEnabled" : false,
+            "gdcSupported" : false,
+            "globalToneMappingEnabled" : false,
+            "globalToneMappingSupported" : true,
+            "hasFlash" : true,
+            "hasTorch" : false,
+            "lensAperture" : 2.200000047683716,
+            "lockFocusCustomLensPositionSupported" : false,
+            "lowLightBoostSupported" : false,
+            "maxAvailableVideoZoomFactor" : 189,
+            "minAvailableVideoZoomFactor" : 1,
+            "modelID" : "com.apple.avfoundation.avcapturedevice.built-in_video:1",
+            "position" : "2",
+            "supportedFlashModes" : [
+              "0",
+              "1",
+              "2"
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:1",
+            "videoHDREnabled" : true
+          }
+        ]
+      },
+      "name" : "deviceDiscovery",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "devices" : [
+          {
+            "activeIsVideoHDRSupported" : true,
+            "formats" : [
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 2,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 2,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              }
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:5"
+          },
+          {
+            "activeIsVideoHDRSupported" : true,
+            "formats" : [
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "192x144",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "352x288",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "480x360",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "640x480",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "960x540",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1024x768",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1280x720",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1440x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1080",
+                "fpsMax" : 120,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1080",
+                "fpsMax" : 240,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : true,
+                "dims" : "1920x1440",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "2592x1944",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3264x2448",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : false
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "3840x2160",
+                "fpsMax" : 60,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              },
+              {
+                "binned" : false,
+                "dims" : "4032x3024",
+                "fpsMax" : 30,
+                "fpsMin" : 1,
+                "videoHDR" : true
+              }
+            ],
+            "uniqueID" : "com.apple.avfoundation.avcapturedevice.built-in_video:0"
+          }
+        ],
+        "hlgTransferFunctionKey" : "ITU_R_2100_HLG",
+        "proResWriter" : {
+          "inputAccepted" : true,
+          "writerCreated" : true
+        }
+      },
+      "name" : "videoFormats",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "autoContentAwareDistortionCorrection" : false,
+        "autoRedEyeReduction" : false,
+        "autoStillImageStabilization" : false,
+        "autoVirtualDeviceFusion" : false,
+        "defaultMaxPhotoDimensions" : "0x0",
+        "defaultPhotoQualityPrioritization" : "1",
+        "isAppleProRAW" : false,
+        "isBayer" : true,
+        "pixelFormat" : "bgg4",
+        "qualityExceptionReason" : "*** -[AVCapturePhotoSettings setPhotoQualityPrioritization:] Unsupported when capturing RAW",
+        "readbackAfterQualityAttempt" : "1",
+        "setBalancedException" : "NSExceptionName(_rawValue: NSInvalidArgumentException)",
+        "setQualityException" : "NSExceptionName(_rawValue: NSInvalidArgumentException)",
+        "setSpeedAccepted" : true,
+        "speedReadback" : "1"
+      },
+      "name" : "photoSettingsDetached",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "modernClass" : "CIRAWFilter",
+        "modernIsCIRAWFilterClass" : true,
+        "modernNativeSize" : "4032.0x3024.0",
+        "modernOutputNotNil" : true,
+        "modernSupportedDecoderVersions" : [
+          "6.dng",
+          "7.dng",
+          "8.dng"
+        ],
+        "staticModelsContainThisDevice" : true,
+        "staticSupportedCameraModelsCount" : 941
+      },
+      "name" : "cirawInitModern",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "isaTopIsCIRAWFilter" : false,
+        "respondsToBoostSetter" : false,
+        "respondsToDecoderVersionSetter" : false,
+        "respondsToHighlightRecoverySetter" : false,
+        "runtimeClass" : "CIRAWFilterImpl"
+      },
+      "name" : "cirawInitDeprecated",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "baselineExposureDefault" : "-0.30221677",
+        "controls" : [
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "boostAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "boostShadowAmount",
+            "neutral" : "1.0",
+            "readback" : "1.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "shadowBias",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "localToneMapAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "contrastAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "sharpnessAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "detailAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "luminanceNoiseReductionAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "colorNoiseReductionAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "moireReductionAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "extendedDynamicRangeAmount",
+            "neutral" : "1",
+            "readback" : "1.0"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "isLensCorrectionEnabled",
+            "neutral" : "false",
+            "readback" : "false"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "isGamutMappingEnabled",
+            "neutral" : "false",
+            "readback" : "false"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "exposure",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          }
+        ],
+        "decoderVersionReadback" : "8.dng",
+        "decoderVersionSet" : "8.dng",
+        "decoderVersions" : [
+          "6.dng",
+          "7.dng",
+          "8.dng"
+        ],
+        "highlightRecoveryAssigned" : true,
+        "highlightRecoveryReadback" : "false",
+        "isDraftModeEnabledDefault" : "false",
+        "neutralTemperatureDefault" : "5201.2573",
+        "neutralTintDefault" : "6.358185",
+        "orientationDefault" : "6",
+        "scaleFactorDefault" : "1.0"
+      },
+      "name" : "cirawControlsProRAW",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "edrLadder" : [
+          {
+            "above1" : 0,
+            "below0" : 0,
+            "edr" : 0,
+            "max" : 1,
+            "mean" : 0.31352691082760714,
+            "min" : 0.006549835205078125,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 1948,
+            "below0" : 0,
+            "edr" : 1,
+            "max" : 1.3310546875,
+            "mean" : 0.28737627726907256,
+            "min" : 0.005565643310546875,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 2324,
+            "below0" : 0,
+            "edr" : 2,
+            "max" : 1.5634765625,
+            "mean" : 0.25617929851817595,
+            "min" : 0.004581451416015625,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          }
+        ]
+      },
+      "name" : "edrHeadroom",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "bytes" : 84671,
+        "depth" : 10,
+        "pixelHeight" : 404,
+        "pixelWidth" : 303,
+        "profileName" : "Display P3"
+      },
+      "name" : "heif10",
+      "status" : "ok"
+    },
+    {
+      "name" : "cameraPermission",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "captures" : [
+          {
+            "duration" : 1.4e-05,
+            "error" : "",
+            "fileBytes" : 9747619,
+            "isRaw" : true,
+            "iso" : 33,
+            "name" : "flat_iso33_exp14",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.0001869440321068127,
+            "error" : "",
+            "fileBytes" : 8125977,
+            "isRaw" : true,
+            "iso" : 33,
+            "name" : "flat_iso33_exp186",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.002496290795739501,
+            "error" : "",
+            "fileBytes" : 8128927,
+            "isRaw" : true,
+            "iso" : 33,
+            "name" : "flat_iso33_exp2496",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.03333333333333333,
+            "error" : "",
+            "fileBytes" : 8127418,
+            "isRaw" : true,
+            "iso" : 33,
+            "name" : "flat_iso33_exp33333",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 1.4e-05,
+            "error" : "",
+            "fileBytes" : 8126393,
+            "isRaw" : true,
+            "iso" : 1188,
+            "name" : "flat_iso1188_exp14",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.0001869440321068127,
+            "error" : "",
+            "fileBytes" : 8128715,
+            "isRaw" : true,
+            "iso" : 1188,
+            "name" : "flat_iso1188_exp186",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.002496290795739501,
+            "error" : "",
+            "fileBytes" : 8128341,
+            "isRaw" : true,
+            "iso" : 1188,
+            "name" : "flat_iso1188_exp2496",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.03333333333333333,
+            "error" : "",
+            "fileBytes" : 9748676,
+            "isRaw" : true,
+            "iso" : 1188,
+            "name" : "flat_iso1188_exp33333",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 1.4e-05,
+            "error" : "",
+            "fileBytes" : 9747047,
+            "isRaw" : true,
+            "iso" : 2343,
+            "name" : "flat_iso2343_exp14",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.0001869440321068127,
+            "error" : "",
+            "fileBytes" : 9747792,
+            "isRaw" : true,
+            "iso" : 2343,
+            "name" : "flat_iso2343_exp186",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.002496290795739501,
+            "error" : "",
+            "fileBytes" : 9747812,
+            "isRaw" : true,
+            "iso" : 2343,
+            "name" : "flat_iso2343_exp2496",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.03333333333333333,
+            "error" : "",
+            "fileBytes" : 9748644,
+            "isRaw" : true,
+            "iso" : 2343,
+            "name" : "flat_iso2343_exp33333",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 1.4e-05,
+            "error" : "",
+            "fileBytes" : 9748080,
+            "isRaw" : true,
+            "iso" : 3498,
+            "name" : "flat_iso3498_exp14",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.0001869440321068127,
+            "error" : "",
+            "fileBytes" : 9748534,
+            "isRaw" : true,
+            "iso" : 3498,
+            "name" : "flat_iso3498_exp186",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.002496290795739501,
+            "error" : "",
+            "fileBytes" : 9747234,
+            "isRaw" : true,
+            "iso" : 3498,
+            "name" : "flat_iso3498_exp2496",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.03333333333333333,
+            "error" : "",
+            "fileBytes" : 9747533,
+            "isRaw" : true,
+            "iso" : 3498,
+            "name" : "flat_iso3498_exp33333",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 1.4e-05,
+            "error" : "",
+            "fileBytes" : 9748165,
+            "isRaw" : true,
+            "iso" : 4653,
+            "name" : "flat_iso4653_exp14",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.0001869440321068127,
+            "error" : "",
+            "fileBytes" : 9748146,
+            "isRaw" : true,
+            "iso" : 4653,
+            "name" : "flat_iso4653_exp186",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.002496290795739501,
+            "error" : "",
+            "fileBytes" : 9750316,
+            "isRaw" : true,
+            "iso" : 4653,
+            "name" : "flat_iso4653_exp2496",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.03333333333333333,
+            "error" : "",
+            "fileBytes" : 9749676,
+            "isRaw" : true,
+            "iso" : 4653,
+            "name" : "flat_iso4653_exp33333",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 1.4e-05,
+            "error" : "",
+            "fileBytes" : 9748693,
+            "isRaw" : true,
+            "iso" : 5808,
+            "name" : "flat_iso5808_exp14",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.0001869440321068127,
+            "error" : "",
+            "fileBytes" : 9750711,
+            "isRaw" : true,
+            "iso" : 5808,
+            "name" : "flat_iso5808_exp186",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.002496290795739501,
+            "error" : "",
+            "fileBytes" : 9750315,
+            "isRaw" : true,
+            "iso" : 5808,
+            "name" : "flat_iso5808_exp2496",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "duration" : 0.03333333333333333,
+            "error" : "",
+            "fileBytes" : 9749523,
+            "isRaw" : true,
+            "iso" : 5808,
+            "name" : "flat_iso5808_exp33333",
+            "pixelFormat" : "rgg4",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "fileBytes" : 9749356,
+            "name" : "fixture-bayer-rich",
+            "rawDims" : "4032x3024",
+            "success" : true
+          },
+          {
+            "error" : "",
+            "fileBytes" : 10036633,
+            "flashEnabled" : true,
+            "isRaw" : true,
+            "name" : "flash-raw-probe",
+            "pixelFormat" : "rgg4",
+            "success" : true
+          }
+        ],
+        "determinism" : {
+          "activeColorSpace" : "1",
+          "centerStageControlMode" : "1",
+          "centerStageEnabled" : false,
+          "centerStageModeSetException" : "",
+          "gdcEnabled" : false,
+          "lowLightBoost" : false,
+          "maxPhotoDimensions" : "4032x3024",
+          "videoHDR" : false,
+          "wideColorAutoConfig" : false,
+          "zoomFactor" : "1.0"
+        }
+      },
+      "name" : "captureSeries",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "availableRawPhotoPixelFormatTypes" : [
+          "rgg4"
+        ],
+        "bayerRAWFormats" : [
+          "rgg4"
+        ],
+        "deviceZoomFactor" : 1,
+        "isAutoDeferredPhotoDeliveryEnabledDefault" : false,
+        "isContentAwareDistortionCorrectionSupported" : false,
+        "isFastCapturePrioritizationSupported" : false,
+        "isResponsiveCaptureSupported" : true,
+        "isZeroShutterLagEnabledDefault" : true,
+        "isZeroShutterLagSupported" : true,
+        "livePhotoSupported" : true,
+        "maxPhotoDimensions" : "4032x3024",
+        "maxPhotoQualityPrioritization" : "2",
+        "stillImageStabilizationSupported" : true,
+        "supportedFlashModes" : [
+          "0",
+          "1",
+          "2"
+        ],
+        "virtualDeviceFusionSupported" : false
+      },
+      "name" : "photoOutputAttached",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "baselineExposureDefault" : "4.4594316",
+        "controls" : [
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "boostAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "boostShadowAmount",
+            "neutral" : "1.0",
+            "readback" : "1.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "shadowBias",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "localToneMapAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "contrastAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "sharpnessAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "detailAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "luminanceNoiseReductionAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "colorNoiseReductionAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "moireReductionAmount",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "extendedDynamicRangeAmount",
+            "neutral" : "1",
+            "readback" : "1.0"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "isLensCorrectionEnabled",
+            "neutral" : "false",
+            "readback" : "false"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "isGamutMappingEnabled",
+            "neutral" : "false",
+            "readback" : "false"
+          },
+          {
+            "assigned" : true,
+            "exception" : "",
+            "name" : "exposure",
+            "neutral" : "0.0",
+            "readback" : "0.0000"
+          }
+        ],
+        "decoderVersionReadback" : "8.dng",
+        "decoderVersionSet" : "8.dng",
+        "decoderVersions" : [
+          "6.dng",
+          "7.dng",
+          "7",
+          "8.dng",
+          "8"
+        ],
+        "highlightRecoveryAssigned" : true,
+        "highlightRecoveryReadback" : "false",
+        "isDraftModeEnabledDefault" : "false",
+        "neutralTemperatureDefault" : "4049.9456",
+        "neutralTintDefault" : "22.045004",
+        "orientationDefault" : "6",
+        "scaleFactorDefault" : "1.0"
+      },
+      "name" : "cirawControlsBayer",
+      "status" : "ok"
+    },
+    {
+      "data" : {
+        "edrLadder" : [
+          {
+            "above1" : 0,
+            "below0" : 0,
+            "edr" : 0,
+            "max" : 0.24267578125,
+            "mean" : 0.019519500668526382,
+            "min" : -0,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 0,
+            "below0" : 0,
+            "edr" : 1,
+            "max" : 0.264892578125,
+            "mean" : 0.02290017303648365,
+            "min" : 0,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          },
+          {
+            "above1" : 0,
+            "below0" : 0,
+            "edr" : 2,
+            "max" : 0.265869140625,
+            "mean" : 0.023777869235015986,
+            "min" : 0,
+            "samples" : 2286144,
+            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+          }
+        ]
+      },
+      "name" : "edrHeadroomBayer",
+      "status" : "ok"
+    },
+    {
+      "name" : "photoKitPermission",
+      "status" : "ok"
+    },
+    {
+      "data" : [
+        {
+          "creationError" : "Error Domain=PHPhotosErrorDomain Code=3300 \"(null)\"",
+          "creationSucceeded" : false,
+          "currentRenderMeanDiff" : -1,
+          "dngBytesMatch" : false,
+          "fetchError" : "",
+          "resources" : [
+
+          ],
+          "shape" : "A",
+          "supportsResourceTypes" : true
+        },
+        {
+          "creationError" : "Error Domain=PHPhotosErrorDomain Code=3300 \"(null)\"",
+          "creationSucceeded" : false,
+          "currentRenderMeanDiff" : -1,
+          "dngBytesMatch" : false,
+          "fetchError" : "",
+          "resources" : [
+
+          ],
+          "shape" : "B",
+          "supportsResourceTypes" : true
+        },
+        {
+          "creationError" : "Error Domain=PHPhotosErrorDomain Code=3300 \"(null)\"",
+          "creationSucceeded" : false,
+          "currentRenderMeanDiff" : -1,
+          "dngBytesMatch" : false,
+          "fetchError" : "",
+          "resources" : [
+
+          ],
+          "shape" : "C",
+          "supportsResourceTypes" : true
+        }
+      ],
+      "name" : "photoKitShapes",
+      "status" : "ok"
+    },
+    {
+      "name" : "trap-probe",
+      "status" : "crash-expected"
+    },
+    {
+      "data" : true,
+      "name" : "trapProbeSurvived",
+      "status" : "ok"
+    },
+    {
+      "name" : "done",
+      "status" : "ok"
+    }
+  ],
+  "startedAt" : "2026-10-24T10:34:22Z"
+}

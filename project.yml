@@ -27,6 +27,9 @@ settings:
   base:
     SWIFT_VERSION: "5.0"
     GENERATE_INFOPLIST_FILE: YES
+    # Device signing (v2 §2): the iPhone 12 mini is the verification target.
+    DEVELOPMENT_TEAM: GV4GK5XGN5
+    CODE_SIGN_STYLE: Automatic
 
 targets:
   pikicam:
@@ -83,6 +86,45 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamUITests
         TEST_TARGET_NAME: pikicam
 
+  # ------------------------------------------------------------------
+  # v2 §14 — probe target (Phase 0). Committed probe files, never links
+  # app sources, excluded from the main test action. Runs the §1
+  # claims-under-test ledger on the connected iPhone 12 mini.
+  # ------------------------------------------------------------------
+  pikicamProbes:
+    type: application
+    platform: iOS
+    sources:
+      - path: Probes/pikicamProbes
+      - path: Probes/pikicamProbes/Fixtures/IMG_1361.DNG
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbes
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        SWIFT_OBJC_BRIDGING_HEADER: Probes/pikicamProbes/ProbesBridgingHeader.h
+        TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: 1
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: Probe app captures Bayer RAW photos on the connected device to verify capture claims.
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: Probe app verifies PhotoKit resource shapes by creating and deleting its own assets.
+        INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: Probe app saves its own probe assets to verify PhotoKit behaviour.
+
+  pikicamProbesUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: Probes/pikicamProbesUITests
+    dependencies:
+      - target: pikicamProbes
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbesUITests
+        TEST_TARGET_NAME: pikicamProbes
+
 schemes:
   pikicam:
     build:
@@ -96,3 +138,12 @@ schemes:
       targets:
         - pikicamTests
         - pikicamUITests
+
+  pikicamProbes:
+    build:
+      targets:
+        pikicamProbes: all
+    test:
+      config: Debug
+      targets:
+        - pikicamProbesUITests
