@@ -123,37 +123,37 @@ struct ViewerScreen: View {
                 }
                 Spacer()
                 Text("[ PLATE ]")
-                    .pikicamType(.label)
-                    .foregroundStyle(InkColor.ash)
+                    .font(PikicamFont.mono(.telemetry))
+                    .foregroundStyle(Palette.ash)
             }
             .frame(height: 44)
             .padding(.horizontal, UGrid.micro)
-            .background(PlateColor.photometricLow)
+            .background(SurfaceColor.low)
 
             ZStack {
-                PlateColor.photometricDeep
+                SurfaceColor.surface
                 if let display = model.display {
                     Image(decorative: display.cgImage, scale: 1)
                         .resizable().scaledToFit()
                         .accessibilityLabel("Developed capture")
                 } else if model.isDeveloping {
                     Text("[ DEVELOPING ]")
-                        .pikicamType(.label)
-                        .foregroundStyle(InkColor.ash)
+                        .font(PikicamFont.mono(.telemetry))
+                        .foregroundStyle(Palette.ash)
                 } else if let error = model.developError {
                     Text("[ DEVELOP FAILED ]")
-                        .pikicamType(.label)
-                        .foregroundStyle(InkColor.ash)
+                        .font(PikicamFont.mono(.telemetry))
+                        .foregroundStyle(Palette.ash)
                     Text(error)
-                        .pikicamType(.micro)
-                        .foregroundStyle(InkColor.ash.opacity(0.6))
+                        .font(PikicamFont.mono(.micro))
+                        .foregroundStyle(Palette.ash.opacity(0.6))
                 }
             }
             .frame(maxHeight: .infinity)
 
             developControls
         }
-        .background(PlateColor.photometricDeep)
+        .background(SurfaceColor.surface)
         .task { await model.load() }
     }
 
@@ -194,11 +194,11 @@ struct ViewerScreen: View {
             }
             if !model.provenanceSummary.isEmpty {
                 Text(model.provenanceSummary)
-                    .pikicamType(.micro)
-                    .foregroundStyle(InkColor.ash)
+                    .font(PikicamFont.mono(.micro))
+                    .foregroundStyle(Palette.ash)
                     .padding(UGrid.small)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(PlateColor.photometricLow)
+                    .background(SurfaceColor.low)
             }
         }
         .padding(UGrid.small)

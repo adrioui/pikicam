@@ -47,16 +47,16 @@ struct LibraryScreen: View {
         VStack(spacing: 0) {
             HStack {
                 Text("ARCHIVE")
-                    .pikicamType(.title)
-                    .foregroundStyle(InkColor.muslin)
+                    .font(PikicamFont.mono(.headline))
+                    .foregroundStyle(Palette.muslin)
                 Spacer()
                 Text("[ \(model.items.count) ]")
-                    .pikicamType(.readout)
-                    .foregroundStyle(InkColor.ash)
+                    .font(PikicamFont.mono(.telemetry))
+                    .foregroundStyle(Palette.ash)
             }
             .padding(.horizontal, UGrid.micro)
             .frame(height: 44)
-            .background(PlateColor.photometricLow)
+            .background(SurfaceColor.low)
 
             if model.items.isEmpty {
                 emptyState
@@ -71,7 +71,7 @@ struct LibraryScreen: View {
                 }
             }
         }
-        .background(PlateColor.photometricDeep)
+        .background(SurfaceColor.surface)
         .task { await model.start() }
         .onDisappear { model.stop() }
         .sheet(item: $viewerItem) { item in
@@ -82,11 +82,11 @@ struct LibraryScreen: View {
     private var emptyState: some View {
         VStack(spacing: UGrid.small) {
             Text("NO CAPTURES")
-                .pikicamType(.title)
-                .foregroundStyle(InkColor.ash)
+                .font(PikicamFont.mono(.headline))
+                .foregroundStyle(Palette.ash)
             Text("THE ARCHIVE FILLS AS YOU SHOOT")
-                .pikicamType(.micro)
-                .foregroundStyle(InkColor.ash.opacity(0.6))
+                .font(PikicamFont.mono(.micro))
+                .foregroundStyle(Palette.ash.opacity(0.6))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -97,25 +97,25 @@ struct LibraryScreen: View {
         } label: {
             ZStack {
                 Rectangle()
-                    .fill(PlateColor.carbon)
+                    .fill(SurfaceColor.elevated)
                     .aspectRatio(1, contentMode: .fit)
                 VStack(alignment: .leading) {
                     Spacer()
                     HStack {
                         Text(item.creationDate.formatted(date: .abbreviated, time: .omitted))
-                            .pikicamType(.micro)
-                            .foregroundStyle(InkColor.calico)
+                            .font(PikicamFont.mono(.micro))
+                            .foregroundStyle(Palette.calico)
                         Spacer()
                         if case .video(let clip) = item.mediaKind {
                             Text("\(Int(clip.duration))S")
-                                .pikicamType(.micro)
-                                .foregroundStyle(InkColor.ash)
+                                .font(PikicamFont.mono(.micro))
+                                .foregroundStyle(Palette.ash)
                         }
                     }
                     .padding(UGrid.nano)
                 }
             }
-            .overlay(Rectangle().strokeBorder(InkColor.ash.opacity(0.4), lineWidth: UGrid.hairline))
+            .overlay(Rectangle().strokeBorder(Palette.ash.opacity(0.4), lineWidth: UGrid.hairline))
         }
         .buttonStyle(PlainButtonStyle())
         .accessibilityIdentifier("library.cell")

@@ -52,7 +52,7 @@ struct Viewfinder: View {
                     path.addRect(overlay)
                 }
                 .fill(style: FillStyle(eoFill: true))
-                .foregroundColor(PlateColor.photometricDeep)
+                .foregroundColor(SurfaceColor.surface)
                 if showGrid {
                     grid(in: overlay)
                 }
@@ -73,17 +73,17 @@ struct Viewfinder: View {
                 path.addLine(to: CGPoint(x: rect.maxY, y: y))
             }
         }
-        .stroke(InkColor.gesso.opacity(0.25), lineWidth: UGrid.hairline)
+        .stroke(Palette.gesso.opacity(0.25), lineWidth: UGrid.hairline)
     }
 
     private var reticle: some View {
         Rectangle()
-            .strokeBorder(InkColor.gesso.opacity(0.8), lineWidth: UGrid.hairline)
+            .strokeBorder(Palette.gesso.opacity(0.8), lineWidth: UGrid.hairline)
             .frame(width: 96, height: 64)
             .overlay(
                 HStack {
                     ForEach(0..<4, id: \.self) { _ in
-                        Rectangle().fill(InkColor.gesso).frame(width: 1.5, height: 10)
+                        Rectangle().fill(Palette.gesso).frame(width: 1.5, height: 10)
                     }
                 }
                 .offset(y: -32)

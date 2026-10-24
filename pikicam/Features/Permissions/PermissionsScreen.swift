@@ -40,8 +40,8 @@ struct PermissionsScreen: View {
     var body: some View {
         VStack(spacing: UGrid.medium) {
             Text("PERMISSIONS")
-                .pikicamType(.display)
-                .foregroundStyle(InkColor.muslin)
+                .font(PikicamFont.mono(.display))
+                .foregroundStyle(Palette.muslin)
                 .padding(.top, UGrid.large)
 
             permissionRow(
@@ -69,7 +69,7 @@ struct PermissionsScreen: View {
         }
         .padding(UGrid.medium)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(PlateColor.photometricDeep)
+        .background(SurfaceColor.surface)
         .task { await model.refresh() }
     }
 
@@ -77,33 +77,31 @@ struct PermissionsScreen: View {
     private func permissionRow(
         title: String, detail: String, state: PermissionState, onRequest: @escaping () -> Void
     ) -> some View {
-        Plate {
-            AnyView(
-                VStack(alignment: .leading, spacing: UGrid.small) {
+        VStack(alignment: .leading, spacing: UGrid.small) {
                     HStack {
                         Text(title)
-                            .pikicamType(.title)
-                            .foregroundStyle(InkColor.muslin)
+                            .font(PikicamFont.mono(.headline))
+                            .foregroundStyle(Palette.muslin)
                         Spacer()
                         Text("[ \(stateLabel(state)) ]")
-                            .pikicamType(.label)
-                            .foregroundStyle(InkColor.ash)
+                            .font(PikicamFont.mono(.telemetry))
+                            .foregroundStyle(Palette.ash)
                     }
                     Text(detail)
-                        .pikicamType(.micro)
-                        .foregroundStyle(InkColor.calico)
+                        .font(PikicamFont.mono(.micro))
+                        .foregroundStyle(Palette.calico)
                     if state == .notDetermined {
                         BracketButton(title: "[ ALLOW ]", action: onRequest)
                     }
-                    if state == .denied || state == .restricted {
-                        Text("Enable in Settings to use this feature.")
-                            .pikicamType(.micro)
-                            .foregroundStyle(InkColor.ash)
-                    }
+                if state == .denied || state == .restricted {
+                    Text("Enable in Settings to use this feature.")
+                        .font(PikicamFont.mono(.micro))
+                        .foregroundStyle(Palette.ash)
                 }
-                .padding(UGrid.small)
-            )
         }
+        .padding(UGrid.small)
+        .background(SurfaceColor.low)
+        .overlay(RuleColor.border.frame(height: UGrid.hairline), alignment: .top)
     }
 
     private func stateLabel(_ state: PermissionState) -> String {
@@ -136,13 +134,13 @@ struct SettingsScreen: View {
         VStack(spacing: 0) {
             HStack {
                 Text("SETTINGS")
-                    .pikicamType(.title)
-                    .foregroundStyle(InkColor.muslin)
+                    .font(PikicamFont.mono(.headline))
+                    .foregroundStyle(Palette.muslin)
                 Spacer()
             }
             .padding(.horizontal, UGrid.micro)
             .frame(height: 44)
-            .background(PlateColor.photometricLow)
+            .background(SurfaceColor.low)
 
             List {
                 toggleRow("Grid", $grid)
@@ -154,14 +152,14 @@ struct SettingsScreen: View {
             }
             .scrollContentBackground(.hidden)
         }
-        .background(PlateColor.photometricDeep)
+        .background(SurfaceColor.surface)
     }
 
     private func toggleRow(_ title: String, _ value: Binding<Bool>) -> some View {
         Toggle(title, isOn: value)
-            .font(PikicamFont.mono(.readout))
-            .foregroundStyle(InkColor.muslin)
-            .tint(InkColor.gesso)
+            .font(PikicamFont.mono(.telemetry))
+            .foregroundStyle(Palette.muslin)
+            .tint(Palette.gesso)
             .padding(.vertical, UGrid.nano)
     }
 
@@ -175,8 +173,8 @@ struct SettingsScreen: View {
     private var aboutSection: some View {
         Section("WHAT PIKICAM DOES TO YOUR PHOTO") {
             Text(Self.aboutText)
-                .pikicamType(.micro)
-            .foregroundStyle(InkColor.calico)
+                .font(PikicamFont.mono(.micro))
+            .foregroundStyle(Palette.calico)
         }
     }
 }

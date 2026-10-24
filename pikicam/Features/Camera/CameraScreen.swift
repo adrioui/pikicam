@@ -11,18 +11,21 @@ struct CameraScreen: View {
     var body: some View {
         VStack(spacing: 0) {
             statusPlate
-            Viewfinder(
-                source: model.deps.capture.preview,
-                geometry: modelGeometry,
-                showGrid: false
-            )
+            ZStack {
+                Viewfinder(
+                    source: model.deps.capture.preview,
+                    geometry: modelGeometry,
+                    showGrid: false
+                )
+                BastingStitchReticle(mode: .tracking)
+            }
             .frame(maxHeight: .infinity)
             readoutRail
             lensRail
             lineMatrix
             dock
         }
-        .background(PlateColor.photometricDeep)
+        .background(SurfaceColor.surface)
         .preferredColorScheme(.dark)
         .task { await model.start() }
         .onDisappear { model.stop() }
@@ -53,8 +56,8 @@ struct CameraScreen: View {
     private var statusPlate: some View {
         HStack {
             Text(model.statusBadge)
-                .pikicamType(.label)
-                .foregroundStyle(InkColor.muslin)
+                .font(PikicamFont.mono(.telemetry))
+                .foregroundStyle(Palette.muslin)
             Spacer()
             BracketButton(title: "[ QS ]", accessibilityID: AccessibilityID.Camera.quickSettings) {
                 model.isLevelsVisible.toggle()
@@ -62,24 +65,20 @@ struct CameraScreen: View {
         }
         .padding(.horizontal, UGrid.micro)
         .frame(height: 44)
-        .background(PlateColor.photometricLow)
+        .background(SurfaceColor.low)
     }
 
     private var readoutRail: some View {
-        CareLabelStrip(entries: readouts)
-            .padding(.horizontal, UGrid.micro)
-            .frame(height: 56)
-            .background(PlateColor.photometricLow)
-            .accessibilityIdentifier(AccessibilityID.Camera.readoutRail)
-    }
-
-    private var readouts: [String] {
-        [
-            "AE [ AUTO ]",
-            "WB [ AUTO ]",
-            "CROP [ \(model.settings.crop == 1 ? "1.0" : String(format: "%.1f", model.settings.crop))X ]",
-            "TIMER [ \(model.settings.timer == .off ? "OFF" : "\(model.settings.timer.rawValue)S") ]",
-        ]
+        CareLabelStrip(telemetry: CareLabelStrip.Telemetry(
+            focal: model.capabilities?.lens(model.settings.lens)?.equivalentFocalLength ?? 26,
+            aperture: String(format: "F/%.2F", model.capabilities?.lens(model.settings.lens).map { _ in 1.8 } ?? 1.8),
+            shutter: "AUTO",
+            iso: 0,
+            kelvin: 5600
+        ))
+        .padding(.horizontal, UGrid.micro)
+        .frame(height: 56)
+        .background(SurfaceColor.low)
     }
 
     private var lensRail: some View {
@@ -103,8 +102,8 @@ struct CameraScreen: View {
 
     private var lineMatrix: some View {
         NumericLineMatrix(
-            lines: LineProfile.table,
             active: model.activeLine,
+            dormantNumbers: Set(LineProfile.table.filter(\.isDormant).map(\.number)),
             onSelect: { model.selectLine($0) }
         )
         .frame(height: 44)
@@ -122,7 +121,7 @@ struct CameraScreen: View {
         }
         .padding(.horizontal, UGrid.medium)
         .frame(height: 96)
-        .background(PlateColor.photometricLow)
+        .background(SurfaceColor.low)
     }
 
     @ViewBuilder
@@ -132,15 +131,15 @@ struct CameraScreen: View {
                 .resizable().scaledToFill()
                 .frame(width: 64, height: 64)
                 .clipped()
-                .overlay(Rectangle().strokeBorder(InkColor.ash, lineWidth: UGrid.hairline))
+                .overlay(Rectangle().strokeBorder(Palette.ash, lineWidth: UGrid.hairline))
                 .accessibilityIdentifier(AccessibilityID.Camera.thumbnail)
                 .accessibilityLabel("Last capture")
                 .onTapGesture { model.isLibraryPresented = true }
         } else {
             Rectangle()
-                .fill(PlateColor.carbon)
+                .fill(SurfaceColor.elevated)
                 .frame(width: 64, height: 64)
-                .overlay(Rectangle().strokeBorder(InkColor.ash.opacity(0.5), lineWidth: UGrid.hairline))
+                .overlay(Rectangle().strokeBorder(Palette.ash.opacity(0.5), lineWidth: UGrid.hairline))
                 .accessibilityLabel("No captures yet")
                 .onTapGesture { model.isLibraryPresented = true }
         }
@@ -154,12 +153,12 @@ struct CameraScreen: View {
                     model.mode = mode
                 } label: {
                     Text(mode.rawValue.uppercased())
-                        .pikicamType(.micro)
-                        .foregroundStyle(selected ? PlateColor.photometricDeep : InkColor.calico)
+                        .font(PikicamFont.mono(.micro))
+                        .foregroundStyle(selected ? SurfaceColor.surface : Palette.calico)
                         .padding(.horizontal, UGrid.micro)
-                        .frame(minHeight: MinTouchTarget.control)
-                        .background(selected ? InkColor.gesso : Color.clear)
-                        .overlay(Rectangle().strokeBorder(InkColor.ash.opacity(0.6), lineWidth: UGrid.hairline))
+                        .frame(minHeight: 44)
+                        .background(selected ? Palette.gesso : Color.clear)
+                        .overlay(Rectangle().strokeBorder(Palette.ash.opacity(0.6), lineWidth: UGrid.hairline))
                 }
                 .buttonStyle(PlainButtonStyle())
                 .accessibilityIdentifier("camera.mode.\(mode.rawValue)")
