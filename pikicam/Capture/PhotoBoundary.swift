@@ -124,6 +124,7 @@ enum PhotoBoundary {
 
     struct TIFFHeader {
         let littleEndian: Bool
+        let ifd0Offset: UInt32
         let ifd0SubIFDs: [UInt32]
 
         init?(_ data: Data) {
@@ -141,15 +142,28 @@ enum PhotoBoundary {
             guard let ifd0 = Self.readUInt32(data, offset: 4, littleEndian: endian),
                 let entryCount = Self.readUInt16(data, offset: ifd0, littleEndian: endian)
             else { return nil }
+            ifd0Offset = ifd0
             var subIFDs: [UInt32] = []
             for entry in 0..<Int(entryCount) {
                 let entryOffset = ifd0 + 2 + UInt32(entry) * 12
                 guard
                     let tag = Self.readUInt16(data, offset: entryOffset, littleEndian: endian),
                     tag == 0x014A,
+                    let valueType = Self.readUInt16(data, offset: entryOffset + 2, littleEndian: endian),
+                    valueType == 4,
+                    let valueCount = Self.readUInt32(data, offset: entryOffset + 4, littleEndian: endian),
                     let value = Self.readUInt32(data, offset: entryOffset + 8, littleEndian: endian)
                 else { continue }
-                subIFDs.append(value)
+                if valueCount == 1 {
+                    subIFDs.append(value)
+                    continue
+                }
+                for index in 0..<Int(valueCount) {
+                    let arrayOffset = value + UInt32(index) * 4
+                    if let subOffset = Self.readUInt32(data, offset: arrayOffset, littleEndian: endian) {
+                        subIFDs.append(subOffset)
+                    }
+                }
             }
             ifd0SubIFDs = subIFDs
         }

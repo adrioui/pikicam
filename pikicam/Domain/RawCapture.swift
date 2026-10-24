@@ -19,14 +19,31 @@ public struct DNGFacts: Hashable, Sendable {
         case linearRaw = 34892
     }
 
-    public let isTIFF: Bool
-    public let dngVersion: String?
-    public let photometricInterpretation: Photometric?
-    public let hasCFATags: Bool
-    public let uniqueCameraModel: String?
-    public let orientation: Int?
-    public let baselineExposure: Double?
-    public let asShotNeutral: [Double]?
-    public let width: Int
-    public let height: Int
+    public var isTIFF: Bool
+    public var dngVersion: String?
+    public var photometricInterpretation: Photometric?
+    public var hasCFATags: Bool
+    public var uniqueCameraModel: String?
+    public var orientation: Int?
+    public var baselineExposure: Double?
+    public var asShotNeutral: [Double]?
+    public var width: Int
+    public var height: Int
+
+    public init(
+        isTIFF: Bool, dngVersion: String?, photometricInterpretation: Photometric?, hasCFATags: Bool,
+        uniqueCameraModel: String?, orientation: Int?, baselineExposure: Double?, asShotNeutral: [Double]?,
+        width: Int, height: Int
+    ) {
+        self.isTIFF = isTIFF
+        self.dngVersion = dngVersion
+        self.photometricInterpretation = photometricInterpretation
+        self.hasCFATags = hasCFATags
+        self.uniqueCameraModel = uniqueCameraModel
+        self.orientation = orientation
+        self.baselineExposure = baselineExposure
+        self.asShotNeutral = asShotNeutral
+        self.width = width
+        self.height = height
+    }
 }

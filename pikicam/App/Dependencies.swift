@@ -12,6 +12,21 @@ struct Dependencies: Sendable {
     var thumbnails: any ThumbnailStore
     var clock: any Clock<Duration>
 
+    static func live() -> Dependencies {
+        Dependencies(
+            capture: AVCaptureClient(),
+            developer: CoreImageDeveloper(),
+            library: InMemoryLibrary(scenario: .standard),
+            journal: FakeJournal(),
+            recording: FakeRecordingClient(scenario: .standard),
+            scan: FakeScanClient(scenario: .standard),
+            permissions: FakePermissions(scenario: .standard),
+            motion: FakeMotion(),
+            thumbnails: DiskThumbnailFake(),
+            clock: ContinuousClock()
+        )
+    }
+
     static func fake(scenario: FakeScenario) -> Dependencies {
         Dependencies(
             capture: FakeCaptureClient(scenario: scenario),
