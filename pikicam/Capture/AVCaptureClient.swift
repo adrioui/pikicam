@@ -1,4 +1,4 @@
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
 
 actor AVCaptureClient: CaptureClient {
@@ -99,7 +99,13 @@ actor AVCaptureClient: CaptureClient {
         stateContinuation?.yield(.idle)
     }
 
-    func capabilities() async -> DeviceCapabilities {
+    var capabilities: DeviceCapabilities {
+        get async {
+            await capabilitiesValue()
+        }
+    }
+
+    private func capabilitiesValue() async -> DeviceCapabilities {
         guard let device else {
             return DeviceCapabilities(
                 lenses: [], exposureLimits: [:],
@@ -113,16 +119,17 @@ actor AVCaptureClient: CaptureClient {
         let limits = ExposureLimits(
             iso: Double(format.minISO)...Double(format.maxISO),
             exposureDuration: format.minExposureDuration.seconds...format.maxExposureDuration.seconds,
-            bias: device.minExposureTargetBias...device.maxExposureTargetBias
+            bias: Double(device.minExposureTargetBias)...Double(device.maxExposureTargetBias)
         )
         let lenses = Self.availableLenses()
         return DeviceCapabilities(
             lenses: lenses,
             exposureLimits: Dictionary(uniqueKeysWithValues: lenses.map { ($0.kind, limits) }),
-            whiteBalanceLimits: WhiteBalanceLimits(temperature: 2000...10000, tint: -150...150, maxGain: Double(device.maxWhiteBalanceGain)),
+            whiteBalanceLimits: WhiteBalanceLimits(
+                temperature: 2000...10000, tint: -150...150, maxGain: Double(device.maxWhiteBalanceGain)),
             flashSupported: device.hasFlash && photoOutput.supportedFlashModes.contains(.on),
             focusLockSupported: device.isLockingFocusWithCustomLensPositionSupported,
-            rawDimensions: CGSize(width: dims.width, height: dims.height),
+            rawDimensions: CGSize(width: CGFloat(dims.width), height: CGFloat(dims.height)),
             bayerFormat: DeviceConfiguration.bayerFormat(for: photoOutput)
                 ?? BayerFormat(osType: kCVPixelFormatType_14Bayer_RGGB)
         )
@@ -135,7 +142,7 @@ actor AVCaptureClient: CaptureClient {
 
     func apply(_ settings: CameraSettings) {}
 
-    func capture(_ request: CaptureRequest) throws(CaptureError) -> RawCapture {
+    func capture(_ request: CaptureRequest) async throws(CaptureError) -> RawCapture {
         guard let device else {
             throw .sessionStartFailed(code: -2)
         }
@@ -153,13 +160,20 @@ actor AVCaptureClient: CaptureClient {
         }
         switch outcome {
         case .failure(let message):
-            throw .noFileData
+            throw .unexpectedResolvedSettings(message)
         case .success(let photo):
-            return try PhotoBoundary.validate(photo, requestedFormat: bayer)
+            switch PhotoBoundary.validate(photo, requestedFormat: bayer) {
+            case .success(let capture):
+                return capture
+            case .failure(let rejection):
+                throw CaptureError(rejection)
+            }
         }
     }
 
-    nonisolated static func makeSettings(format: BayerFormat, output: AVCapturePhotoOutput, flash: LightMode) -> AVCapturePhotoSettings {
+    nonisolated static func makeSettings(
+        format: BayerFormat, output: AVCapturePhotoOutput, flash: LightMode
+    ) -> AVCapturePhotoSettings {
         let settings = AVCapturePhotoSettings(rawPixelFormatType: format.osType)
         settings.photoQualityPrioritization = .speed
         settings.maxPhotoDimensions = output.maxPhotoDimensions

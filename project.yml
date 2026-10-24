@@ -33,10 +33,7 @@ targets:
       - path: pikicam
     settings:
       base:
-        # TEMPORARY (DECISIONS D7): Xcode account session is dead pending owner
-        # re-auth; piki.pikicamProbes has a cached profile so tests can run.
-        # Revert to piki.pikicam once the owner signs back into Xcode.
-        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbes
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicam
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         MARKETING_VERSION: "2.0"
@@ -75,8 +72,7 @@ targets:
       - target: pikicam
     settings:
       base:
-        # TEMPORARY (DECISIONS D7): shared cached profile until owner re-auth.
-        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamProbesUITests
+        PRODUCT_BUNDLE_IDENTIFIER: piki.pikicamUITests
         TEST_TARGET_NAME: pikicam
 
   pikicamDeviceTests:

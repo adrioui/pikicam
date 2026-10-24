@@ -1,5 +1,6 @@
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
+import Synchronization
 
 final class PhotoCaptureDelegateBox: NSObject, AVCapturePhotoCaptureDelegate, @unchecked Sendable {
     enum Outcome: Sendable {

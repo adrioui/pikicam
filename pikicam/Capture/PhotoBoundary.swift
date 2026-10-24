@@ -10,33 +10,33 @@ enum PhotoBoundary {
         case notADNG
     }
 
-    static func validate(_ photo: AVCapturePhoto, requestedFormat: BayerFormat) throws(Rejection) -> RawCapture {
-        guard photo.isRawPhoto else {
-            throw .notRaw
+    static func validate(_ photo: AVCapturePhoto, requestedFormat: BayerFormat) -> Result<RawCapture, Rejection> {
+        if !photo.isRawPhoto {
+            return .failure(.notRaw)
         }
         if let buffer = photo.pixelBuffer {
             let actual = CVPixelBufferGetPixelFormatType(buffer)
-            guard actual == requestedFormat.osType else {
-                throw .wrongPixelFormat(fourCC(actual))
+            if actual != requestedFormat.osType {
+                return .failure(.wrongPixelFormat(fourCC(actual)))
             }
         }
         let resolved = photo.resolvedSettings
-        guard resolved.expectedPhotoCount == 1 else {
-            throw .unexpectedResolvedSettings("expectedPhotoCount \(resolved.expectedPhotoCount)")
+        if resolved.expectedPhotoCount != 1 {
+            return .failure(.unexpectedResolvedSettings("expectedPhotoCount \(resolved.expectedPhotoCount)"))
         }
-        guard resolved.rawPhotoDimensions.width > 0, resolved.rawPhotoDimensions.height > 0 else {
-            throw .unexpectedResolvedSettings("rawPhotoDimensions zero")
+        if resolved.rawPhotoDimensions.width <= 0 || resolved.rawPhotoDimensions.height <= 0 {
+            return .failure(.unexpectedResolvedSettings("rawPhotoDimensions zero"))
         }
         guard let data = photo.fileDataRepresentation() else {
-            throw .noFileData
+            return .failure(.noFileData)
         }
-        guard isTIFF(data) else {
-            throw .notADNG
+        if !isTIFF(data) {
+            return .failure(.notADNG)
         }
-        guard rawIFDPhotometric(data) != .linearRawLike else {
-            throw .notADNG
+        if rawIFDPhotometric(data) == .linearRawLike {
+            return .failure(.notADNG)
         }
-        return makeCapture(data: data, photo: photo, requestedFormat: requestedFormat)
+        return .success(makeCapture(data: data, photo: photo, requestedFormat: requestedFormat))
     }
 
     static func makeCapture(data: Data, photo: AVCapturePhoto, requestedFormat: BayerFormat) -> RawCapture {
@@ -99,13 +99,16 @@ enum PhotoBoundary {
     }
 
     private static func subIFDPhotometric(_ data: Data, header: TIFFHeader, offset: UInt32) -> Photometric? {
-        guard let count = header.readUInt16(data, offset: offset) else { return nil }
+        guard
+            let count = TIFFHeader.readUInt16(data, offset: offset, littleEndian: header.littleEndian)
+        else { return nil }
         var isRaw = false
         var photometric: Photometric?
         for entry in 0..<Int(count) {
             let entryOffset = offset + 2 + UInt32(entry) * 12
-            guard let tag = header.readUInt16(data, offset: entryOffset),
-                let value = header.readUInt16(data, offset: entryOffset + 8)
+            guard
+                let tag = TIFFHeader.readUInt16(data, offset: entryOffset, littleEndian: header.littleEndian),
+                let value = TIFFHeader.readUInt16(data, offset: entryOffset + 8, littleEndian: header.littleEndian)
             else { continue }
             if tag == 0x0106, value == Photometric.cfa.rawValue {
                 isRaw = true
@@ -126,41 +129,49 @@ enum PhotoBoundary {
         init?(_ data: Data) {
             guard data.count >= 8 else { return nil }
             let head = [UInt8](data.prefix(2))
+            let endian: Bool
             if head == [0x49, 0x49] {
-                littleEndian = true
+                endian = true
             } else if head == [0x4D, 0x4D] {
-                littleEndian = false
+                endian = false
             } else {
                 return nil
             }
-            let ifd0 = readUInt32(data, offset: 4) ?? 0
-            guard let entryCount = readUInt16(data, offset: ifd0) else { return nil }
+            littleEndian = endian
+            guard let ifd0 = Self.readUInt32(data, offset: 4, littleEndian: endian),
+                let entryCount = Self.readUInt16(data, offset: ifd0, littleEndian: endian)
+            else { return nil }
             var subIFDs: [UInt32] = []
             for entry in 0..<Int(entryCount) {
                 let entryOffset = ifd0 + 2 + UInt32(entry) * 12
-                guard let tag = readUInt16(data, offset: entryOffset), tag == 0x014A,
-                    let value = readUInt32(data, offset: entryOffset + 8)
+                guard
+                    let tag = Self.readUInt16(data, offset: entryOffset, littleEndian: endian),
+                    tag == 0x014A,
+                    let value = Self.readUInt32(data, offset: entryOffset + 8, littleEndian: endian)
                 else { continue }
                 subIFDs.append(value)
             }
             ifd0SubIFDs = subIFDs
         }
 
-        func readUInt16(_ data: Data, offset: UInt32) -> UInt16? {
+        static func readUInt16(_ data: Data, offset: UInt32, littleEndian: Bool) -> UInt16? {
             let index = Int(offset)
             guard index + 2 <= data.count else { return nil }
-            return littleEndian
-                ? data[index] | (UInt16(data[index + 1]) << 8)
-                : (UInt16(data[index]) << 8) | UInt16(data[index + 1])
+            let low = UInt16(data[index])
+            let high = UInt16(data[index + 1])
+            return littleEndian ? low | (high << 8) : (low << 8) | high
         }
 
-        func readUInt32(_ data: Data, offset: UInt32) -> UInt32? {
+        static func readUInt32(_ data: Data, offset: UInt32, littleEndian: Bool) -> UInt32? {
             let index = Int(offset)
             guard index + 4 <= data.count else { return nil }
-            let bytes = (0..<4).map { data[index + $0] }
-            return littleEndian
-                ? UInt32(bytes[0]) | (UInt32(bytes[1]) << 8) | (UInt32(bytes[2]) << 16) | (UInt32(bytes[3]) << 24)
-                : (UInt32(bytes[0]) << 24) | (UInt32(bytes[1]) << 16) | (UInt32(bytes[2]) << 8) | UInt32(bytes[3])
+            let b0 = UInt32(data[index])
+            let b1 = UInt32(data[index + 1])
+            let b2 = UInt32(data[index + 2])
+            let b3 = UInt32(data[index + 3])
+            let little = b0 | (b1 << 8) | (b2 << 16) | (b3 << 24)
+            let big = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3
+            return littleEndian ? little : big
         }
     }
 
@@ -170,5 +181,33 @@ enum PhotoBoundary {
             UInt8((code >> 8) & 0xFF), UInt8(code & 0xFF),
         ]
         return String(bytes.map { Character(UnicodeScalar($0)) })
+    }
+}
+
+extension CaptureError {
+    init(_ rejection: PhotoBoundary.Rejection) {
+        switch rejection {
+        case .notRaw:
+            self = .notBayer(pixelFormat: "not raw")
+        case .wrongPixelFormat(let format):
+            self = .notBayer(pixelFormat: format)
+        case .unexpectedResolvedSettings(let detail):
+            self = .unexpectedResolvedSettings(detail)
+        case .noFileData:
+            self = .noFileData
+        case .notADNG:
+            self = .notADNG
+        }
+    }
+}
+
+extension Result {
+    func unwrapError() throws(Error) -> Success {
+        switch self {
+        case .success(let value):
+            return value
+        case .failure(let error):
+            throw error
+        }
     }
 }

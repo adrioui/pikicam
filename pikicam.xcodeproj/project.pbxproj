@@ -25,6 +25,7 @@
 		38E744A3AD8805F6DA029694 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1197D5FDFA6BC4DD756DF182 /* Retry.swift */; };
 		3926848F210E951B51521934 /* VideoProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7235874492D75C7625C45C39 /* VideoProbes.swift */; };
 		3AF457EB067D2483D98520AB /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = DACDE4EC81C0D9C3AEC9BEFF /* Type.swift */; };
+		3C8B1D199631EFB93EA7BBF2 /* PhotoCaptureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */; };
 		3FBF117EE3DF38F640C0F0C8 /* RawCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686A046A18302A7BC02F4C12 /* RawCapture.swift */; };
 		44F1C2E51467140ACFD14B92 /* CameraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41772A80333E431A35BEAF /* CameraUITests.swift */; };
 		4973163375D0D914B8D02590 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7311147759B71723A3E5A90 /* Dependencies.swift */; };
@@ -34,6 +35,7 @@
 		5D36BA565BB16F30E62CEA62 /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0D5B13CB1A8795EA059977 /* DomainTests.swift */; };
 		605E7B8EBA6055FF91009DC3 /* detent.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 9677B113F827125894701BB6 /* detent.ahap */; };
 		655A6FDEC930F0B8F2593E26 /* shutter.ahap in Resources */ = {isa = PBXBuildFile; fileRef = ECF2A043BA4E9E31BB6608F9 /* shutter.ahap */; };
+		6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */; };
 		731A3F73AF8700766E394A93 /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */; };
 		76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CF9A0660C9DEBB114750C83 /* Assets.xcassets */; };
 		7B0528A58961F31CE0D6348E /* Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96239A3ECC56F3051890D21D /* Capabilities.swift */; };
@@ -63,12 +65,14 @@
 		CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */; };
 		CDA4EA059BB7F64BE6A24F5F /* tick.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 9A664626796124AE8951AD20 /* tick.ahap */; };
 		CF4D6458C4279EB5F2AF2725 /* FakeDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA78A8534D7964C94A26A81 /* FakeDeveloper.swift */; };
+		D5C0E1282EFC349570F6091A /* DeviceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */; };
 		D7E923819BF8FE489D2BDA03 /* MapError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF45516CA1A97E6CC6EA285 /* MapError.swift */; };
 		DAD996E44CD2C2E0DB4F36B3 /* Provenance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC403E8E534D3BF0734AFFC /* Provenance.swift */; };
 		DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9400A1986D8108D34D521A2 /* RootView.swift */; };
 		E105647A3F9036E1926FB503 /* Focus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66C6932B9E473D82CE38CB6 /* Focus.swift */; };
 		E2514AD5F5755F211572F248 /* SupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFC18A03572523B086FEFB3 /* SupportTests.swift */; };
 		EAFEFA50A3D2939A439CC1BE /* PhotoDelegateBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */; };
+		F63CDB0C653DE37240AD8703 /* PhotoBoundary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */; };
 		FE46867B09484C65FCDB07C4 /* FrameGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B484C943D545D36BE031106 /* FrameGeometry.swift */; };
 		FE5EAD67229E1969D29138BF /* ProbeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19A85566866AEDF721E8144 /* ProbeApp.swift */; };
 /* End PBXBuildFile section */
@@ -136,6 +140,7 @@
 		8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamProbesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF45516CA1A97E6CC6EA285 /* MapError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapError.swift; sourceTree = "<group>"; };
 		8CFC18A03572523B086FEFB3 /* SupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportTests.swift; sourceTree = "<group>"; };
+		8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDelegate.swift; sourceTree = "<group>"; };
 		91AB47F4C3E33223BE699134 /* Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contrast.swift; sourceTree = "<group>"; };
 		96239A3ECC56F3051890D21D /* Capabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capabilities.swift; sourceTree = "<group>"; };
 		9660528AC98C489C4D856464 /* IDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDs.swift; sourceTree = "<group>"; };
@@ -146,12 +151,15 @@
 		9DC403E8E534D3BF0734AFFC /* Provenance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provenance.swift; sourceTree = "<group>"; };
 		A0D726379232FD7E0BB5B63E /* Look.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Look.swift; sourceTree = "<group>"; };
 		A1DEEC6C66660AC9680CF8B9 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
+		A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConfiguration.swift; sourceTree = "<group>"; };
 		B196CB6431C9550E2E7F87F6 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 		B19A85566866AEDF721E8144 /* ProbeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeApp.swift; sourceTree = "<group>"; };
 		BA71D95BDDBB30C5FE8268E0 /* LibraryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItem.swift; sourceTree = "<group>"; };
+		BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureClient.swift; sourceTree = "<group>"; };
 		BC3F3AB421A5FEFDEBC2BC22 /* failure.ahap */ = {isa = PBXFileReference; path = failure.ahap; sourceTree = "<group>"; };
 		BC441726CA40A2C6B638F465 /* FakeRecordingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRecordingClient.swift; sourceTree = "<group>"; };
 		C06994D63E9AA23683046332 /* AccessibilityID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityID.swift; sourceTree = "<group>"; };
+		C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBoundary.swift; sourceTree = "<group>"; };
 		C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicamProbes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureAgent.swift; sourceTree = "<group>"; };
 		CBA78A8534D7964C94A26A81 /* FakeDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeDeveloper.swift; sourceTree = "<group>"; };
@@ -242,7 +250,11 @@
 		17A9DB728D5EE469127B3B77 /* Capture */ = {
 			isa = PBXGroup;
 			children = (
+				BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */,
 				3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */,
+				A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */,
+				C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */,
+				8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */,
 			);
 			path = Capture;
 			sourceTree = "<group>";
@@ -647,6 +659,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */,
 				0A25495160793D4679E9D858 /* AccessibilityID.swift in Sources */,
 				B4C3812B6DF765050F2BD243 /* CameraSettings.swift in Sources */,
 				7B0528A58961F31CE0D6348E /* Capabilities.swift in Sources */,
@@ -654,6 +667,7 @@
 				CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */,
 				1E74F5220341081EC782264D /* Contrast.swift in Sources */,
 				4973163375D0D914B8D02590 /* Dependencies.swift in Sources */,
+				D5C0E1282EFC349570F6091A /* DeviceConfiguration.swift in Sources */,
 				B978B86B513EB8229368A8F8 /* Errors.swift in Sources */,
 				38DFFEA14B955EAB429B24DC /* Exposure.swift in Sources */,
 				B009B04DEEE9F9023B45E175 /* FakeCaptureClient.swift in Sources */,
@@ -670,6 +684,8 @@
 				D7E923819BF8FE489D2BDA03 /* MapError.swift in Sources */,
 				7E2FA499D2F61BAFACF070A3 /* Mono.swift in Sources */,
 				A35A458C7C6B690A2E8428E1 /* Palette.swift in Sources */,
+				F63CDB0C653DE37240AD8703 /* PhotoBoundary.swift in Sources */,
+				3C8B1D199631EFB93EA7BBF2 /* PhotoCaptureDelegate.swift in Sources */,
 				2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */,
 				DAD996E44CD2C2E0DB4F36B3 /* Provenance.swift in Sources */,
 				3FBF117EE3DF38F640C0F0C8 /* RawCapture.swift in Sources */,
@@ -765,7 +781,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbesUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamUITests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = pikicam;
@@ -794,7 +810,7 @@
 				MARKETING_VERSION = 2.0;
 				MTLLINKER_FLAGS = "-cikernel";
 				MTL_COMPILER_FLAGS = "-fcikernel";
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbes;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicam;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -924,7 +940,7 @@
 				MARKETING_VERSION = 2.0;
 				MTLLINKER_FLAGS = "-cikernel";
 				MTL_COMPILER_FLAGS = "-fcikernel";
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbes;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicam;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1104,7 +1120,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbesUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamUITests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = pikicam;

@@ -11,4 +11,3 @@ func mapError<A, E: Error, F: Error>(
         throw transform(error)
     }
 }
-

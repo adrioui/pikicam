@@ -2,7 +2,9 @@ import AVFoundation
 import Foundation
 
 enum DeviceConfiguration {
-    static func apply(session: AVCaptureSession, device: AVCaptureDevice, output: AVCapturePhotoOutput) throws(CaptureError) -> DeviceDeterminism {
+    static func apply(
+        session: AVCaptureSession, device: AVCaptureDevice, output: AVCapturePhotoOutput
+    ) throws(CaptureError) -> DeviceDeterminism {
         session.automaticallyConfiguresCaptureDeviceForWideColor = false
         do {
             try device.lockForConfiguration()
@@ -11,6 +13,28 @@ enum DeviceConfiguration {
         }
         defer { device.unlockForConfiguration() }
 
+        applyDeviceLocks(device)
+        device.activeColorSpace = .P3_D65
+        device.videoZoomFactor = 1.0
+
+        let centerStage: DeterminismValue
+        if AVCaptureDevice.centerStageControlMode == .app, !AVCaptureDevice.isCenterStageEnabled {
+            centerStage = .off
+        } else if AVCaptureDevice.isCenterStageEnabled {
+            centerStage = .on
+        } else {
+            centerStage = .notSupported
+        }
+        return DeviceDeterminism(
+            geometricDistortionCorrection: device.isGeometricDistortionCorrectionSupported ? .off : .notSupported,
+            centerStage: centerStage,
+            videoHDR: device.isVideoHDREnabled ? .on : (device.activeFormat.isVideoHDRSupported ? .off : .notSupported),
+            lowLightBoost: device.isLowLightBoostSupported ? .off : .notSupported,
+            colorSpace: "\(device.activeColorSpace.rawValue)"
+        )
+    }
+
+    private static func applyDeviceLocks(_ device: AVCaptureDevice) {
         if device.isGeometricDistortionCorrectionSupported {
             device.isGeometricDistortionCorrectionEnabled = false
         }
@@ -30,21 +54,6 @@ enum DeviceConfiguration {
         if device.activeFormat.isGlobalToneMappingSupported {
             device.isGlobalToneMappingEnabled = false
         }
-        device.activeColorSpace = .P3_D65
-        device.videoZoomFactor = 1.0
-
-        let determinism = DeviceDeterminism(
-            geometricDistortionCorrection: device.isGeometricDistortionCorrectionSupported ? .off : .notSupported,
-            centerStage: AVCaptureDevice.isCenterStageEnabled ? .on : (centerStageApplicable() ? .off : .notSupported),
-            videoHDR: device.isVideoHDREnabled ? .on : (device.activeFormat.isVideoHDRSupported ? .off : .notSupported),
-            lowLightBoost: device.isLowLightBoostSupported ? .off : .notSupported,
-            colorSpace: "\(device.activeColorSpace.rawValue)"
-        )
-        return determinism
-    }
-
-    private static func centerStageApplicable() -> Bool {
-        AVCaptureDevice.centerStageControlMode != .none
     }
 
     static func largestPhotoDimensions(_ device: AVCaptureDevice) -> CMVideoDimensions {
