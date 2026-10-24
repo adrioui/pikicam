@@ -7,98 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A25495160793D4679E9D858 /* AccessibilityID.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06994D63E9AA23683046332 /* AccessibilityID.swift */; };
 		0B8E190815D2E82E4F62124C /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 98B3374C413622E12D6607E8 /* IMG_1361.DNG */; };
-		0EC2D19A0236799B17E67A96 /* Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873DBA30F23DADB830935168 /* Timeout.swift */; };
-		13C58E5A7C52E918624BDF3B /* selection.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 9BDDA1EB5B78BD2C0A889DC4 /* selection.ahap */; };
-		17D7B629429B2E2B6B80BFE5 /* GessoShutterActuator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E14B80B7CB61C49CAAE7872 /* GessoShutterActuator.swift */; };
 		1A161F979B61F3E52999863C /* LinearRenderProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6908144C28D3970A79127E41 /* LinearRenderProbes.swift */; };
-		1B098AF2F18A9BA599B3EAEC /* DesignSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A42410CE4E9A02B9F4A342 /* DesignSystemTests.swift */; };
 		1B6370A173577BEC1A14FAC3 /* CaptureAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */; };
-		1E74F5220341081EC782264D /* Contrast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AB47F4C3E33223BE699134 /* Contrast.swift */; };
-		1FB47E54F3151B4001DFE332 /* RecordingIngest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F69924600179566EAD762B0 /* RecordingIngest.swift */; };
-		228B57CD97439875A331B100 /* SampleForwarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD7938D61164609F489C1F6 /* SampleForwarding.swift */; };
-		28570C4E2DD6125EFD3DBDDC /* CaptureClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */; };
-		28ED2FBA5386221C9A101FCA /* WhiteBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */; };
 		2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887529D123CA8228FAD6A638 /* PikicamApp.swift */; };
 		2CCB98A192D6BAAFBD06D8C5 /* DeviceProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDBE40BE8358B5CD0BD2DBB /* DeviceProbeTests.swift */; };
 		2DC96402AB338CAA139C2F1F /* CIRAWProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */; };
-		31FD4E453F6D22F398EF2CEA /* Journal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C56E35771EC561F80504DD /* Journal.swift */; };
 		375A37A0A499260885F0C053 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */; };
-		38DFFEA14B955EAB429B24DC /* Exposure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DBB0E1DE56A438E6C373FF /* Exposure.swift */; };
-		38E744A3AD8805F6DA029694 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1197D5FDFA6BC4DD756DF182 /* Retry.swift */; };
 		3926848F210E951B51521934 /* VideoProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7235874492D75C7625C45C39 /* VideoProbes.swift */; };
-		3AF457EB067D2483D98520AB /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = DACDE4EC81C0D9C3AEC9BEFF /* Type.swift */; };
 		3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B9A346F804B0BB91E8939 /* CameraEngine.swift */; };
-		3C8B1D199631EFB93EA7BBF2 /* PhotoCaptureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */; };
-		3D484A2FA8B8CD7E53BE554C /* EmulsionToggleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66250CB3F81BE7179872BEA7 /* EmulsionToggleCard.swift */; };
-		3D778785378AF74C82C5E1C0 /* DNGInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B957650F0DB5AB9B292B687E /* DNGInspector.swift */; };
-		3FBF117EE3DF38F640C0F0C8 /* RawCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686A046A18302A7BC02F4C12 /* RawCapture.swift */; };
-		448D2E0F773D4446093E3FBE /* DevelopDeviceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED028F68B1F8BA52C58AD1DF /* DevelopDeviceTests.swift */; };
-		47C6EABA551E52334E3BF81D /* CareLabelStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7045E79CA44DD6FCE3E37ED0 /* CareLabelStrip.swift */; };
-		4888FA9BAF529F17195E9383 /* rigidPop.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 625E72A19005E200DDE4E8AD /* rigidPop.ahap */; };
-		4D8F23AD7FC77900E124FD71 /* PikicamLook.ci.metal in Sources */ = {isa = PBXBuildFile; fileRef = 1AA27C1E07EBA56E3E139BF3 /* PikicamLook.ci.metal */; };
 		50CDB03EA96802020A32899C /* PhotoKitProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */; };
-		57802685C9CDC820332AC50F /* InMemoryLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7635A3ED7F1F113BA3EAE4 /* InMemoryLibrary.swift */; };
-		582432D6BFF7C636FDC9A6EB /* NumericLineMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = F648ABF4BD7EAF9C7833BBF8 /* NumericLineMatrix.swift */; };
-		586584B4C37C88BE8C86001F /* TurretFocalSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A4BC5A88ECA33506449C34 /* TurretFocalSelector.swift */; };
-		595D632D299D7EEB5039F0B2 /* FakeScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4285814AABE13983184F3C76 /* FakeScenario.swift */; };
-		5D36BA565BB16F30E62CEA62 /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0D5B13CB1A8795EA059977 /* DomainTests.swift */; };
 		612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */; };
-		677729E7963020E9A1476F90 /* PikicamLook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F754622E4E133DC68C88D68 /* PikicamLook.swift */; };
 		69E3DD46349D8EA6B9EB4423 /* WalkSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */; };
-		6E6E3B64CA1B7CBB0B28B896 /* AVRecordingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */; };
-		6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */; };
-		731A3F73AF8700766E394A93 /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */; };
 		76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CF9A0660C9DEBB114750C83 /* Assets.xcassets */; };
-		7B0528A58961F31CE0D6348E /* Capabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96239A3ECC56F3051890D21D /* Capabilities.swift */; };
-		7E2FA499D2F61BAFACF070A3 /* Mono.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BB16AC988E55DE2E6F0348 /* Mono.swift */; };
 		81A30DFE03410B195350628D /* CameraScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */; };
-		8411F9361D2161E3689866C6 /* States.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB28E693B4AB32F016CBECB /* States.swift */; };
-		8A580C8B90967442796F57BE /* Plate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3734C6986B133EA72D97C5 /* Plate.swift */; };
 		8A5B8B55E31FF7B2E1F23219 /* CompileProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */; };
 		8CC168732F5D8E4CA64BD8BD /* ProbeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */; };
-		8E44C00D67FB58F5EEB1E006 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = B196CB6431C9550E2E7F87F6 /* OFL.txt */; };
 		9319638C03690CBFE6FE3A0C /* CameraProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */; };
-		933506FA97EE297715770CC9 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D3EC46DB11D6AAE4D73A80 /* Recording.swift */; };
 		938BDEC7C044D0F646B6497E /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */; };
-		94A0A4E2ABD69EB2E7CC2785 /* TactileCalibrationDial.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16DBC6F66F0450A9F23B5C4 /* TactileCalibrationDial.swift */; };
-		95677364DF52996B46FA3C89 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5947D497D6E6158AB5DBB00 /* Scan.swift */; };
-		96EA61A58BB8425781050C7E /* Look.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0D726379232FD7E0BB5B63E /* Look.swift */; };
-		985B329C9F3411A483D3FAA8 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC2BCB32E034EF47766F9D /* Tokens.swift */; };
-		A12CF5D8C991709BA0FB39C0 /* PermissionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC51664E53026518100C01AC /* PermissionClient.swift */; };
-		A2BA065BE19F90302265CC04 /* BastingStitchReticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432177234C34F451C1410290 /* BastingStitchReticle.swift */; };
-		A35A458C7C6B690A2E8428E1 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6888400FF2DD01A8A79AF3D /* Palette.swift */; };
-		A63C41188390ACD368E97426 /* FakeRecordingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC441726CA40A2C6B638F465 /* FakeRecordingClient.swift */; };
-		A8BEFFFE9BAC2CEAEE97503E /* ArchiveRollSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F8D74B114CD432BF4A3CE6 /* ArchiveRollSummary.swift */; };
-		B009B04DEEE9F9023B45E175 /* FakeCaptureClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F918EB3FFECF7FF154A61C /* FakeCaptureClient.swift */; };
-		B110C4B5DA61D01E075639FD /* IDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660528AC98C489C4D856464 /* IDs.swift */; };
-		B3EC4A1B119746A8D4F21B65 /* LibraryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA71D95BDDBB30C5FE8268E0 /* LibraryItem.swift */; };
-		B4C3812B6DF765050F2BD243 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */; };
 		B8180EE680AADE77D710D171 /* BNWDeveloperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */; };
-		B978B86B513EB8229368A8F8 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11ABA19B58835186F0A043A5 /* Errors.swift */; };
-		C0D96869192AA9F7BDD06150 /* rigidImpact.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 93FC11968684D380F21B0B96 /* rigidImpact.ahap */; };
 		C1BA02DD60AB40D8D3F97E8D /* ProbeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */; };
-		C558A2C5D4268D3F70B7FC7E /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */; };
 		CAD68F1664BE24935F1FE457 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */; };
-		CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */; };
-		CCECDD66DF46D5B42228873D /* AVScanClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20356537A98A9352BFB8ECE4 /* AVScanClient.swift */; };
-		CF4D6458C4279EB5F2AF2725 /* FakeDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA78A8534D7964C94A26A81 /* FakeDeveloper.swift */; };
-		D06A765EDA4101F6C4752945 /* NeutralRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03546CE4225F655BD933B1FE /* NeutralRecipe.swift */; };
-		D5C0E1282EFC349570F6091A /* DeviceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */; };
-		D7E923819BF8FE489D2BDA03 /* MapError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF45516CA1A97E6CC6EA285 /* MapError.swift */; };
-		DAD996E44CD2C2E0DB4F36B3 /* Provenance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC403E8E534D3BF0734AFFC /* Provenance.swift */; };
-		DC96B6D385B2200B6264DC1F /* CoreImageDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B1375ED727346F8093385D /* CoreImageDeveloper.swift */; };
 		DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9400A1986D8108D34D521A2 /* RootView.swift */; };
-		E105647A3F9036E1926FB503 /* Focus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66C6932B9E473D82CE38CB6 /* Focus.swift */; };
-		E2514AD5F5755F211572F248 /* SupportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFC18A03572523B086FEFB3 /* SupportTests.swift */; };
 		E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C27BCE63799CBDCBDA315B /* WalkMark.swift */; };
 		EAFEFA50A3D2939A439CC1BE /* PhotoDelegateBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */; };
 		EFC70894ACA0C05FECCAE5AF /* fixture-bayer-rich.dng in Resources */ = {isa = PBXBuildFile; fileRef = 08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */; };
 		F1422961B00FB1F370B2FD21 /* BNWDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */; };
-		F63CDB0C653DE37240AD8703 /* PhotoBoundary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */; };
-		FCC13A048657C2DE47175380 /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7E39CAE346D031A4B9C4B4 /* Encoder.swift */; };
-		FE46867B09484C65FCDB07C4 /* FrameGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B484C943D545D36BE031106 /* FrameGeometry.swift */; };
 		FE5EAD67229E1969D29138BF /* ProbeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19A85566866AEDF721E8144 /* ProbeApp.swift */; };
 /* End PBXBuildFile section */
 
@@ -134,125 +68,44 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		03546CE4225F655BD933B1FE /* NeutralRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeutralRecipe.swift; sourceTree = "<group>"; };
-		03C56E35771EC561F80504DD /* Journal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Journal.swift; sourceTree = "<group>"; };
 		04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSupport.swift; sourceTree = "<group>"; };
-		07DBB0E1DE56A438E6C373FF /* Exposure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exposure.swift; sourceTree = "<group>"; };
 		08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */ = {isa = PBXFileReference; path = "fixture-bayer-rich.dng"; sourceTree = "<group>"; };
-		0B484C943D545D36BE031106 /* FrameGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameGeometry.swift; sourceTree = "<group>"; };
-		1197D5FDFA6BC4DD756DF182 /* Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Retry.swift; sourceTree = "<group>"; };
-		11ABA19B58835186F0A043A5 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
-		1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
-		1AA27C1E07EBA56E3E139BF3 /* PikicamLook.ci.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PikicamLook.ci.metal; sourceTree = "<group>"; };
-		20356537A98A9352BFB8ECE4 /* AVScanClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVScanClient.swift; sourceTree = "<group>"; };
 		22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScreen.swift; sourceTree = "<group>"; };
-		24B1375ED727346F8093385D /* CoreImageDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreImageDeveloper.swift; sourceTree = "<group>"; };
-		27F918EB3FFECF7FF154A61C /* FakeCaptureClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeCaptureClient.swift; sourceTree = "<group>"; };
 		2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkSmokeUITests.swift; sourceTree = "<group>"; };
-		2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
-		32F8D74B114CD432BF4A3CE6 /* ArchiveRollSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRollSummary.swift; sourceTree = "<group>"; };
 		35DD3B3E04FF2F30821162B4 /* pikicam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureClient.swift; sourceTree = "<group>"; };
-		40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpaceMono-Bold.ttf"; sourceTree = "<group>"; };
-		4285814AABE13983184F3C76 /* FakeScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeScenario.swift; sourceTree = "<group>"; };
-		432177234C34F451C1410290 /* BastingStitchReticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BastingStitchReticle.swift; sourceTree = "<group>"; };
 		44A0DB1F83FE22CE5A81780B /* pikicamDeviceTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamDeviceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNWDeveloperTests.swift; sourceTree = "<group>"; };
-		5F69924600179566EAD762B0 /* RecordingIngest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingIngest.swift; sourceTree = "<group>"; };
 		6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeUITests.swift; sourceTree = "<group>"; };
-		625E72A19005E200DDE4E8AD /* rigidPop.ahap */ = {isa = PBXFileReference; path = rigidPop.ahap; sourceTree = "<group>"; };
 		625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
-		66250CB3F81BE7179872BEA7 /* EmulsionToggleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulsionToggleCard.swift; sourceTree = "<group>"; };
-		686A046A18302A7BC02F4C12 /* RawCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawCapture.swift; sourceTree = "<group>"; };
 		6908144C28D3970A79127E41 /* LinearRenderProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearRenderProbes.swift; sourceTree = "<group>"; };
 		6CF9A0660C9DEBB114750C83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7045E79CA44DD6FCE3E37ED0 /* CareLabelStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareLabelStrip.swift; sourceTree = "<group>"; };
 		70C27BCE63799CBDCBDA315B /* WalkMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkMark.swift; sourceTree = "<group>"; };
 		71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
 		7235874492D75C7625C45C39 /* VideoProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProbes.swift; sourceTree = "<group>"; };
-		77A4BC5A88ECA33506449C34 /* TurretFocalSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurretFocalSelector.swift; sourceTree = "<group>"; };
 		78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoKitProbes.swift; sourceTree = "<group>"; };
-		7E14B80B7CB61C49CAAE7872 /* GessoShutterActuator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GessoShutterActuator.swift; sourceTree = "<group>"; };
-		84DC2BCB32E034EF47766F9D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraProbes.swift; sourceTree = "<group>"; };
 		859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNWDeveloper.swift; sourceTree = "<group>"; };
-		873DBA30F23DADB830935168 /* Timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timeout.swift; sourceTree = "<group>"; };
 		887529D123CA8228FAD6A638 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
 		8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamProbesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		8AF45516CA1A97E6CC6EA285 /* MapError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapError.swift; sourceTree = "<group>"; };
-		8CFC18A03572523B086FEFB3 /* SupportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportTests.swift; sourceTree = "<group>"; };
-		8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDelegate.swift; sourceTree = "<group>"; };
-		91AB47F4C3E33223BE699134 /* Contrast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contrast.swift; sourceTree = "<group>"; };
-		93FC11968684D380F21B0B96 /* rigidImpact.ahap */ = {isa = PBXFileReference; path = rigidImpact.ahap; sourceTree = "<group>"; };
-		96239A3ECC56F3051890D21D /* Capabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Capabilities.swift; sourceTree = "<group>"; };
-		9660528AC98C489C4D856464 /* IDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDs.swift; sourceTree = "<group>"; };
-		96A42410CE4E9A02B9F4A342 /* DesignSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemTests.swift; sourceTree = "<group>"; };
 		98B3374C413622E12D6607E8 /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
-		9BDDA1EB5B78BD2C0A889DC4 /* selection.ahap */ = {isa = PBXFileReference; path = selection.ahap; sourceTree = "<group>"; };
-		9DC403E8E534D3BF0734AFFC /* Provenance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provenance.swift; sourceTree = "<group>"; };
-		9F754622E4E133DC68C88D68 /* PikicamLook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamLook.swift; sourceTree = "<group>"; };
-		A0D726379232FD7E0BB5B63E /* Look.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Look.swift; sourceTree = "<group>"; };
 		A1DEEC6C66660AC9680CF8B9 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
 		A76B9A346F804B0BB91E8939 /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
-		A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConfiguration.swift; sourceTree = "<group>"; };
-		AA7E39CAE346D031A4B9C4B4 /* Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encoder.swift; sourceTree = "<group>"; };
-		B196CB6431C9550E2E7F87F6 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 		B19A85566866AEDF721E8144 /* ProbeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeApp.swift; sourceTree = "<group>"; };
-		B957650F0DB5AB9B292B687E /* DNGInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNGInspector.swift; sourceTree = "<group>"; };
-		BA71D95BDDBB30C5FE8268E0 /* LibraryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryItem.swift; sourceTree = "<group>"; };
-		BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureClient.swift; sourceTree = "<group>"; };
-		BC441726CA40A2C6B638F465 /* FakeRecordingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRecordingClient.swift; sourceTree = "<group>"; };
-		C06994D63E9AA23683046332 /* AccessibilityID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityID.swift; sourceTree = "<group>"; };
-		C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoBoundary.swift; sourceTree = "<group>"; };
 		C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicamProbes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureAgent.swift; sourceTree = "<group>"; };
-		CBA78A8534D7964C94A26A81 /* FakeDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeDeveloper.swift; sourceTree = "<group>"; };
-		CC51664E53026518100C01AC /* PermissionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionClient.swift; sourceTree = "<group>"; };
-		CE0D5B13CB1A8795EA059977 /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
-		CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBalance.swift; sourceTree = "<group>"; };
-		CFD7938D61164609F489C1F6 /* SampleForwarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleForwarding.swift; sourceTree = "<group>"; };
-		D3BB16AC988E55DE2E6F0348 /* Mono.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mono.swift; sourceTree = "<group>"; };
-		D6888400FF2DD01A8A79AF3D /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
-		DACDE4EC81C0D9C3AEC9BEFF /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
 		DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompileProbes.swift; sourceTree = "<group>"; };
 		E07EF371F48A630494030106 /* pikicamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveScreen.swift; sourceTree = "<group>"; };
 		E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRAWProbes.swift; sourceTree = "<group>"; };
-		E5947D497D6E6158AB5DBB00 /* Scan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
-		E66C6932B9E473D82CE38CB6 /* Focus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Focus.swift; sourceTree = "<group>"; };
-		E6D3EC46DB11D6AAE4D73A80 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDelegateBox.swift; sourceTree = "<group>"; };
-		EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRequest.swift; sourceTree = "<group>"; };
 		EAFE175C489BFB6A82EDB6FA /* ProbesBridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProbesBridgingHeader.h; sourceTree = "<group>"; };
-		EB7635A3ED7F1F113BA3EAE4 /* InMemoryLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryLibrary.swift; sourceTree = "<group>"; };
-		ED028F68B1F8BA52C58AD1DF /* DevelopDeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopDeviceTests.swift; sourceTree = "<group>"; };
-		ED3734C6986B133EA72D97C5 /* Plate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plate.swift; sourceTree = "<group>"; };
-		F16DBC6F66F0450A9F23B5C4 /* TactileCalibrationDial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TactileCalibrationDial.swift; sourceTree = "<group>"; };
-		F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVRecordingClient.swift; sourceTree = "<group>"; };
-		F648ABF4BD7EAF9C7833BBF8 /* NumericLineMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericLineMatrix.swift; sourceTree = "<group>"; };
 		F9400A1986D8108D34D521A2 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		FCDBE40BE8358B5CD0BD2DBB /* DeviceProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceProbeTests.swift; sourceTree = "<group>"; };
-		FEB28E693B4AB32F016CBECB /* States.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = States.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		00F7A769CF0BAB9E43B779CD /* DesignSystem */ = {
-			isa = PBXGroup;
-			children = (
-				C06994D63E9AA23683046332 /* AccessibilityID.swift */,
-				91AB47F4C3E33223BE699134 /* Contrast.swift */,
-				D6888400FF2DD01A8A79AF3D /* Palette.swift */,
-				84DC2BCB32E034EF47766F9D /* Tokens.swift */,
-				DACDE4EC81C0D9C3AEC9BEFF /* Type.swift */,
-				3AD763DE78EFB7ECD6056D25 /* Components */,
-				3DB6155561D16C762FBD11B5 /* Fonts */,
-				DCEF4043F22D9CB5A1C9CDA8 /* Haptics */,
-			);
-			path = DesignSystem;
-			sourceTree = "<group>";
-		};
 		0449976460DF3CED20E65081 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,18 +127,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		12305CFDC7E76BF54F64B11C /* Fakes */ = {
-			isa = PBXGroup;
-			children = (
-				27F918EB3FFECF7FF154A61C /* FakeCaptureClient.swift */,
-				CBA78A8534D7964C94A26A81 /* FakeDeveloper.swift */,
-				BC441726CA40A2C6B638F465 /* FakeRecordingClient.swift */,
-				4285814AABE13983184F3C76 /* FakeScenario.swift */,
-				EB7635A3ED7F1F113BA3EAE4 /* InMemoryLibrary.swift */,
-			);
-			path = Fakes;
-			sourceTree = "<group>";
-		};
 		1579B5D36D56151414CE1252 = {
 			isa = PBXGroup;
 			children = (
@@ -298,22 +139,6 @@
 			);
 			sourceTree = "<group>";
 		};
-		17A9DB728D5EE469127B3B77 /* Capture */ = {
-			isa = PBXGroup;
-			children = (
-				BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */,
-				F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */,
-				20356537A98A9352BFB8ECE4 /* AVScanClient.swift */,
-				3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */,
-				A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */,
-				C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */,
-				8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */,
-				5F69924600179566EAD762B0 /* RecordingIngest.swift */,
-				CFD7938D61164609F489C1F6 /* SampleForwarding.swift */,
-			);
-			path = Capture;
-			sourceTree = "<group>";
-		};
 		18B503B6183B216D06A282D6 /* Probes */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,44 +148,12 @@
 			path = Probes;
 			sourceTree = "<group>";
 		};
-		3AD763DE78EFB7ECD6056D25 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				32F8D74B114CD432BF4A3CE6 /* ArchiveRollSummary.swift */,
-				432177234C34F451C1410290 /* BastingStitchReticle.swift */,
-				7045E79CA44DD6FCE3E37ED0 /* CareLabelStrip.swift */,
-				66250CB3F81BE7179872BEA7 /* EmulsionToggleCard.swift */,
-				7E14B80B7CB61C49CAAE7872 /* GessoShutterActuator.swift */,
-				F648ABF4BD7EAF9C7833BBF8 /* NumericLineMatrix.swift */,
-				ED3734C6986B133EA72D97C5 /* Plate.swift */,
-				F16DBC6F66F0450A9F23B5C4 /* TactileCalibrationDial.swift */,
-				77A4BC5A88ECA33506449C34 /* TurretFocalSelector.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		3DB6155561D16C762FBD11B5 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				B196CB6431C9550E2E7F87F6 /* OFL.txt */,
-				40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */,
-				2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */,
-			);
-			path = Fonts;
-			sourceTree = "<group>";
-		};
 		577127E007D104BC27D49682 /* pikicam */ = {
 			isa = PBXGroup;
 			children = (
 				6CF9A0660C9DEBB114750C83 /* Assets.xcassets */,
 				A6745F97BB471094FF3AFFCD /* App */,
 				B11A8CDDF5E8877E625397BF /* Camera */,
-				17A9DB728D5EE469127B3B77 /* Capture */,
-				00F7A769CF0BAB9E43B779CD /* DesignSystem */,
-				6E8D4DA0E7F3BA0C082A8442 /* Develop */,
-				A28705B6CB4D8593D87F0411 /* Domain */,
-				12305CFDC7E76BF54F64B11C /* Fakes */,
-				E03AE1E3FF28BD68988C13AA /* Platform */,
 				0449976460DF3CED20E65081 /* Resources */,
 				7AC2E67896AA72D923E2838D /* Support */,
 			);
@@ -371,10 +164,6 @@
 			isa = PBXGroup;
 			children = (
 				49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */,
-				96A42410CE4E9A02B9F4A342 /* DesignSystemTests.swift */,
-				ED028F68B1F8BA52C58AD1DF /* DevelopDeviceTests.swift */,
-				CE0D5B13CB1A8795EA059977 /* DomainTests.swift */,
-				8CFC18A03572523B086FEFB3 /* SupportTests.swift */,
 				D2A1959CAA9E50F5A1A3F196 /* Fixtures */,
 			);
 			path = pikicamTests;
@@ -388,25 +177,9 @@
 			path = pikicamProbesUITests;
 			sourceTree = "<group>";
 		};
-		6E8D4DA0E7F3BA0C082A8442 /* Develop */ = {
-			isa = PBXGroup;
-			children = (
-				24B1375ED727346F8093385D /* CoreImageDeveloper.swift */,
-				B957650F0DB5AB9B292B687E /* DNGInspector.swift */,
-				AA7E39CAE346D031A4B9C4B4 /* Encoder.swift */,
-				03546CE4225F655BD933B1FE /* NeutralRecipe.swift */,
-				1AA27C1E07EBA56E3E139BF3 /* PikicamLook.ci.metal */,
-				9F754622E4E133DC68C88D68 /* PikicamLook.swift */,
-			);
-			path = Develop;
-			sourceTree = "<group>";
-		};
 		7AC2E67896AA72D923E2838D /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				8AF45516CA1A97E6CC6EA285 /* MapError.swift */,
-				1197D5FDFA6BC4DD756DF182 /* Retry.swift */,
-				873DBA30F23DADB830935168 /* Timeout.swift */,
 				70C27BCE63799CBDCBDA315B /* WalkMark.swift */,
 			);
 			path = Support;
@@ -418,31 +191,6 @@
 				2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */,
 			);
 			path = pikicamUITests;
-			sourceTree = "<group>";
-		};
-		A28705B6CB4D8593D87F0411 /* Domain */ = {
-			isa = PBXGroup;
-			children = (
-				1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */,
-				96239A3ECC56F3051890D21D /* Capabilities.swift */,
-				EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */,
-				11ABA19B58835186F0A043A5 /* Errors.swift */,
-				07DBB0E1DE56A438E6C373FF /* Exposure.swift */,
-				E66C6932B9E473D82CE38CB6 /* Focus.swift */,
-				0B484C943D545D36BE031106 /* FrameGeometry.swift */,
-				9660528AC98C489C4D856464 /* IDs.swift */,
-				03C56E35771EC561F80504DD /* Journal.swift */,
-				BA71D95BDDBB30C5FE8268E0 /* LibraryItem.swift */,
-				A0D726379232FD7E0BB5B63E /* Look.swift */,
-				D3BB16AC988E55DE2E6F0348 /* Mono.swift */,
-				9DC403E8E534D3BF0734AFFC /* Provenance.swift */,
-				686A046A18302A7BC02F4C12 /* RawCapture.swift */,
-				E6D3EC46DB11D6AAE4D73A80 /* Recording.swift */,
-				E5947D497D6E6158AB5DBB00 /* Scan.swift */,
-				FEB28E693B4AB32F016CBECB /* States.swift */,
-				CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */,
-			);
-			path = Domain;
 			sourceTree = "<group>";
 		};
 		A6745F97BB471094FF3AFFCD /* App */ = {
@@ -493,24 +241,6 @@
 				98B3374C413622E12D6607E8 /* IMG_1361.DNG */,
 			);
 			path = Fixtures;
-			sourceTree = "<group>";
-		};
-		DCEF4043F22D9CB5A1C9CDA8 /* Haptics */ = {
-			isa = PBXGroup;
-			children = (
-				93FC11968684D380F21B0B96 /* rigidImpact.ahap */,
-				625E72A19005E200DDE4E8AD /* rigidPop.ahap */,
-				9BDDA1EB5B78BD2C0A889DC4 /* selection.ahap */,
-			);
-			path = Haptics;
-			sourceTree = "<group>";
-		};
-		E03AE1E3FF28BD68988C13AA /* Platform */ = {
-			isa = PBXGroup;
-			children = (
-				CC51664E53026518100C01AC /* PermissionClient.swift */,
-			);
-			path = Platform;
 			sourceTree = "<group>";
 		};
 		F307F4C593FA0F88A1617279 /* pikicamDeviceTests */ = {
@@ -708,13 +438,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */,
-				8E44C00D67FB58F5EEB1E006 /* OFL.txt in Resources */,
 				375A37A0A499260885F0C053 /* PrivacyInfo.xcprivacy in Resources */,
-				731A3F73AF8700766E394A93 /* SpaceMono-Bold.ttf in Resources */,
-				C558A2C5D4268D3F70B7FC7E /* SpaceMono-Regular.ttf in Resources */,
-				C0D96869192AA9F7BDD06150 /* rigidImpact.ahap in Resources */,
-				4888FA9BAF529F17195E9383 /* rigidPop.ahap in Resources */,
-				13C58E5A7C52E918624BDF3B /* selection.ahap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,69 +490,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */,
-				6E6E3B64CA1B7CBB0B28B896 /* AVRecordingClient.swift in Sources */,
-				CCECDD66DF46D5B42228873D /* AVScanClient.swift in Sources */,
-				0A25495160793D4679E9D858 /* AccessibilityID.swift in Sources */,
-				A8BEFFFE9BAC2CEAEE97503E /* ArchiveRollSummary.swift in Sources */,
 				612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */,
 				F1422961B00FB1F370B2FD21 /* BNWDeveloper.swift in Sources */,
-				A2BA065BE19F90302265CC04 /* BastingStitchReticle.swift in Sources */,
 				3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */,
 				81A30DFE03410B195350628D /* CameraScreen.swift in Sources */,
-				B4C3812B6DF765050F2BD243 /* CameraSettings.swift in Sources */,
-				7B0528A58961F31CE0D6348E /* Capabilities.swift in Sources */,
-				28570C4E2DD6125EFD3DBDDC /* CaptureClient.swift in Sources */,
-				CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */,
-				47C6EABA551E52334E3BF81D /* CareLabelStrip.swift in Sources */,
-				1E74F5220341081EC782264D /* Contrast.swift in Sources */,
-				DC96B6D385B2200B6264DC1F /* CoreImageDeveloper.swift in Sources */,
-				3D778785378AF74C82C5E1C0 /* DNGInspector.swift in Sources */,
-				D5C0E1282EFC349570F6091A /* DeviceConfiguration.swift in Sources */,
-				3D484A2FA8B8CD7E53BE554C /* EmulsionToggleCard.swift in Sources */,
-				FCC13A048657C2DE47175380 /* Encoder.swift in Sources */,
-				B978B86B513EB8229368A8F8 /* Errors.swift in Sources */,
-				38DFFEA14B955EAB429B24DC /* Exposure.swift in Sources */,
-				B009B04DEEE9F9023B45E175 /* FakeCaptureClient.swift in Sources */,
-				CF4D6458C4279EB5F2AF2725 /* FakeDeveloper.swift in Sources */,
-				A63C41188390ACD368E97426 /* FakeRecordingClient.swift in Sources */,
-				595D632D299D7EEB5039F0B2 /* FakeScenario.swift in Sources */,
-				E105647A3F9036E1926FB503 /* Focus.swift in Sources */,
-				FE46867B09484C65FCDB07C4 /* FrameGeometry.swift in Sources */,
-				17D7B629429B2E2B6B80BFE5 /* GessoShutterActuator.swift in Sources */,
-				B110C4B5DA61D01E075639FD /* IDs.swift in Sources */,
-				57802685C9CDC820332AC50F /* InMemoryLibrary.swift in Sources */,
-				31FD4E453F6D22F398EF2CEA /* Journal.swift in Sources */,
-				B3EC4A1B119746A8D4F21B65 /* LibraryItem.swift in Sources */,
-				96EA61A58BB8425781050C7E /* Look.swift in Sources */,
-				D7E923819BF8FE489D2BDA03 /* MapError.swift in Sources */,
-				7E2FA499D2F61BAFACF070A3 /* Mono.swift in Sources */,
-				D06A765EDA4101F6C4752945 /* NeutralRecipe.swift in Sources */,
-				582432D6BFF7C636FDC9A6EB /* NumericLineMatrix.swift in Sources */,
-				A35A458C7C6B690A2E8428E1 /* Palette.swift in Sources */,
-				A12CF5D8C991709BA0FB39C0 /* PermissionClient.swift in Sources */,
-				F63CDB0C653DE37240AD8703 /* PhotoBoundary.swift in Sources */,
-				3C8B1D199631EFB93EA7BBF2 /* PhotoCaptureDelegate.swift in Sources */,
 				2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */,
-				4D8F23AD7FC77900E124FD71 /* PikicamLook.ci.metal in Sources */,
-				677729E7963020E9A1476F90 /* PikicamLook.swift in Sources */,
-				8A580C8B90967442796F57BE /* Plate.swift in Sources */,
-				DAD996E44CD2C2E0DB4F36B3 /* Provenance.swift in Sources */,
-				3FBF117EE3DF38F640C0F0C8 /* RawCapture.swift in Sources */,
-				933506FA97EE297715770CC9 /* Recording.swift in Sources */,
-				1FB47E54F3151B4001DFE332 /* RecordingIngest.swift in Sources */,
-				38E744A3AD8805F6DA029694 /* Retry.swift in Sources */,
 				DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */,
-				228B57CD97439875A331B100 /* SampleForwarding.swift in Sources */,
-				95677364DF52996B46FA3C89 /* Scan.swift in Sources */,
-				8411F9361D2161E3689866C6 /* States.swift in Sources */,
-				94A0A4E2ABD69EB2E7CC2785 /* TactileCalibrationDial.swift in Sources */,
-				0EC2D19A0236799B17E67A96 /* Timeout.swift in Sources */,
-				985B329C9F3411A483D3FAA8 /* Tokens.swift in Sources */,
-				586584B4C37C88BE8C86001F /* TurretFocalSelector.swift in Sources */,
-				3AF457EB067D2483D98520AB /* Type.swift in Sources */,
 				E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */,
-				28ED2FBA5386221C9A101FCA /* WhiteBalance.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,10 +523,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8180EE680AADE77D710D171 /* BNWDeveloperTests.swift in Sources */,
-				1B098AF2F18A9BA599B3EAEC /* DesignSystemTests.swift in Sources */,
-				448D2E0F773D4446093E3FBE /* DevelopDeviceTests.swift in Sources */,
-				5D36BA565BB16F30E62CEA62 /* DomainTests.swift in Sources */,
-				E2514AD5F5755F211572F248 /* SupportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
