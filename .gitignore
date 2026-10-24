@@ -51,6 +51,9 @@ pikicamTests/Fixtures/*.DNG
 !/docs/artifacts/frametime
 !/docs/artifacts/frametime/*.json
 !/docs/artifacts/frametime/DECISION.md
+!/docs/artifacts/export
+!/docs/artifacts/export/*.txt
+!/docs/artifacts/export/REPORT.md
 
 !/README.md
 # Why: front door + inversion documentation.

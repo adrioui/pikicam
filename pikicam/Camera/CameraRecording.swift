@@ -45,10 +45,29 @@ extension CameraEngine {
     func stopRecording() async {
         guard isRecording else { return }
         WalkMark.mark("record-stop-requested")
+        let monoWasOn = isMonoOn
         let box = movieDelegate
         movieOutput.stopRecording()
         if let url = await box?.finishedURL() {
             WalkMark.mark("record-file-ready")
+            if monoWasOn {
+                WalkMark.mark("mono-export-begin")
+                if let rendition = await ClipLookExporter.monochromeVersion(of: url) {
+                    WalkMark.mark("mono-export-done")
+                    if ProcessInfo.processInfo.arguments.contains("-pikicam.dumpclip") {
+                        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                        let monoDest = docs.appendingPathComponent("last-mono-clip.mov")
+                        let sourceDest = docs.appendingPathComponent("last-source-clip.mov")
+                        try? FileManager.default.removeItem(at: monoDest)
+                        try? FileManager.default.copyItem(at: rendition, to: monoDest)
+                        try? FileManager.default.copyItem(at: url, to: sourceDest)
+                    }
+                    await saveClip(rendition)
+                    try? FileManager.default.removeItem(at: url)
+                    return
+                }
+                clipMessage = "Mono export failed; saved the untouched clip."
+            }
             await saveClip(url)
         } else {
             clipMessage = "Recording failed."

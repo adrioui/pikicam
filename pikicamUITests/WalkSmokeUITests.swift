@@ -92,3 +92,26 @@ extension WalkSmokeUITests {
         XCTAssertTrue(cell.waitForExistence(timeout: 15), "clip appears in archive")
     }
 }
+
+extension WalkSmokeUITests {
+    @MainActor
+    func testMonoClipExportsAndSaves() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-pikicam.dumpclip"]
+        app.launch()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        Self.dismissSystemAlerts(springboard)
+        let bnw = app.buttons["camera.bnw"]
+        XCTAssertTrue(bnw.waitForExistence(timeout: 15))
+        bnw.tap()
+        app.buttons["camera.mode.video"].tap()
+        let shutter = app.buttons["camera.shutter"]
+        XCTAssertTrue(shutter.waitForExistence(timeout: 5))
+        shutter.tap()
+        Thread.sleep(forTimeInterval: 6)
+        Self.dismissSystemAlerts(springboard)
+        app.buttons["camera.shutter"].tap()
+        let saved = app.staticTexts["Clip saved."]
+        XCTAssertTrue(saved.waitForExistence(timeout: 45), "mono export + save completes")
+    }
+}
