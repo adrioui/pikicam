@@ -1,7 +1,7 @@
 @preconcurrency import AVFoundation
 import Photos
-import SwiftUI
 import UIKit
+import SwiftUI
 
 struct CaptureResult: Sendable {
     let data: Data
@@ -12,8 +12,14 @@ struct CaptureResult: Sendable {
 @MainActor
 @Observable
 final class CameraEngine {
+    enum Mode: String, CaseIterable {
+        case photo
+        case video
+    }
+
     let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
+    private let movieOutput = AVCaptureMovieFileOutput()
     private let sessionQueue = DispatchQueue(label: "piki.pikicam.session", qos: .userInitiated)
     private var isConfigured = false
     private var pending: PendingCapture?
@@ -24,7 +30,13 @@ final class CameraEngine {
     private(set) var photosDenied = false
     private(set) var lastCapture: CaptureResult?
     private(set) var savedCount = 0
+    private(set) var isRecording = false
+    private(set) var recordingStarted: Date?
+    private(set) var clipMessage: String?
+    var mode: Mode = .photo
     var isMonoOn = false
+    private var movieDelegate: MovieRecorderBox?
+    private var audioInput: AVCaptureDeviceInput?
 
     func start() async {
         guard AVCaptureDevice.authorizationStatus(for: .video) != .denied else {
@@ -43,7 +55,7 @@ final class CameraEngine {
             return
         }
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            sessionQueue.async { [session, photoOutput] in
+            sessionQueue.async { [session, photoOutput, movieOutput] in
                 session.beginConfiguration()
                 session.sessionPreset = .photo
                 if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
@@ -54,6 +66,9 @@ final class CameraEngine {
                 }
                 if session.canAddOutput(photoOutput) {
                     session.addOutput(photoOutput)
+                }
+                if session.canAddOutput(movieOutput) {
+                    session.addOutput(movieOutput)
                 }
                 session.commitConfiguration()
                 continuation.resume()
@@ -79,6 +94,101 @@ final class CameraEngine {
         isRunning = nowRunning
     }
 
+
+    func startRecording() async {
+        guard !isRecording else { return }
+        if AVCaptureDevice.authorizationStatus(for: .audio) == .notDetermined {
+            _ = await AVCaptureDevice.requestAccess(for: .audio)
+        }
+        await attachMicIfNeeded()
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("piki-clip-\(UUID().uuidString).mov")
+        let box = MovieRecorderBox()
+        movieDelegate = box
+        movieOutput.startRecording(to: url, recordingDelegate: box)
+        isRecording = true
+        recordingStarted = Date()
+        WalkMark.mark("record-started")
+    }
+
+    private func attachMicIfNeeded() async {
+        guard audioInput == nil,
+            AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
+            let mic = AVCaptureDevice.default(for: .audio),
+            let input = try? AVCaptureDeviceInput(device: mic)
+        else {
+            clipMessage = audioInput == nil && AVCaptureDevice.authorizationStatus(for: .audio) != .authorized
+                ? "Mic off — clip will have no sound." : clipMessage
+            return
+        }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            sessionQueue.async { [session] in
+                session.beginConfiguration()
+                if session.canAddInput(input) {
+                    session.addInput(input)
+                }
+                session.commitConfiguration()
+                continuation.resume()
+            }
+        }
+        audioInput = input
+    }
+
+    func stopRecording() async {
+        guard isRecording else { return }
+        WalkMark.mark("record-stop-requested")
+        let box = movieDelegate
+        movieOutput.stopRecording()
+        if let url = await box?.finishedURL() {
+            WalkMark.mark("record-file-ready")
+            await saveClip(url)
+        } else {
+            clipMessage = "Recording failed."
+        }
+        isRecording = false
+        recordingStarted = nil
+    }
+
+    func handleAppBackground() async {
+        guard isRecording else { return }
+        let taskID = UIApplication.shared.beginBackgroundTask(withName: "clip-save")
+        await stopRecording()
+        if taskID != .invalid {
+            UIApplication.shared.endBackgroundTask(taskID)
+        }
+    }
+
+    private func saveClip(_ url: URL) async {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        guard status == .authorized || status == .limited else {
+            photosDenied = true
+            clipMessage = "Photos access denied — clip can't be saved. Allow access in Settings."
+            return
+        }
+        WalkMark.mark("clip-save-begin")
+        let saved = await Self.performVideoWrite(fileURL: url)
+        WalkMark.mark(saved ? "clip-save-done" : "clip-save-failed")
+        if saved {
+            savedCount += 1
+            clipMessage = "Clip saved."
+        } else {
+            clipMessage = "Saving the clip failed."
+        }
+        try? FileManager.default.removeItem(at: url)
+    }
+
+    nonisolated private static func performVideoWrite(fileURL: URL) async -> Bool {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+            PHPhotoLibrary.shared().performChanges {
+                let request = PHAssetCreationRequest.forAsset()
+                let options = PHAssetResourceCreationOptions()
+                options.originalFilename = fileURL.lastPathComponent
+                request.addResource(with: .video, fileURL: fileURL, options: options)
+            } completionHandler: { success, _ in
+                continuation.resume(returning: success)
+            }
+        }
+    }
 
     nonisolated private static func performPhotoWrite(
         _ change: @escaping @Sendable (PHAssetCreationRequest) -> Void
@@ -236,4 +346,39 @@ struct CameraPreviewView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: PreviewView, context: Context) {}
+}
+
+final class MovieRecorderBox: NSObject, AVCaptureFileOutputRecordingDelegate, @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<URL?, Never>?
+    private var fileURL: URL?
+    private var finished = false
+
+    func finishedURL() async -> URL? {
+        await withCheckedContinuation { continuation in
+            lock.lock()
+            if finished {
+                lock.unlock()
+                continuation.resume(returning: fileURL)
+            } else {
+                self.continuation = continuation
+                lock.unlock()
+            }
+        }
+    }
+
+    func fileOutput(
+        _ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL,
+        from connections: [AVCaptureConnection], error: Error?
+    ) {
+        lock.lock()
+        finished = true
+        fileURL = (error as? NSError)?.userInfo[AVErrorRecordingSuccessfullyFinishedKey] as? Bool == true
+            ? outputFileURL
+            : (error == nil ? outputFileURL : nil)
+        let held = continuation
+        continuation = nil
+        lock.unlock()
+        held?.resume(returning: fileURL)
+    }
 }

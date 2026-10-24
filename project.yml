@@ -46,6 +46,7 @@ targets:
         INFOPLIST_KEY_NSCameraUsageDescription: pikicam needs camera access to capture DNG raw photos with zero computational processing.
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: pikicam accesses your photo library to show and manage the DNG photos you capture.
         INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: pikicam saves the DNG photos you capture to your photo library.
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: pikicam records audio with your videos.
         INFOPLIST_KEY_UIAppFonts: "SpaceMono-Regular.ttf SpaceMono-Bold.ttf"
         MTL_COMPILER_FLAGS: -fcikernel
         MTLLINKER_FLAGS: -cikernel

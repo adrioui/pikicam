@@ -25,6 +25,8 @@ struct CameraScreen: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 Task { await engine.start() }
+            } else if phase == .background {
+                Task { await engine.handleAppBackground() }
             }
         }
         .sheet(isPresented: $isArchivePresented) {
@@ -33,6 +35,56 @@ struct CameraScreen: View {
     }
 
     private var statusRow: some View {
+        HStack {
+            modeStrip
+            Spacer()
+            if engine.isRecording {
+                recordTimer
+            } else {
+                Text("\(engine.savedCount) SAVED")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(.white.opacity(0.7))
+            }
+        }
+        .padding(.horizontal, 16)
+        .frame(height: 44)
+        .background(Color.black)
+    }
+
+    private var modeStrip: some View {
+        HStack(spacing: 8) {
+            ForEach(CameraEngine.Mode.allCases, id: \.rawValue) { mode in
+                let selected = engine.mode == mode
+                Button {
+                    engine.mode = mode
+                } label: {
+                    Text(mode.rawValue.uppercased())
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(selected ? .black : .white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(selected ? Color.white : Color.clear)
+                }
+                .accessibilityIdentifier("camera.mode.\(mode.rawValue)")
+            }
+        }
+    }
+
+    private var recordTimer: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            Text(elapsed(context.date))
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(.red)
+        }
+    }
+
+    private func elapsed(_ now: Date) -> String {
+        guard let started = engine.recordingStarted else { return "0:00" }
+        let seconds = max(0, Int(now.timeIntervalSince(started)))
+        return String(format: "%d:%02d", seconds / 60, seconds % 60)
+    }
+
+    private var statusRowLegacy: some View {
         HStack {
             Text("[ PIKICAM ]")
                 .font(.system(size: 11, weight: .bold))
@@ -49,7 +101,14 @@ struct CameraScreen: View {
 
     private var controls: some View {
         VStack(spacing: 12) {
-            monoToggle
+            if engine.mode == .photo {
+                monoToggle
+            }
+            if let clip = engine.clipMessage, engine.mode == .video {
+                Text(clip)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(.white)
+            }
             if engine.photosDenied {
                 denialBanner
             } else if let message = engine.lastMessage {
@@ -121,6 +180,14 @@ struct CameraScreen: View {
     private var shutterButton: some View {
         Button {
             Task {
+                if engine.mode == .video {
+                    if engine.isRecording {
+                        await engine.stopRecording()
+                    } else {
+                        await engine.startRecording()
+                    }
+                    return
+                }
                 WalkMark.mark("shutter-pressed")
                 if let capture = await engine.capturePhoto() {
                     WalkMark.mark("capture-returned")
@@ -130,15 +197,32 @@ struct CameraScreen: View {
         } label: {
             ZStack {
                 Circle()
-                    .strokeBorder(Color.white, lineWidth: 3)
+                    .strokeBorder(engine.mode == .video ? Color.red : Color.white, lineWidth: 3)
                     .frame(width: 72, height: 72)
-                Circle()
-                    .fill(engine.isCapturing ? Color.white.opacity(0.5) : Color.white)
-                    .frame(width: 58, height: 58)
+                if engine.mode == .video && engine.isRecording {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.red)
+                        .frame(width: 26, height: 26)
+                } else {
+                    Circle()
+                        .fill(fillColor)
+                        .frame(width: 58, height: 58)
+                }
             }
         }
         .disabled(engine.isCapturing)
-        .accessibilityLabel("Shutter")
+        .accessibilityLabel(accessoryLabel)
         .accessibilityIdentifier("camera.shutter")
+    }
+
+    private var fillColor: Color {
+        if engine.mode == .video {
+            return .red
+        }
+        return engine.isCapturing ? Color.white.opacity(0.5) : Color.white
+    }
+
+    private var accessoryLabel: String {
+        engine.mode == .video ? (engine.isRecording ? "Stop recording" : "Record") : "Shutter"
     }
 }

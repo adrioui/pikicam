@@ -59,7 +59,7 @@ struct ArchiveScreen: View {
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         options.fetchLimit = 200
-        let fetch = PHAsset.fetchAssets(with: .image, options: options)
+        let fetch = PHAsset.fetchAssets(with: options)
         var collected: [PHAsset] = []
         fetch.enumerateObjects { asset, _, _ in collected.append(asset) }
         assets = collected
@@ -78,6 +78,17 @@ struct AssetThumb: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
+            }
+            if asset.mediaType == .video {
+                VStack {
+                    Spacer()
+                    Text(String(format: "%d:%02d", Int(asset.duration) / 60, Int(asset.duration) % 60))
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(4)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.black.opacity(0.7))
+                }
             }
         }
         .frame(minWidth: 0, maxWidth: .infinity)

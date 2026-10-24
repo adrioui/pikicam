@@ -69,3 +69,26 @@ extension WalkSmokeUITests {
         XCTAssertTrue(cell.waitForExistence(timeout: 15), "mono photo appears in archive")
     }
 }
+
+extension WalkSmokeUITests {
+    @MainActor
+    func testRecordVideoClipAppearsInArchive() {
+        let app = XCUIApplication()
+        app.launch()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        Self.dismissSystemAlerts(springboard)
+        let videoMode = app.buttons["camera.mode.video"]
+        XCTAssertTrue(videoMode.waitForExistence(timeout: 15))
+        videoMode.tap()
+        let shutter = app.buttons["camera.shutter"]
+        XCTAssertTrue(shutter.waitForExistence(timeout: 5))
+        shutter.tap()
+        Thread.sleep(forTimeInterval: 8)
+        Self.dismissSystemAlerts(springboard)
+        app.buttons["camera.shutter"].tap()
+        Thread.sleep(forTimeInterval: 3)
+        app.buttons["Open archive"].tap()
+        let cell = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Photo'")).firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 15), "clip appears in archive")
+    }
+}
