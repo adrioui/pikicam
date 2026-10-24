@@ -18,7 +18,7 @@ struct Dependencies: Sendable {
             developer: CoreImageDeveloper(),
             library: PhotoKitLibrary(),
             journal: FileJournal(),
-            recording: FakeRecordingClient(scenario: .standard),
+            recording: AVRecordingClient(),
             scan: FakeScanClient(scenario: .standard),
             permissions: FakePermissions(scenario: .standard),
             motion: FakeMotion(),

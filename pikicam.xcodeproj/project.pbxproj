@@ -16,6 +16,8 @@
 		1B098AF2F18A9BA599B3EAEC /* DesignSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A42410CE4E9A02B9F4A342 /* DesignSystemTests.swift */; };
 		1B6370A173577BEC1A14FAC3 /* CaptureAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */; };
 		1E74F5220341081EC782264D /* Contrast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AB47F4C3E33223BE699134 /* Contrast.swift */; };
+		1FB47E54F3151B4001DFE332 /* RecordingIngest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F69924600179566EAD762B0 /* RecordingIngest.swift */; };
+		228B57CD97439875A331B100 /* SampleForwarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD7938D61164609F489C1F6 /* SampleForwarding.swift */; };
 		28570C4E2DD6125EFD3DBDDC /* CaptureClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */; };
 		28DD65894A70160359BF9A91 /* ViewerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E138D97093A93D774E6FA01A /* ViewerScreen.swift */; };
 		28ED2FBA5386221C9A101FCA /* WhiteBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */; };
@@ -46,6 +48,7 @@
 		66E613BECBE5F10AB1285808 /* CaptureFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AED35EC72722D35194EBF7 /* CaptureFlow.swift */; };
 		677729E7963020E9A1476F90 /* PikicamLook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F754622E4E133DC68C88D68 /* PikicamLook.swift */; };
 		6984813DC2250AFE92E3AC00 /* PhotoKitLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC5B62BEE79438EBB5F91C7 /* PhotoKitLibrary.swift */; };
+		6E6E3B64CA1B7CBB0B28B896 /* AVRecordingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */; };
 		6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */; };
 		731A3F73AF8700766E394A93 /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 40F943BD63184DEF89728321 /* SpaceMono-Bold.ttf */; };
 		752E3AD07862E76369EE379C /* CameraScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFD6383F34A46C78C80DF5B /* CameraScreen.swift */; };
@@ -160,6 +163,7 @@
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		55954D740D762A3A2AD59064 /* PermissionsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsScreen.swift; sourceTree = "<group>"; };
 		5D9C15370C01AE6892DD33A8 /* EditFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFlow.swift; sourceTree = "<group>"; };
+		5F69924600179566EAD762B0 /* RecordingIngest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingIngest.swift; sourceTree = "<group>"; };
 		6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeUITests.swift; sourceTree = "<group>"; };
 		625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
 		63AED35EC72722D35194EBF7 /* CaptureFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFlow.swift; sourceTree = "<group>"; };
@@ -212,6 +216,7 @@
 		CC51664E53026518100C01AC /* PermissionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionClient.swift; sourceTree = "<group>"; };
 		CE0D5B13CB1A8795EA059977 /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
 		CF378BDCDDCA0949A28D2453 /* WhiteBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBalance.swift; sourceTree = "<group>"; };
+		CFD7938D61164609F489C1F6 /* SampleForwarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleForwarding.swift; sourceTree = "<group>"; };
 		D3BB16AC988E55DE2E6F0348 /* Mono.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mono.swift; sourceTree = "<group>"; };
 		D6888400FF2DD01A8A79AF3D /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		D7311147759B71723A3E5A90 /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
@@ -232,6 +237,7 @@
 		EBB961E8460DDA95A1AEC2A4 /* FileJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileJournal.swift; sourceTree = "<group>"; };
 		ECF2A043BA4E9E31BB6608F9 /* shutter.ahap */ = {isa = PBXFileReference; path = shutter.ahap; sourceTree = "<group>"; };
 		ED028F68B1F8BA52C58AD1DF /* DevelopDeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopDeviceTests.swift; sourceTree = "<group>"; };
+		F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVRecordingClient.swift; sourceTree = "<group>"; };
 		F9400A1986D8108D34D521A2 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		FCDBE40BE8358B5CD0BD2DBB /* DeviceProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceProbeTests.swift; sourceTree = "<group>"; };
 		FEB28E693B4AB32F016CBECB /* States.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = States.swift; sourceTree = "<group>"; };
@@ -321,10 +327,13 @@
 			isa = PBXGroup;
 			children = (
 				BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */,
+				F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */,
 				3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */,
 				A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */,
 				C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */,
 				8F6BA17A5A2EA5DFC9D5257A /* PhotoCaptureDelegate.swift */,
+				5F69924600179566EAD762B0 /* RecordingIngest.swift */,
+				CFD7938D61164609F489C1F6 /* SampleForwarding.swift */,
 			);
 			path = Capture;
 			sourceTree = "<group>";
@@ -816,6 +825,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */,
+				6E6E3B64CA1B7CBB0B28B896 /* AVRecordingClient.swift in Sources */,
 				0A25495160793D4679E9D858 /* AccessibilityID.swift in Sources */,
 				9A2D36DFCADB34EA6F31491B /* AdjustmentCodec.swift in Sources */,
 				82EF5B67212F84F501A39D34 /* Album.swift in Sources */,
@@ -865,9 +875,11 @@
 				DAD996E44CD2C2E0DB4F36B3 /* Provenance.swift in Sources */,
 				3FBF117EE3DF38F640C0F0C8 /* RawCapture.swift in Sources */,
 				933506FA97EE297715770CC9 /* Recording.swift in Sources */,
+				1FB47E54F3151B4001DFE332 /* RecordingIngest.swift in Sources */,
 				5C253EC1661255A43FDA8C83 /* RecoveryFlow.swift in Sources */,
 				38E744A3AD8805F6DA029694 /* Retry.swift in Sources */,
 				DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */,
+				228B57CD97439875A331B100 /* SampleForwarding.swift in Sources */,
 				024E2543286282307B5461A1 /* SaveRetry.swift in Sources */,
 				95677364DF52996B46FA3C89 /* Scan.swift in Sources */,
 				8411F9361D2161E3689866C6 /* States.swift in Sources */,
