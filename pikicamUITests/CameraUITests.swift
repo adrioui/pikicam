@@ -41,8 +41,8 @@ final class CameraUITests: XCTestCase {
     @MainActor
     func testLineMatrixDormantLinesAreInactive() {
         let app = launchApp()
-        XCTAssertTrue(app.buttons["N° 00 Artisanal"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["N° 03 Fragrance"].exists, "dormant lines must not be buttons")
+        XCTAssertTrue(app.buttons["Line 0"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Line 3"].exists, "dormant lines must not be buttons")
     }
 }
 
