@@ -41,6 +41,8 @@ pikicamTests/Fixtures/*.DNG
 # Why: the recorded failures the rebuild fixes; evidence for every cut.
 !/docs/WALK.md
 # Why: the acceptance walk definition and the measured budget numbers.
+!/docs/SKIN.md
+# Why: the token table and every deliberate HIG deviation.
 
 !/README.md
 # Why: front door + inversion documentation.
