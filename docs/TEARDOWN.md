@@ -78,6 +78,18 @@ always-on text readouts, asymmetric record control, REC timecode.
 - VIEWER: "One capture at a time, full-bleed; BACK is the only chrome;
   video plays where it lies."
 
+## Anti-pattern table (what each reference gets wrong that pikicam refuses)
+
+| Reference | Anti-pattern inherited risk | pikicam refusal |
+|---|---|---|
+| Apple Camera | Icon toggles with state carried by lit/unlit color | States are TEXT, uppercase — greyscale-safe by construction |
+| Apple Camera | Mode strip is a swipe surface (invisible affordance) | Mode is explicit chips, one tap, no hidden gestures |
+| Apple Camera | Decorative blur/translucent chrome | Opaque black plates; nothing behind text |
+| Pro dialect (Blackmagic/Halide) | Sprawling manual panels (ISO/shutter/WB wheels always exposed) | Three verbs only; no manual sprawl exists to expose |
+| Pro dialect | Recording as a red-dot icon with tiny timecode | REC M:SS is an inverted text plate, arm's-length legible |
+| Both | Grid/gallery content mixed into the capture screen | Archive is a separate sheet; the feed is never cluttered |
+| Both | Color carries state (red = record, yellow = AE lock) | One grey rule line + text; color never means anything |
+
 ## Owner hand-check (fill during the walk)
 
 - [ ] Apple Camera table matches what your hands find (amend rows).

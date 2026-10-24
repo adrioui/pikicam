@@ -46,6 +46,21 @@ writes the same marks via the real pipeline) and reading
 Both photo and mono smoke tests passed on device post-skin. The human
 walk remains the ship gate; these numbers say the skin cost no budget.
 
+## Grown steps (the mandate's additions)
+
+9. Look on video is visibly the same monochrome as look on stills of the
+   same locked scene (BNW ON for both).
+10. The clip plays in-app: paging reaches it, PLAY/PAUSE and scrubber
+    work.
+11. Paging works: swipe across media in the viewer.
+12. The archive lists ONLY pikicam captures (album fetch; nothing
+    foreign).
+13. 10-minute record soak: no drops, thermal state recorded.
+
+Steps 9-12 are covered by the device smoke suite plus the parity
+artifacts; step 13 is a human soak (start record, wait 10 min, stop,
+check save + thermal note here).
+
 ## Operator notes
 
 - Free provisioning: the developer certificate must be re-trusted on the

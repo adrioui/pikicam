@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
     @State private var frameTimeProbe: FrameTimeProbe?
+    @State private var panelMode = false
 
     private var isParity: Bool {
         ProcessInfo.processInfo.arguments.contains("-pikicam.parity")
@@ -9,7 +10,9 @@ struct RootView: View {
 
     var body: some View {
         Group {
-            if isParity {
+            if panelMode {
+                PanelRamp()
+            } else if isParity {
                 Text("PARITY RUN IN PROGRESS")
                     .skin(.body)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -29,6 +32,7 @@ struct RootView: View {
                 if ProcessInfo.processInfo.arguments.contains("-pikicam.parity") {
                     await ParityCapture.run()
                 }
+                panelMode = ProcessInfo.processInfo.arguments.contains("-pikicam.panel")
             }
     }
 }

@@ -56,6 +56,8 @@ pikicamTests/Fixtures/*.DNG
 !/docs/artifacts/export/REPORT.md
 !/docs/artifacts/parity
 !/docs/artifacts/parity/REPORT.md
+!/docs/artifacts/soak
+!/docs/artifacts/soak/REPORT.md
 
 !/README.md
 # Why: front door + inversion documentation.

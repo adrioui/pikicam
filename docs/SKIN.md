@@ -23,6 +23,18 @@ Enforced by `pikicamTests/SkinTests.swift` (greps + WCAG arithmetic), run
 in `scripts/verify.sh`. A stray hex, raw font size, corner radius, or
 animation modifier anywhere under `pikicam/` fails the build.
 
+## Tone lock (PANEL CLAIM OPEN — measured by nobody)
+
+No colorimeter exists for this device. The tone definition therefore
+LOCKS to P3 D65 with the transfer math transcribed from the governing
+specs: SMPTE RP 431-2 defines the P3 primaries (0.680/0.320,
+0.265/0.690, 0.150/0.060) and D65 white; IEC 61966-2-1 defines the sRGB
+transfer function Apple's display pipeline renders through. The panel
+claim — that emitted grey values match prediction within some ΔE — is
+OPEN until the owner measures a rendered grey ramp with a colorimeter.
+Ramp mode: launch with `-pikicam.panel` and measure the 17-step 0..255
+ramp full-screen. Record results here with the instrument's name.
+
 ## Deliberate HIG deviations (each with its reason)
 
 1. Navigation bar translucency and blur are overridden with an opaque
@@ -39,10 +51,23 @@ animation modifier anywhere under `pikicam/` fails the build.
    radius; the stop affordance in video mode is a square — shape, not
    color.
 5. Sheet presentation keeps its system slide — the transition is
-   system-owned and not overridable without private API; it is listed
-   here as accepted, not chosen.
+   system-owned and not overridable without private API; listed here as
+   accepted, not chosen.
 6. `TimelineView` ticks once per second to update the timer readout; a
    clock update is not a state-change animation.
+7. The video player's scrubber is a UISlider (system control) restyled
+   only by inheritance from the black plate — its track tint is grey;
+   building a hairline scrubber from scratch would cost accessibility
+   behaviour iOS gives free. Enforced deviation, documented here.
+
+## Layout sources (one-line rationale per screen — from TEARDOWN)
+
+- CAMERA: broadcast panel — feed hero, top status line, bottom control
+  plate, all labels.
+- ARCHIVE: contact sheet — uniform grid under one rule, only what this
+  app made.
+- VIEWER: one capture full-bleed — BACK is the only chrome; video plays
+  where it lies.
 
 ## The greyscale test
 
