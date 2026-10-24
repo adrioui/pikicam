@@ -1,4 +1,3 @@
-// periphery:ignore
 import SwiftUI
 
 enum UGrid {
@@ -10,59 +9,43 @@ enum UGrid {
     static let hairline: CGFloat = 1
 }
 
-enum UMotion {
-    static let snap: Double = 0
-    static let drawer: Double = 120
-    static let focusSnap: Double = 60
-
-    static func duration(for named: String, reduceMotion: Bool) -> Double {
-        reduceMotion ? 0 : rawDuration(named)
-    }
-
-    private static func rawDuration(_ named: String) -> Double {
-        switch named {
-        case "drawer": return drawer
-        case "focusSnap": return focusSnap
-        default: return snap
-        }
-    }
-}
-
-enum MinTouchTarget {
-    static let control: CGFloat = 44
-    static let shutter: CGFloat = 88
-}
-
 enum TypeRole {
     case display
-    case title
-    case readout
-    case label
+    case headline
+    case body
+    case telemetry
     case micro
 
     var size: CGFloat {
         switch self {
-        case .display: return 18
-        case .title: return 13
-        case .readout: return 11
-        case .label: return 10
+        case .display: return 32
+        case .headline: return 20
+        case .body: return 13
+        case .telemetry: return 11
         case .micro: return 9
         }
     }
 
     var tracking: Double {
         switch self {
-        case .display: return -0.03
-        case .title: return -0.02
-        case .readout: return 0.08
-        case .label, .micro: return 0.18
+        case .display: return -0.04
+        case .headline: return 0
+        case .body: return 0.01
+        case .telemetry: return 0.08
+        case .micro: return 0.18
         }
     }
 
     var weight: Font.Weight {
         switch self {
-        case .display, .title: return .bold
+        case .display, .headline: return .bold
         default: return .regular
         }
     }
+}
+
+enum HapticProfile {
+    case rigidImpact
+    case selection
+    case rigidPop
 }

@@ -1,4 +1,3 @@
-// periphery:ignore
 import SwiftUI
 
 enum Palette {
@@ -7,8 +6,25 @@ enum Palette {
     static let calico = Color(hex: 0xD6D3CB)
     static let ash = Color(hex: 0x888681)
     static let carbon = Color(hex: 0x262524)
-    static let photometricLow = Color(hex: 0x141312)
-    static let photometricDeep = Color(hex: 0x080808)
+    static let photometricBlack = Color(hex: 0x080808)
+}
+
+enum SurfaceColor {
+    static let surface = Color(hex: 0x0E0E0E)
+    static let low = Color(hex: 0x141414)
+    static let card = Color(hex: 0x181818)
+    static let elevated = Color(hex: 0x222222)
+}
+
+enum RuleColor {
+    static let border = Color(hex: 0x2A2A2A)
+    static let borderLight = Color(hex: 0x3C3C3C)
+}
+
+enum TextColor {
+    static let primary = Color(hex: 0xF8F7F4)
+    static let muted = Color(hex: 0x9E9E9C)
+    static let dim = Color(hex: 0x6B6A68)
 }
 
 extension Color {
@@ -19,21 +35,4 @@ extension Color {
             blue: Double(hex & 0xFF) / 255
         )
     }
-
-    init(uiHex hex: UInt32) {
-        self.init(hex: hex)
-    }
-}
-
-enum PlateColor {
-    static let photometricLow = Color(hex: 0x141312)
-    static let photometricDeep = Color(hex: 0x080808)
-    static let carbon = Color(hex: 0x262524)
-}
-
-enum InkColor {
-    static let gesso = Color(hex: 0xFFFFFF)
-    static let muslin = Color(hex: 0xF4F3EF)
-    static let calico = Color(hex: 0xD6D3CB)
-    static let ash = Color(hex: 0x888681)
 }

@@ -1,4 +1,3 @@
-// periphery:ignore
 import SwiftUI
 import UIKit
 
@@ -25,7 +24,7 @@ extension Text {
 
     private func uppercase(for role: TypeRole) -> Text.Case? {
         switch role {
-        case .label, .micro: return .uppercase
+        case .telemetry, .micro: return .uppercase
         default: return nil
         }
     }
