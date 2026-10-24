@@ -93,6 +93,7 @@
 		C558A2C5D4268D3F70B7FC7E /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */; };
 		CAD68F1664BE24935F1FE457 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */; };
 		CC0E3C73066C8458AC375499 /* CaptureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE48E21E4E67934E8CD28D /* CaptureRequest.swift */; };
+		CCECDD66DF46D5B42228873D /* AVScanClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20356537A98A9352BFB8ECE4 /* AVScanClient.swift */; };
 		CF4D6458C4279EB5F2AF2725 /* FakeDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA78A8534D7964C94A26A81 /* FakeDeveloper.swift */; };
 		D06A765EDA4101F6C4752945 /* NeutralRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03546CE4225F655BD933B1FE /* NeutralRecipe.swift */; };
 		D168936AE61DB21B4B72ECD7 /* AssetBoundary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5765704B0D4CA0EB2F38EE /* AssetBoundary.swift */; };
@@ -157,6 +158,7 @@
 		16F80B2778FFFBF979D092AF /* Viewfinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Viewfinder.swift; sourceTree = "<group>"; };
 		1AA27C1E07EBA56E3E139BF3 /* PikicamLook.ci.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PikicamLook.ci.metal; sourceTree = "<group>"; };
 		1C3AA881DCECE148A12A22AA /* AdjustmentCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentCodec.swift; sourceTree = "<group>"; };
+		20356537A98A9352BFB8ECE4 /* AVScanClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVScanClient.swift; sourceTree = "<group>"; };
 		24B1375ED727346F8093385D /* CoreImageDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreImageDeveloper.swift; sourceTree = "<group>"; };
 		27F918EB3FFECF7FF154A61C /* FakeCaptureClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeCaptureClient.swift; sourceTree = "<group>"; };
 		2D654A0478AD1AFCB45B3E4B /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 			children = (
 				BB0B36C12881582CD823C1B2 /* AVCaptureClient.swift */,
 				F5AC37E034C02CE5F337C110 /* AVRecordingClient.swift */,
+				20356537A98A9352BFB8ECE4 /* AVScanClient.swift */,
 				3C5E47F12E82039BC93B9E83 /* CaptureClient.swift */,
 				A99A5D42A9962C292B6A1469 /* DeviceConfiguration.swift */,
 				C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */,
@@ -846,6 +849,7 @@
 			files = (
 				6F3836A2B526706543F94AFD /* AVCaptureClient.swift in Sources */,
 				6E6E3B64CA1B7CBB0B28B896 /* AVRecordingClient.swift in Sources */,
+				CCECDD66DF46D5B42228873D /* AVScanClient.swift in Sources */,
 				0A25495160793D4679E9D858 /* AccessibilityID.swift in Sources */,
 				9A2D36DFCADB34EA6F31491B /* AdjustmentCodec.swift in Sources */,
 				82EF5B67212F84F501A39D34 /* Album.swift in Sources */,

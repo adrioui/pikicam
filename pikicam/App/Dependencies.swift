@@ -19,7 +19,7 @@ struct Dependencies: Sendable {
             library: PhotoKitLibrary(),
             journal: FileJournal(),
             recording: AVRecordingClient(),
-            scan: FakeScanClient(scenario: .standard),
+            scan: AVScanClient(),
             permissions: FakePermissions(scenario: .standard),
             motion: FakeMotion(),
             thumbnails: DiskThumbnailFake(),
