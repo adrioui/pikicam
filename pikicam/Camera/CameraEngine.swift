@@ -94,14 +94,21 @@ final class CameraEngine {
         isRunning = nowRunning
     }
 
+    final class CreationBox: @unchecked Sendable {
+        var created: String?
+    }
+
     nonisolated private static func performPhotoWrite(
         _ change: @escaping @Sendable (PHAssetCreationRequest) -> Void
-    ) async -> Bool {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+    ) async -> String? {
+        let box = CreationBox()
+        return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
             PHPhotoLibrary.shared().performChanges {
-                change(PHAssetCreationRequest.forAsset())
+                let request = PHAssetCreationRequest.forAsset()
+                change(request)
+                box.created = request.placeholderForCreatedAsset?.localIdentifier
             } completionHandler: { success, _ in
-                continuation.resume(returning: success)
+                continuation.resume(returning: success ? box.created : nil)
             }
         }
     }
@@ -155,6 +162,18 @@ final class CameraEngine {
     }
 
     func saveToPhotos(_ result: CaptureResult) async {
+        guard let createdID = await persist(result) else {
+            lastMessage = "Saving to Photos failed. Try again."
+            return
+        }
+        savedCount += 1
+        lastMessage = nil
+        if let album = try? await Archive.ensureAlbum() {
+            try? await Archive.add(createdID, to: album)
+        }
+    }
+
+    private func persist(_ result: CaptureResult) async -> String? {
         var toSave = result
         if isMonoOn, let heic = await Look.monochromeHEIC(from: result.data) {
             WalkMark.mark("mono-develop-done")
@@ -171,14 +190,14 @@ final class CameraEngine {
         guard granted == .authorized || granted == .limited else {
             photosDenied = true
             lastMessage = "Photos access denied — captures can't be saved. Allow access in Settings."
-            return
+            return nil
         }
         photosDenied = false
         WalkMark.mark("save-begin")
         let timestamp = result.timestamp
         let data = result.data
         let isDNG = result.isDNG
-        let saved = await Self.performPhotoWrite { request in
+        let createdID = await Self.performPhotoWrite { request in
             request.creationDate = timestamp
             let options = PHAssetResourceCreationOptions()
             let formatter = DateFormatter()
@@ -187,12 +206,7 @@ final class CameraEngine {
             options.originalFilename = "PIKI_\(formatter.string(from: timestamp)).\(kind)"
             request.addResource(with: .photo, data: data, options: options)
         }
-        WalkMark.mark(saved ? "save-done" : "save-failed")
-        if saved {
-            savedCount += 1
-            lastMessage = nil
-        } else {
-            lastMessage = "Saving to Photos failed. Try again."
-        }
+        WalkMark.mark(createdID != nil ? "save-done" : "save-failed")
+        return createdID
     }
 }

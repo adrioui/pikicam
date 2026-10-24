@@ -57,13 +57,16 @@ struct ArchiveScreen: View {
     }
 
     private func reload() {
-        let options = PHFetchOptions()
-        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        options.fetchLimit = 200
-        let fetch = PHAsset.fetchAssets(with: options)
-        var collected: [PHAsset] = []
-        fetch.enumerateObjects { asset, _, _ in collected.append(asset) }
-        assets = collected
+        assets = Archive.fetchArchiveAssets()
+        Task { await runMigrationIfFirstLaunch() }
+    }
+
+    private func runMigrationIfFirstLaunch() async {
+        let dry = Archive.dryRun()
+        guard !dry.alreadyDone, dry.legacyFound > 0 || dry.beforeInAlbum == 0 else { return }
+        guard let report = try? await Archive.migrate() else { return }
+        assets = Archive.fetchArchiveAssets()
+        print("MIGRATION report:", report.beforeInAlbum, report.legacyFound, report.moved, report.foreignTouched)
     }
 }
 

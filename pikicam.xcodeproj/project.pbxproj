@@ -16,6 +16,7 @@
 		3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B9A346F804B0BB91E8939 /* CameraEngine.swift */; };
 		43C7084595061D15C3D8706B /* CameraSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8D53C969EF986048AD7C03 /* CameraSupport.swift */; };
 		4A404EF736A5911778BDF00F /* SkinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593DD3F00390FB203D0C33CA /* SkinTests.swift */; };
+		4FFB3AE5AC541E35C47275FB /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6653AC3E449A8F9569807F /* Archive.swift */; };
 		612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */; };
 		69E3DD46349D8EA6B9EB4423 /* WalkSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */; };
 		76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CF9A0660C9DEBB114750C83 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		2017C071B41CC9007F7F577E /* CameraRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraRecording.swift; sourceTree = "<group>"; };
 		22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScreen.swift; sourceTree = "<group>"; };
 		2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkSmokeUITests.swift; sourceTree = "<group>"; };
+		2E6653AC3E449A8F9569807F /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
 		35DD3B3E04FF2F30821162B4 /* pikicam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A0AD49F88BFCE86FA9D4D65 /* FrameTimeProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameTimeProbe.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 		B11A8CDDF5E8877E625397BF /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				2E6653AC3E449A8F9569807F /* Archive.swift */,
 				E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */,
 				A76B9A346F804B0BB91E8939 /* CameraEngine.swift */,
 				2017C071B41CC9007F7F577E /* CameraRecording.swift */,
@@ -311,6 +314,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FFB3AE5AC541E35C47275FB /* Archive.swift in Sources */,
 				612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */,
 				3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */,
 				2421CA08CA8B7C8E357AF69A /* CameraRecording.swift in Sources */,

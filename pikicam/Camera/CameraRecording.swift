@@ -99,26 +99,31 @@ extension CameraEngine {
             return
         }
         WalkMark.mark("clip-save-begin")
-        let saved = await Self.performVideoWrite(fileURL: url)
-        WalkMark.mark(saved ? "clip-save-done" : "clip-save-failed")
-        if saved {
+        let createdID = await Self.performVideoWrite(fileURL: url)
+        WalkMark.mark(createdID != nil ? "clip-save-done" : "clip-save-failed")
+        if let createdID {
             savedCount += 1
             clipMessage = "Clip saved."
+            if let album = try? await Archive.ensureAlbum() {
+                try? await Archive.add(createdID, to: album)
+            }
         } else {
             clipMessage = "Saving the clip failed."
         }
         try? FileManager.default.removeItem(at: url)
     }
 
-    nonisolated private static func performVideoWrite(fileURL: URL) async -> Bool {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+    nonisolated private static func performVideoWrite(fileURL: URL) async -> String? {
+        let box = CameraEngine.CreationBox()
+        return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
             PHPhotoLibrary.shared().performChanges {
                 let request = PHAssetCreationRequest.forAsset()
                 let options = PHAssetResourceCreationOptions()
                 options.originalFilename = fileURL.lastPathComponent
                 request.addResource(with: .video, fileURL: fileURL, options: options)
+                box.created = request.placeholderForCreatedAsset?.localIdentifier
             } completionHandler: { success, _ in
-                continuation.resume(returning: success)
+                continuation.resume(returning: success ? box.created : nil)
             }
         }
     }
