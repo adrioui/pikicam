@@ -19,3 +19,9 @@ pikicamTests/Fixtures/*.DNG
 # Device fixtures are git-ignored (v2 §4.3); SHA256SUMS.txt + probe-results.json are committed.
 fixtures/device/*.dng
 fixtures/device/*.mov
+
+# Working corpus (kept locally, not part of the shipped repository)
+docs/workflow/
+docs/design-source/
+docs/PROMPT-v2.md
+.agents/
