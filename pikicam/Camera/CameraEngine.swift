@@ -24,6 +24,7 @@ final class CameraEngine {
     private(set) var photosDenied = false
     private(set) var lastCapture: CaptureResult?
     private(set) var savedCount = 0
+    var isMonoOn = false
 
     func start() async {
         guard AVCaptureDevice.authorizationStatus(for: .video) != .denied else {
@@ -140,6 +141,12 @@ final class CameraEngine {
     }
 
     func saveToPhotos(_ result: CaptureResult) async {
+        var toSave = result
+        if isMonoOn, let heic = await BNWDeveloper.monochromeHEIC(from: result) {
+            WalkMark.mark("mono-develop-done")
+            toSave = CaptureResult(data: heic, isDNG: false, timestamp: result.timestamp)
+        }
+        let result = toSave
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         let granted: PHAuthorizationStatus
         if status == .notDetermined {

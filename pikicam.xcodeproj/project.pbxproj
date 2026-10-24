@@ -86,6 +86,7 @@
 		B110C4B5DA61D01E075639FD /* IDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9660528AC98C489C4D856464 /* IDs.swift */; };
 		B3EC4A1B119746A8D4F21B65 /* LibraryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA71D95BDDBB30C5FE8268E0 /* LibraryItem.swift */; };
 		B4C3812B6DF765050F2BD243 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1218551DBD7FF6A141CE7E7C /* CameraSettings.swift */; };
+		B8180EE680AADE77D710D171 /* BNWDeveloperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */; };
 		B8E85C1AD7614DA08C6F46A7 /* LibraryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94716D236FB1657382AB7E5 /* LibraryScreen.swift */; };
 		B978B86B513EB8229368A8F8 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11ABA19B58835186F0A043A5 /* Errors.swift */; };
 		BE290CA09A6923F69916C771 /* FileJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB961E8460DDA95A1AEC2A4 /* FileJournal.swift */; };
@@ -109,6 +110,7 @@
 		E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C27BCE63799CBDCBDA315B /* WalkMark.swift */; };
 		EAFEFA50A3D2939A439CC1BE /* PhotoDelegateBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */; };
 		EFC70894ACA0C05FECCAE5AF /* fixture-bayer-rich.dng in Resources */ = {isa = PBXBuildFile; fileRef = 08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */; };
+		F1422961B00FB1F370B2FD21 /* BNWDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */; };
 		F63CDB0C653DE37240AD8703 /* PhotoBoundary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54A7326EE3A9AE433A1CA9D /* PhotoBoundary.swift */; };
 		FCC13A048657C2DE47175380 /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7E39CAE346D031A4B9C4B4 /* Encoder.swift */; };
 		FE46867B09484C65FCDB07C4 /* FrameGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B484C943D545D36BE031106 /* FrameGeometry.swift */; };
@@ -173,6 +175,7 @@
 		432177234C34F451C1410290 /* BastingStitchReticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BastingStitchReticle.swift; sourceTree = "<group>"; };
 		44A0DB1F83FE22CE5A81780B /* pikicamDeviceTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamDeviceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNWDeveloperTests.swift; sourceTree = "<group>"; };
 		55954D740D762A3A2AD59064 /* PermissionsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsScreen.swift; sourceTree = "<group>"; };
 		5D9C15370C01AE6892DD33A8 /* EditFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFlow.swift; sourceTree = "<group>"; };
 		5F69924600179566EAD762B0 /* RecordingIngest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingIngest.swift; sourceTree = "<group>"; };
@@ -194,6 +197,7 @@
 		7E14B80B7CB61C49CAAE7872 /* GessoShutterActuator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GessoShutterActuator.swift; sourceTree = "<group>"; };
 		84DC2BCB32E034EF47766F9D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraProbes.swift; sourceTree = "<group>"; };
+		859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNWDeveloper.swift; sourceTree = "<group>"; };
 		873DBA30F23DADB830935168 /* Timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timeout.swift; sourceTree = "<group>"; };
 		887529D123CA8228FAD6A638 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
 		8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamProbesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -438,6 +442,7 @@
 		5EF8105C75BC74200C590770 /* pikicamTests */ = {
 			isa = PBXGroup;
 			children = (
+				49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */,
 				96A42410CE4E9A02B9F4A342 /* DesignSystemTests.swift */,
 				ED028F68B1F8BA52C58AD1DF /* DevelopDeviceTests.swift */,
 				CE0D5B13CB1A8795EA059977 /* DomainTests.swift */,
@@ -536,6 +541,7 @@
 			isa = PBXGroup;
 			children = (
 				E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */,
+				859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */,
 				A76B9A346F804B0BB91E8939 /* CameraEngine.swift */,
 				22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */,
 			);
@@ -863,6 +869,7 @@
 				A8BEFFFE9BAC2CEAEE97503E /* ArchiveRollSummary.swift in Sources */,
 				612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */,
 				D168936AE61DB21B4B72ECD7 /* AssetBoundary.swift in Sources */,
+				F1422961B00FB1F370B2FD21 /* BNWDeveloper.swift in Sources */,
 				A2BA065BE19F90302265CC04 /* BastingStitchReticle.swift in Sources */,
 				3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */,
 				81A30DFE03410B195350628D /* CameraScreen.swift in Sources */,
@@ -954,6 +961,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8180EE680AADE77D710D171 /* BNWDeveloperTests.swift in Sources */,
 				1B098AF2F18A9BA599B3EAEC /* DesignSystemTests.swift in Sources */,
 				448D2E0F773D4446093E3FBE /* DevelopDeviceTests.swift in Sources */,
 				5D36BA565BB16F30E62CEA62 /* DomainTests.swift in Sources */,

@@ -49,6 +49,7 @@ struct CameraScreen: View {
 
     private var controls: some View {
         VStack(spacing: 12) {
+            monoToggle
             if engine.photosDenied {
                 denialBanner
             } else if let message = engine.lastMessage {
@@ -68,6 +69,23 @@ struct CameraScreen: View {
         }
         .padding(.vertical, 16)
         .background(Color.black)
+    }
+
+    private var monoToggle: some View {
+        Button {
+            engine.isMonoOn.toggle()
+        } label: {
+            Text(engine.isMonoOn ? "[ BNW ON ]" : "[ BNW OFF ]")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(engine.isMonoOn ? Color.white.opacity(0.25) : Color.clear)
+                .overlay(RoundedRectangle(cornerRadius: 0).stroke(Color.white, lineWidth: 1))
+        }
+        .accessibilityLabel("Black and white toggle")
+        .accessibilityValue(engine.isMonoOn ? "On" : "Off")
+        .accessibilityIdentifier("camera.bnw")
     }
 
     private var denialBanner: some View {
