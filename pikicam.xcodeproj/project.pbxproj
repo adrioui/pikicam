@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B8E190815D2E82E4F62124C /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 98B3374C413622E12D6607E8 /* IMG_1361.DNG */; };
+		122583702A94BCE7010F0D12 /* PlayerViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA71BB0E88485E3A3E0BAF2 /* PlayerViews.swift */; };
 		1902E99A633148F56B014E90 /* ClipLookExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF1C04B88A3560265EECEE /* ClipLookExporter.swift */; };
 		2421CA08CA8B7C8E357AF69A /* CameraRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2017C071B41CC9007F7F577E /* CameraRecording.swift */; };
 		2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887529D123CA8228FAD6A638 /* PikicamApp.swift */; };
@@ -67,6 +68,7 @@
 		BA30873DAAC40D73AEF72D6E /* Skin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skin.swift; sourceTree = "<group>"; };
 		BA8D53C969EF986048AD7C03 /* CameraSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSupport.swift; sourceTree = "<group>"; };
 		BB6ADF261FD7103F0407EB99 /* LookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookTests.swift; sourceTree = "<group>"; };
+		DBA71BB0E88485E3A3E0BAF2 /* PlayerViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViews.swift; sourceTree = "<group>"; };
 		E07EF371F48A630494030106 /* pikicamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveScreen.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				08AF1C04B88A3560265EECEE /* ClipLookExporter.swift */,
 				4A0AD49F88BFCE86FA9D4D65 /* FrameTimeProbe.swift */,
 				FBA0C1BF946F047DEC67B088 /* ParityCapture.swift */,
+				DBA71BB0E88485E3A3E0BAF2 /* PlayerViews.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				FA1DCAD13049AEFDBB4D1F74 /* Look.swift in Sources */,
 				3568E3A88A187A755ECEE84F /* ParityCapture.swift in Sources */,
 				2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */,
+				122583702A94BCE7010F0D12 /* PlayerViews.swift in Sources */,
 				DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */,
 				AEB88B2768C6C27BFC50483C /* Skin.swift in Sources */,
 				E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */,
