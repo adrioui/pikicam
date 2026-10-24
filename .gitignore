@@ -45,6 +45,12 @@ pikicamTests/Fixtures/*.DNG
 # Why: the token table and every deliberate HIG deviation.
 !/docs/TEARDOWN.md
 # Why: the grammar spec the UX is built against; the amendment source.
+!/docs/artifacts
+/docs/artifacts/*
+# Why: every artifact states who measured it and how; allowed per-file.
+!/docs/artifacts/frametime
+!/docs/artifacts/frametime/*.json
+!/docs/artifacts/frametime/DECISION.md
 
 !/README.md
 # Why: front door + inversion documentation.

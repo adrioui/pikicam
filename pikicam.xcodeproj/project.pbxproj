@@ -20,6 +20,7 @@
 		81A30DFE03410B195350628D /* CameraScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */; };
 		AEB88B2768C6C27BFC50483C /* Skin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA30873DAAC40D73AEF72D6E /* Skin.swift */; };
 		B9A8B32474D47927DA23BB03 /* LookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6ADF261FD7103F0407EB99 /* LookTests.swift */; };
+		CF1100D1E1EFCFF7CE7C71E0 /* FrameTimeProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0AD49F88BFCE86FA9D4D65 /* FrameTimeProbe.swift */; };
 		DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9400A1986D8108D34D521A2 /* RootView.swift */; };
 		E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C27BCE63799CBDCBDA315B /* WalkMark.swift */; };
 		EFC70894ACA0C05FECCAE5AF /* fixture-bayer-rich.dng in Resources */ = {isa = PBXBuildFile; fileRef = 08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */; };
@@ -51,6 +52,7 @@
 		2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkSmokeUITests.swift; sourceTree = "<group>"; };
 		35DD3B3E04FF2F30821162B4 /* pikicam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A0AD49F88BFCE86FA9D4D65 /* FrameTimeProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameTimeProbe.swift; sourceTree = "<group>"; };
 		593DD3F00390FB203D0C33CA /* SkinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkinTests.swift; sourceTree = "<group>"; };
 		6CF9A0660C9DEBB114750C83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		70C27BCE63799CBDCBDA315B /* WalkMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkMark.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				2017C071B41CC9007F7F577E /* CameraRecording.swift */,
 				22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */,
 				BA8D53C969EF986048AD7C03 /* CameraSupport.swift */,
+				4A0AD49F88BFCE86FA9D4D65 /* FrameTimeProbe.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				2421CA08CA8B7C8E357AF69A /* CameraRecording.swift in Sources */,
 				81A30DFE03410B195350628D /* CameraScreen.swift in Sources */,
 				43C7084595061D15C3D8706B /* CameraSupport.swift in Sources */,
+				CF1100D1E1EFCFF7CE7C71E0 /* FrameTimeProbe.swift in Sources */,
 				FA1DCAD13049AEFDBB4D1F74 /* Look.swift in Sources */,
 				2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */,
 				DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */,
