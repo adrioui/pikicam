@@ -1,6 +1,8 @@
-# Allow-list gitignore: "*" blocks everything; "!" re-allows one path with a reason.
+# Allow-list gitignore: /* blocks every TOP-LEVEL path; ! re-allows with a reason.
+# (A bare * would also block files inside allowed directories; directory
+# contents are governed by their own /* rules below where needed.)
 
-*
+/*
 
 !/.gitignore
 # Why: the allow-list itself must be versioned so every clone agrees on what is source.
@@ -8,77 +10,50 @@
 !/project.yml
 # Why: XcodeGen source of truth; pikicam.xcodeproj is generated from it.
 
-!/pikicam.xcodeproj/
-!/pikicam.xcodeproj/project.xcworkspace/
-!/pikicam.xcodeproj/xcshareddata/
-# Why: the generated project, workspace and SHARED schemes are committed so a
-# clean clone passes `git diff --exit-code` determinism and CI can build
-# without xcodegen; xcuserdata stays blocked by "*".
-
 !/.swiftlint.yml
 # Why: strict lint is a gate; the config must not drift per machine.
 !/.swift-format
 # Why: same for formatting.
 !/.periphery.yml
-# Why: dead-code scope is a reviewed decision (D8), not local taste.
+# Why: dead-code scope is a reviewed decision, not local taste.
 
-!/fixtures/
-!/fixtures/device/SHA256SUMS.txt
-!/fixtures/device/probe-results.json
-# Why: fixture payloads are device-specific multi-MB DNGs (blocked), but their
-# SHA256 register and the probe JSON are the reproducibility evidence.
+!/pikicam
+# Why: the app is the product — the whole subtree is source.
 
-!/scripts/
-!/scripts/verify.sh
-# Why: the local verification entry point (device suite + lint + oracles).
-!/scripts/make-synthetic-bayer.py
-# Why: regenerates the dng_validate-clean parser fixture deterministically.
-!/scripts/calibrate.py
-# Why: Phase A analysis over the captured flat series.
-!/scripts/reference-diff.py
-# Why: LibRaw bracket oracle for the develop pipeline.
-!/scripts/host-render.swift
-# Why: the our-side neutral render feeding the bracket (same CIRAWFilter
-# front end as the app, on the macOS host).
-!/scripts/colorcheck.py
-# Why: deltaE2000 per ColorChecker patch (Tier 1 calibration).
-!/scripts/p3-luminance.py
-# Why: derives the mono kernel luminance constants from the P3 primaries.
-!/scripts/fuzz-corpus.py
-# Why: deterministic parser fuzz (50-variant smoke per run, full in CI).
-
-!/pikicam/
-# Why: the app is the product; all sources, assets, fonts, haptics.
-
-!/pikicamTests/
-# Why: unit + develop tests mirror the app tree.
+!/pikicamTests
+# Why: unit tests mirror the app tree.
 pikicamTests/Fixtures/*.DNG
 # Why not: multi-MB device captures; SHA-registered outside git.
 
-!/pikicamUITests/
-# Why: XCUITest suite (fake-mode journeys on device).
+!/pikicamUITests
+# Why: the one real-pipeline smoke suite (device).
 
-!/pikicamDeviceTests/
-# Why: probe assertions that need real hardware.
+!/scripts
+# Why: verification and oracle scripts are part of the product contract.
 
-!/Probes/
-# Why: the claims ledger is re-provable only if the probe app ships.
+!/pikicam.xcodeproj
+# Why: generated but committed so a clean clone passes the determinism diff
+# and builds without xcodegen; xcuserdata stays blocked.
 
-!/README.md
-# Why: inversion documentation (intent/decisions/constraints/gotchas).
-!/AGENTS.md
-# Why: operating contract for coding agents (<= 80 lines).
-!/docs/
-!/docs/DECISIONS.md
-# Why: claims ledger + deviations with reversal conditions.
+!/docs
+/docs/*
+# Why: the docs directory holds working material that stays local; each
+# shipped doc is allowed individually below.
 !/docs/DIAGNOSIS.md
 # Why: the recorded failures the rebuild fixes; evidence for every cut.
 !/docs/WALK.md
 # Why: the acceptance walk definition and the measured budget numbers.
 
+!/README.md
+# Why: front door + inversion documentation.
+!/AGENTS.md
+# Why: the operating contract for coding agents.
+
+!/fixtures
+/fixtures/*
+# Why: fixture payloads are device-specific multi-MB DNGs (blocked), but the
+# SHA register and probe JSON are reproducibility evidence.
+!/fixtures/device/SHA256SUMS.txt
+!/fixtures/device/probe-results.json
+
 .DS_Store
-build/
-.build/
-DerivedData/
-xcuserdata/
-*.xcuserstate
