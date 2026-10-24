@@ -26,6 +26,9 @@ struct CameraScreen: View {
         .preferredColorScheme(.dark)
         .task { await model.start() }
         .onDisappear { model.stop() }
+        .fullScreenCover(isPresented: $model.isLibraryPresented) {
+            LibraryScreen(deps: model.deps)
+        }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active:
@@ -132,12 +135,14 @@ struct CameraScreen: View {
                 .overlay(Rectangle().strokeBorder(InkColor.ash, lineWidth: UGrid.hairline))
                 .accessibilityIdentifier(AccessibilityID.Camera.thumbnail)
                 .accessibilityLabel("Last capture")
+                .onTapGesture { model.isLibraryPresented = true }
         } else {
             Rectangle()
                 .fill(PlateColor.carbon)
                 .frame(width: 64, height: 64)
                 .overlay(Rectangle().strokeBorder(InkColor.ash.opacity(0.5), lineWidth: UGrid.hairline))
                 .accessibilityLabel("No captures yet")
+                .onTapGesture { model.isLibraryPresented = true }
         }
     }
 

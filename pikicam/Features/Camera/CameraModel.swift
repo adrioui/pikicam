@@ -21,6 +21,7 @@ final class CameraModel {
     var lastError: String?
     var lastThumbnail: Data?
     var isLevelsVisible = false
+    var isLibraryPresented = false
 
     private var sessionTask: Task<Void, Never>?
     private var captureFlow: CaptureFlow { CaptureFlow(deps: deps) }
