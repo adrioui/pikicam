@@ -13,14 +13,12 @@ struct ArchiveScreen: View {
                 if assets.isEmpty {
                     VStack(spacing: 12) {
                         Text("NO CAPTURES")
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.white)
-                        Text("Shots you take appear here.")
-                            .font(.system(size: 11))
-                            .foregroundColor(.white.opacity(0.6))
+                            .skin(.body)
+                        Text("SHOTS YOU TAKE APPEAR HERE.")
+                            .skin(.caption, Skin.Ink.rule)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black)
+                    .background(Skin.Ink.black)
                 } else {
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 4)], spacing: 4) {
@@ -37,19 +35,22 @@ struct ArchiveScreen: View {
             }
             .navigationTitle("ARCHIVE")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(Skin.Ink.black, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("[ BACK ]") { dismiss() }
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(.white)
-                        .accessibilityIdentifier("archive.back")
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("BACK")
+                            .skin(.caption)
+                    }
+                    .accessibilityIdentifier("archive.back")
                 }
             }
             .navigationDestination(for: PHAsset.self) { asset in
                 AssetPage(asset: asset, manager: imageManager)
             }
-            .background(Color.black.ignoresSafeArea())
+            .background(Skin.Ink.black.ignoresSafeArea())
         }
         .preferredColorScheme(.dark)
         .onAppear { reload() }
@@ -73,7 +74,7 @@ struct AssetThumb: View {
 
     var body: some View {
         ZStack {
-            Rectangle().fill(Color(white: 0.12))
+            Rectangle().fill(Skin.Ink.black)
             if let image {
                 Image(uiImage: image)
                     .resizable()
@@ -83,11 +84,10 @@ struct AssetThumb: View {
                 VStack {
                     Spacer()
                     Text(String(format: "%d:%02d", Int(asset.duration) / 60, Int(asset.duration) % 60))
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(.white)
+                        .skin(.caption, Skin.Ink.black)
                         .padding(4)
                         .frame(maxWidth: .infinity)
-                        .background(Color.black.opacity(0.7))
+                        .background(Skin.Ink.white)
                 }
             }
         }
@@ -113,23 +113,25 @@ struct AssetPage: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Skin.Ink.black.ignoresSafeArea()
             if let image {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
             } else {
                 Text("LOADING…")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(.white.opacity(0.6))
+                    .skin(.caption, Skin.Ink.rule)
             }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("[ BACK ]") { dismiss() }
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(.white)
+                Button {
+                    dismiss()
+                } label: {
+                    Text("BACK")
+                        .skin(.caption)
+                }
                     .accessibilityIdentifier("photo.back")
             }
         }

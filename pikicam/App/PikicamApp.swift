@@ -2,7 +2,9 @@ import SwiftUI
 
 @main
 struct PikicamApp: App {
-    init() {}
+    init() {
+        Skin.applyGlobalChrome()
+    }
 
     var body: some Scene {
         WindowGroup {

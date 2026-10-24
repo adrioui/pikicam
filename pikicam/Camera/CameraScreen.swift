@@ -9,18 +9,17 @@ struct CameraScreen: View {
         VStack(spacing: 0) {
             statusRow
             ZStack {
-                Color.black
+                Skin.Ink.black
                 CameraPreviewView(session: engine.session)
                     .accessibilityLabel("Viewfinder")
                 if !engine.isRunning {
                     Text("STARTING CAMERA…")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(.white)
+                        .skin(.body)
                 }
             }
             controls
         }
-        .background(Color.black.ignoresSafeArea())
+        .background(Skin.Ink.black.ignoresSafeArea())
         .task { await engine.start() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -35,46 +34,32 @@ struct CameraScreen: View {
     }
 
     private var statusRow: some View {
-        HStack {
-            modeStrip
+        HStack(spacing: 8) {
+            Text("PIKICAM")
+                .skin(.caption)
             Spacer()
             if engine.isRecording {
-                recordTimer
+                recordReadout
             } else {
                 Text("\(engine.savedCount) SAVED")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(.white.opacity(0.7))
+                    .skin(.caption, Skin.Ink.rule)
             }
         }
         .padding(.horizontal, 16)
         .frame(height: 44)
-        .background(Color.black)
-    }
-
-    private var modeStrip: some View {
-        HStack(spacing: 8) {
-            ForEach(CameraEngine.Mode.allCases, id: \.rawValue) { mode in
-                let selected = engine.mode == mode
-                Button {
-                    engine.mode = mode
-                } label: {
-                    Text(mode.rawValue.uppercased())
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(selected ? .black : .white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(selected ? Color.white : Color.clear)
-                }
-                .accessibilityIdentifier("camera.mode.\(mode.rawValue)")
-            }
+        .background(Skin.Ink.black)
+        .overlay(alignment: .bottom) {
+            Rectangle().fill(Skin.Ink.rule).frame(height: Skin.hairline)
         }
     }
 
-    private var recordTimer: some View {
+    private var recordReadout: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
-            Text(elapsed(context.date))
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(.red)
+            Text("REC \(elapsed(context.date))")
+                .skin(.title, Skin.Ink.black)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .background(Skin.Ink.white)
         }
     }
 
@@ -84,39 +69,13 @@ struct CameraScreen: View {
         return String(format: "%d:%02d", seconds / 60, seconds % 60)
     }
 
-    private var statusRowLegacy: some View {
-        HStack {
-            Text("[ PIKICAM ]")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(.white)
-            Spacer()
-            Text("\(engine.savedCount) SAVED")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(.white.opacity(0.7))
-        }
-        .padding(.horizontal, 16)
-        .frame(height: 44)
-        .background(Color.black)
-    }
-
     private var controls: some View {
         VStack(spacing: 12) {
+            modeStrip
             if engine.mode == .photo {
                 monoToggle
             }
-            if let clip = engine.clipMessage, engine.mode == .video {
-                Text(clip)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(.white)
-            }
-            if engine.photosDenied {
-                denialBanner
-            } else if let message = engine.lastMessage {
-                Text(message)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 16)
-            }
+            messages
             HStack {
                 archiveButton
                 Spacer()
@@ -127,41 +86,56 @@ struct CameraScreen: View {
             .padding(.horizontal, 32)
         }
         .padding(.vertical, 16)
-        .background(Color.black)
+        .background(Skin.Ink.black)
+        .overlay(alignment: .top) {
+            Rectangle().fill(Skin.Ink.rule).frame(height: Skin.hairline)
+        }
+    }
+
+    private var modeStrip: some View {
+        HStack(spacing: 8) {
+            ForEach(CameraEngine.Mode.allCases, id: \.rawValue) { mode in
+                SkinChip(
+                    title: mode.rawValue,
+                    size: .caption,
+                    selected: engine.mode == mode
+                ) {
+                    engine.mode = mode
+                }
+                .accessibilityIdentifier("camera.mode.\(mode.rawValue)")
+            }
+        }
     }
 
     private var monoToggle: some View {
-        Button {
+        SkinChip(
+            title: engine.isMonoOn ? "BNW ON" : "BNW OFF",
+            size: .caption,
+            selected: engine.isMonoOn
+        ) {
             engine.isMonoOn.toggle()
-        } label: {
-            Text(engine.isMonoOn ? "[ BNW ON ]" : "[ BNW OFF ]")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(engine.isMonoOn ? Color.white.opacity(0.25) : Color.clear)
-                .overlay(RoundedRectangle(cornerRadius: 0).stroke(Color.white, lineWidth: 1))
         }
         .accessibilityLabel("Black and white toggle")
         .accessibilityValue(engine.isMonoOn ? "On" : "Off")
         .accessibilityIdentifier("camera.bnw")
     }
 
-    private var denialBanner: some View {
-        VStack(spacing: 8) {
-            Text("Photos access is off — captures can't be saved.")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(.white)
-            Button("OPEN SETTINGS") {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
+    @ViewBuilder
+    private var messages: some View {
+        if engine.photosDenied {
+            VStack(spacing: 8) {
+                Text("PHOTOS ACCESS IS OFF — CAPTURES CAN'T BE SAVED.")
+                    .skin(.caption)
+                SkinChip(title: "OPEN SETTINGS", size: .caption, selected: true) {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
                 }
             }
-            .font(.system(size: 11, weight: .bold))
-            .foregroundColor(.white)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(Color.white.opacity(0.2))
+        } else if engine.mode == .video, let clip = engine.clipMessage {
+            Text(clip).skin(.caption)
+        } else if let message = engine.lastMessage {
+            Text(message).skin(.caption)
         }
     }
 
@@ -170,8 +144,7 @@ struct CameraScreen: View {
             isArchivePresented = true
         } label: {
             Image(systemName: "photo.on.rectangle")
-                .font(.system(size: 22))
-                .foregroundColor(.white)
+                .skin(.title)
                 .frame(width: 64, height: 64)
         }
         .accessibilityLabel("Open archive")
@@ -197,32 +170,29 @@ struct CameraScreen: View {
         } label: {
             ZStack {
                 Circle()
-                    .strokeBorder(engine.mode == .video ? Color.red : Color.white, lineWidth: 3)
+                    .strokeBorder(Skin.Ink.white, lineWidth: 3)
                     .frame(width: 72, height: 72)
                 if engine.mode == .video && engine.isRecording {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.red)
+                    Rectangle()
+                        .fill(Skin.Ink.white)
                         .frame(width: 26, height: 26)
+                } else if engine.mode == .video {
+                    Circle()
+                        .strokeBorder(Skin.Ink.white, lineWidth: Skin.hairline)
+                        .frame(width: 58, height: 58)
                 } else {
                     Circle()
-                        .fill(fillColor)
+                        .fill(engine.isCapturing ? Skin.Ink.rule : Skin.Ink.white)
                         .frame(width: 58, height: 58)
                 }
             }
         }
         .disabled(engine.isCapturing)
-        .accessibilityLabel(accessoryLabel)
+        .accessibilityLabel(shutterLabel)
         .accessibilityIdentifier("camera.shutter")
     }
 
-    private var fillColor: Color {
-        if engine.mode == .video {
-            return .red
-        }
-        return engine.isCapturing ? Color.white.opacity(0.5) : Color.white
-    }
-
-    private var accessoryLabel: String {
+    private var shutterLabel: String {
         engine.mode == .video ? (engine.isRecording ? "Stop recording" : "Record") : "Shutter"
     }
 }
