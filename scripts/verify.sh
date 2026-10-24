@@ -21,18 +21,29 @@ xcodebuild -project pikicam.xcodeproj -scheme pikicam \
   DEVELOPMENT_TEAM=V7BF8622ZR build-for-testing
 
 echo "== device suite (real pipeline) =="
-rm -rf build/dd/results.xcresult
-set +e
-xcodebuild -project pikicam.xcodeproj -scheme pikicam \
-  -destination "platform=iOS,id=$UDID" \
-  -derivedDataPath build/dd -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM=V7BF8622ZR \
-  -resultBundlePath build/dd/results.xcresult \
-  test-without-building 2>&1 | tee build/dd/test.log | \
-  grep -E "Test case .* (passed|failed)|TEST (FAILED|EXECUTE)" | tail -10
-STATUS=${PIPESTATUS[0]}
-set -e
-[ "$STATUS" -eq 0 ] || { echo "FAIL: suite red"; exit 1; }
+run_suite() {
+  rm -rf build/dd/results.xcresult
+  set +e
+  xcodebuild -project pikicam.xcodeproj -scheme pikicam \
+    -destination "platform=iOS,id=$UDID" \
+    -derivedDataPath build/dd -allowProvisioningUpdates \
+    DEVELOPMENT_TEAM=V7BF8622ZR \
+    -resultBundlePath build/dd/results.xcresult \
+    test-without-building 2>&1 | tee build/dd/test.log | \
+    grep -E "Test case .* (passed|failed)|TEST (FAILED|EXECUTE)" | tail -10
+  STATUS=${PIPESTATUS[0]}
+  set -e
+}
+
+run_suite
+if [ "$STATUS" -ne 0 ]; then
+  if grep -qE "Timed out while enabling automation|failed to initialize for UI testing|not trusted|Failed to create a bundle instance" build/dd/test.log; then
+    echo "RUNNER FLAKE detected (automation init) — one labeled retry"
+    sleep 45
+    run_suite
+  fi
+fi
+[ "$STATUS" -eq 0 ] || { echo "FAIL: suite red (app failure, not runner flake)"; exit 1; }
 grep -qE "Test [Cc]ase .* passed" build/dd/test.log || { echo "FAIL: zero tests"; exit 1; }
 
 echo "== lint =="
