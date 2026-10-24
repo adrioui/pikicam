@@ -33,7 +33,7 @@ xcodebuild -project pikicam.xcodeproj -scheme pikicam \
 STATUS=${PIPESTATUS[0]}
 set -e
 [ "$STATUS" -eq 0 ] || { echo "FAIL: suite red"; exit 1; }
-grep -q "Test case .* passed" build/dd/test.log || { echo "FAIL: zero tests"; exit 1; }
+grep -qE "Test [Cc]ase .* passed" build/dd/test.log || { echo "FAIL: zero tests"; exit 1; }
 
 echo "== lint =="
 swiftlint lint --strict --quiet
