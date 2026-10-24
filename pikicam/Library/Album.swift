@@ -6,6 +6,7 @@ enum Album {
     private static let title = "pikicam"
 
     static func fetchOrCreateSync() throws(LibraryError) -> PHAssetCollection {
+        WalkMark.mark("album-fetch-begin")
         let semaphore = DispatchSemaphore(value: 0)
         let box = AlbumBox()
         Task {

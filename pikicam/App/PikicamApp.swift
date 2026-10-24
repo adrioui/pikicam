@@ -5,13 +5,21 @@ struct PikicamApp: App {
     @State private var dependencies: Dependencies
 
     init() {
-        self.dependencies = .fake(scenario: Self.launchScenario())
+        if Self.isSelfWalk() {
+            self.dependencies = .live()
+        } else {
+            self.dependencies = .fake(scenario: Self.launchScenario())
+        }
     }
 
     var body: some Scene {
         WindowGroup {
             RootView(dependencies: dependencies)
         }
+    }
+
+    private static func isSelfWalk() -> Bool {
+        ProcessInfo.processInfo.arguments.contains("-pikicam.selfwalk")
     }
 
     private static func launchScenario() -> FakeScenario {

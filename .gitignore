@@ -71,14 +71,10 @@ pikicamTests/Fixtures/*.DNG
 !/docs/
 !/docs/DECISIONS.md
 # Why: claims ledger + deviations with reversal conditions.
-!/docs/CALIBRATION.md
-# Why: measured numbers and the method behind each.
-!/docs/INTEROP.md
-# Why: independent-decoder matrix for DNG/HEIC outputs.
-!/docs/DEVICE-CHECKLIST.md
-# Why: owner-physical verification items.
-!/docs/COLOR.md
-# Why: working-space choices and curve/gamut citations.
+!/docs/DIAGNOSIS.md
+# Why: the recorded failures the rebuild fixes; evidence for every cut.
+!/docs/WALK.md
+# Why: the acceptance walk definition and the measured budget numbers.
 
 .DS_Store
 build/

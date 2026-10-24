@@ -19,6 +19,7 @@ final class PermissionsModel {
 
     func request(_ permission: PikicamPermission) async {
         _ = await deps.permissions.request(permission)
+        WalkMark.mark("permission-\(permission.rawValue)-requested")
         await refresh()
     }
 

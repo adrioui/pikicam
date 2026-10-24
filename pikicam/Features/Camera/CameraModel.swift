@@ -1,4 +1,5 @@
 import AVFoundation
+import Photos
 import SwiftUI
 
 @MainActor
@@ -34,6 +35,7 @@ final class CameraModel {
     }
 
     func start() async {
+        WalkMark.mark("camera-start-begin")
         await refreshCapabilities()
         sessionTask = Task { [weak self] in
             guard let states = self?.deps.capture.sessionStates else { return }
@@ -48,11 +50,22 @@ final class CameraModel {
         }
         do {
             try await deps.capture.start(lens: settings.lens)
+            WalkMark.mark("session-started")
         } catch {
+            WalkMark.mark("session-start-failed")
             lastError = "\(error)"
         }
-        let recovery = RecoveryFlow(deps: deps)
-        try? await recovery.run()
+        if ProcessInfo.processInfo.arguments.contains("-pikicam.selfwalk") {
+            WalkMark.mark("selfwalk-shutter")
+            await pressShutter()
+            await reportPhotoPermission()
+            WalkMark.mark("selfwalk-done")
+        }
+    }
+
+    private func reportPhotoPermission() async {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        WalkMark.mark("photos-permission-\(status == .authorized ? "authorized" : (status == .limited ? "limited" : "not-granted"))")
     }
 
     func stop() {
@@ -82,15 +95,18 @@ final class CameraModel {
             guard case .ready = shutterState else { return }
         }
         let request = CaptureRequest(id: CaptureID(), geometry: geometry(), settings: settings)
+        WalkMark.mark("shutter-pressed")
         shutterState = .capturing(request.id)
         do {
             let item = try await captureFlow.run(request)
+            WalkMark.mark("capture-flow-done")
             shutterState = .saving(request.id)
             lastThumbnail = try? await deps.thumbnails.thumbnail(
                 for: item, dng: Data(), look: .standard
             )
             shutterState = .ready
         } catch {
+            WalkMark.mark("capture-flow-failed")
             shutterState = .failed(error)
             lastError = "\(error)"
         }

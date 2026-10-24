@@ -94,6 +94,7 @@ actor PhotoKitLibrary: Library {
     }
 
     private func saveSync(_ change: @escaping () throws -> Void) throws(LibraryError) {
+        WalkMark.mark("performChanges-begin")
         let semaphore = DispatchSemaphore(value: 0)
         var thrown: Error?
         PHPhotoLibrary.shared().performChanges {
@@ -105,6 +106,7 @@ actor PhotoKitLibrary: Library {
             semaphore.signal()
         }
         semaphore.wait()
+        WalkMark.mark("performChanges-end")
         if let thrown {
             throw Self.map(thrown)
         }
