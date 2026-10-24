@@ -1,0 +1,26 @@
+[0m[31m[33mWarning: No project session found with id 'pikicam-r6'; creating a new session with that id.[39m[0m
+[0m[31mThe socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()[0m
+== attempt 1 Sat Oct  3 10:28:35 WIB 2026
+Working tree untouched (no stash/revert; only the new report added). Output written to `docs/workflow/research/06-adjudication.md`.
+
+## Adjudication results
+
+**C1 — 01/02 right, 03 wrong.** Full IFD parse: `ColorMatrix1` (0xC621), `ColorMatrix2` (0xC622), `CalibrationIlluminant1/2` (0xC65A/5B), `WhiteLevel` (0xC61D = 65535³) and `BaselineExposure` (0xC62A = −0.30221677) **all exist in IFD0**. 03's scan missed IFD0 and mislabelled 0xC61D (→ *WhiteLevel*, not AsShotNeutral) and 0xC62A (→ *BaselineExposure*, not ShadowScale 0xC633). Also: 0xC761 is public `NoiseProfile`, 0xC6FC is Apple-private (not `ProfileToneCurve`).
+
+**C2 — 03 right, but for the wrong reason.** `CIRAWFilter(imageData:)` resolves via `-dump-ast` to `CIFilter.init(imageData:options:)` from the **deprecated category at `CIRAWFilter_Deprecated.h:28`** → runtime class `CIRAWFilterImpl`, isa chain `CIRAWFilterImpl → CIFilter → NSObject` (not a `CIRAWFilter`). Reproduced on **iOS 26.5 sim and macOS** — so it bites on device too. All 2-arg/`imageURL:` variants return a real filter (85 methods, all setters present) and render **byte-identically**, including with a deliberately wrong `identifierHint: "public.jpeg"` → the hint value is irrelevant.
+
+**C3 — settable but inert.** HR on/off differs in **344–447 of 762 048 px (0.045–0.059 %)**, max delta 2–5/255. 02's "p99.9 208→189" was confounded with `baselineExposure`.
+
+**C4 — confirmed.** Fresh-filter `baselineExposure` = −0.30221677, delta **0.0** vs the DNG tag; forcing 0 brightens mean R 92.81 → 102.56.
+
+**C5 — partially refuted.** Hook fires on both platforms (demosaiced 3-channel linear RGB, untagged colour space, full native size), but **custom kernels break it**: bare `CIColorKernel`/`CIKernel` → `outputImage == nil`; kernel-then-filter → **silently discarded** (const 0.0 and const 64.0 both render the untouched image). `exposure = -1` is *not* equal to `CIExposureAdjust(-1)` (99.9 % of pixels differ).
+
+**C6 —02's EDR claim refuted.** `outputImage.colorSpace` is always Display P3, **but** rendering to `64RGBAHalf`/`extendedLinear` gives max **1.018 / 1.853 / 2.688** at EDR 0/1/2 — EDR *is* the linearisation lever. Plus: `render(…format:.RGBAh…)` into a malloc'd buffer **SIGTRAPs**.
+
+**C7 — reconciled.** SDK: 14-bit samples packed in 16-bit; the "12-bit" is the DNG's `BitsPerSample`, and `WhiteLevel 4095 ⇒ 12-bit` is wrong on Apple's own files. The fixture is **ProRAW, not Bayer**, so it is no evidence for Bayer depth.
+
+**C8 — documented-fact vs vendor-claim separated.** WWDC26-304: 48 MP needs balanced/quality, 24 MP is multi-frame + quality-only + deferred-only — Bayer RAW mandates `.speed` ⇒ impossible by Apple's own rules, independent of Halide's vendor claim.
+
+**C9 — 02 right; 01 and the repo comment wrong.** `AVCapturePhotoSettings(rawPixelFormatType:)` returns **`.speed`** (rawValue 1) at construction; setting `.speed` is legal; only `.quality` throws. `maxPhotoDimensions` reads (0,0).
+
+**C10 extras.** `supportedCameraModels` does **not** contain `"iPhone13,3 back camera"` (03's gating advice would reject a valid file); `CIImageProcessorKernel(source:)` doesn't exist; `input*` key path is a dead end (it's the *engine*).

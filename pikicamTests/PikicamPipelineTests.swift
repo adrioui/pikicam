@@ -117,7 +117,7 @@ final class PikicamPipelineTests: XCTestCase {
         let capture: PikicamCapture
         do {
             let saved = try await library.save(
-                CapturedDNG(data: rawData, capturedAt: Date())
+                try CapturedDNG(data: rawData, capturedAt: Date())
             )
             capture = saved
             captureForCleanup = saved
@@ -448,5 +448,143 @@ final class PikicamPipelineTests: XCTestCase {
             i += 4
         }
         return count == 0 ? 0 : Double(sum) / Double(count)
+    }
+
+    // MARK: - CapturedDNG boundary validation
+
+    func testCapturedDNGRejectsEmptyData() {
+        XCTAssertThrowsError(try CapturedDNG(data: Data(), capturedAt: Date())) { error in
+            XCTAssertEqual(error as? CapturedDNGError, .emptyData)
+        }
+    }
+
+    func testCapturedDNGRejectsInvalidZoomFactor() {
+        let bytes = Data([0x49, 0x49, 0x2A, 0x00])
+        for badZoom: CGFloat in [0, 0.5, -2, .infinity, -.infinity, .nan] {
+            do {
+                _ = try CapturedDNG(data: bytes, capturedAt: Date(), zoomFactor: badZoom)
+                XCTFail("zoom \(badZoom) must be rejected")
+            } catch let error as CapturedDNGError {
+                guard case .invalidZoomFactor = error else {
+                    XCTFail("expected invalidZoomFactor for zoom \(badZoom), got \(error)")
+                    continue
+                }
+            } catch {
+                XCTFail("unexpected error type \(error)")
+            }
+        }
+        XCTAssertNoThrow(try CapturedDNG(data: bytes, capturedAt: Date(), zoomFactor: 1.0))
+        XCTAssertNoThrow(try CapturedDNG(data: bytes, capturedAt: Date(), zoomFactor: 12.5))
+    }
+
+    // MARK: - Zero-process recipe
+
+    /// The recipe must enumerate every enhancement `CIRAWFilter` declares.
+    ///
+    /// It used to list ten controls and omit seven that Apple enables by
+    /// default — chroma noise reduction, detail, moiré reduction, shadow
+    /// boost, extended dynamic range, plus lens correction and gamut mapping
+    /// (which were listed but skipped, see the next test). Six of those have
+    /// no neutral default: `CIRAWFilter.h` documents chroma noise reduction
+    /// and moiré reduction as "the default value will vary per image". So
+    /// "the filter's default is already neutral" was never a safe assumption,
+    /// and this list is what makes the omission impossible to repeat.
+    func testZeroRecipeEnumeratesEveryEnhancementControl() {
+        let expected: Set<String> = [
+            "baselineExposure",
+            "exposure",
+            "boostAmount",
+            "boostShadowAmount",
+            "shadowBias",
+            "localToneMapAmount",
+            "luminanceNoiseReductionAmount",
+            "colorNoiseReductionAmount",
+            "sharpnessAmount",
+            "detailAmount",
+            "moireReductionAmount",
+            "contrastAmount",
+            "extendedDynamicRangeAmount",
+            "lensCorrectionEnabled",
+            "gamutMappingEnabled",
+        ]
+
+        let actual = Set(CIRAWZeroProcessor.recipe.map(\.objcProperty))
+
+        XCTAssertEqual(
+            actual, expected,
+            "The recipe must neutralize every enhancement CIRAWFilter declares. "
+                + "Missing: \(expected.subtracting(actual).sorted()). "
+                + "Unexpected: \(actual.subtracting(expected).sorted())."
+        )
+
+        // The recipe's whole claim is that nothing *subjective* is applied, so
+        // white balance (the DNG's AsShotNeutral, which is radiometric) and the
+        // decoder algorithm itself must stay out of it.
+        for forbidden in ["temperature", "tint", "neutralTemperature", "neutralTint", "decoderVersion"] {
+            XCTAssertFalse(
+                actual.contains(forbidden),
+                "\(forbidden) is not a subjective enhancement and must not be in the recipe."
+            )
+        }
+    }
+
+    /// The recipe must reach a real `CIRAWFilter`, not merely list controls.
+    ///
+    /// `apply` probes with `responds(to:)` before assigning, so a control whose
+    /// derived setter does not exist is skipped in silence. The two flags were
+    /// declared as `"isLensCorrectionEnabled"` / `"isGamutMappingEnabled"`,
+    /// which derives `setIsLensCorrectionEnabled:` — but the SDK declares them
+    /// `@property(readwrite, getter= isLensCorrectionEnabled) BOOL
+    /// lensCorrectionEnabled`, so the real selector is
+    /// `setLensCorrectionEnabled:`. Both probes therefore failed and neither
+    /// flag was ever applied. Reading the values back is the only proof.
+    func testZeroRecipeReachesEveryControlOnARealFilter() async throws {
+        guard let dngData = try loadDNGFixture() else {
+            throw XCTSkip("DNG fixture missing — copy one into pikicamTests/Fixtures/ or run on a device.")
+        }
+        guard let filter = CIRAWFilter(imageData: dngData) else {
+            throw XCTSkip("CIRAWFilter could not decode the fixture in this environment.")
+        }
+
+        // Every entry must be settable here, or the probe skips it and the
+        // value assertions below would pass vacuously.
+        for entry in CIRAWZeroProcessor.recipe {
+            let setter = Selector(
+                "set" + entry.objcProperty.prefix(1).uppercased() + entry.objcProperty.dropFirst() + ":"
+            )
+            XCTAssertTrue(
+                filter.responds(to: setter),
+                "CIRAWFilter does not respond to \(setter) — the recipe entry "
+                    + "'\(entry.objcProperty)' would be skipped in silence."
+            )
+        }
+
+        CIRAWZeroProcessor().applyZeroRecipe(filter)
+
+        let tolerance: Float = 1e-4
+        let amounts: [(String, Float)] = [
+            ("baselineExposure", filter.baselineExposure),
+            ("exposure", filter.exposure),
+            ("boostAmount", filter.boostAmount),
+            ("boostShadowAmount", filter.boostShadowAmount),
+            ("shadowBias", filter.shadowBias),
+            ("localToneMapAmount", filter.localToneMapAmount),
+            ("luminanceNoiseReductionAmount", filter.luminanceNoiseReductionAmount),
+            ("colorNoiseReductionAmount", filter.colorNoiseReductionAmount),
+            ("sharpnessAmount", filter.sharpnessAmount),
+            ("detailAmount", filter.detailAmount),
+            ("moireReductionAmount", filter.moireReductionAmount),
+            ("contrastAmount", filter.contrastAmount),
+            ("extendedDynamicRangeAmount", filter.extendedDynamicRangeAmount),
+        ]
+        for (name, value) in amounts {
+            XCTAssertEqual(
+                value, 0, accuracy: tolerance,
+                "\(name) is \(value) after the zero-process recipe; it must be 0."
+            )
+        }
+
+        XCTAssertFalse(filter.isLensCorrectionEnabled, "Lens correction must be off.")
+        XCTAssertFalse(filter.isGamutMappingEnabled, "Gamut mapping must be off.")
     }
 }

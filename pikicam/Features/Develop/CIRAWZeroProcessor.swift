@@ -12,15 +12,9 @@ import CoreImage
 /// - Camera color matrix (from DNG tags)
 /// - White balance (from AsShotNeutral)
 ///
-/// All subjective enhancements are explicitly disabled:
-/// - No exposure boost (`boostAmount = 0`)
-/// - No shadow recovery (`shadowBias = 0`)
-/// - No local tone mapping (`localToneMapAmount = 0`)
-/// - No noise reduction (`luminanceNoiseReductionAmount = 0`)
-/// - No sharpening (`sharpnessAmount = 0`)
-/// - No contrast adjustment (`contrastAmount = 0`)
-/// - No lens correction (`isLensCorrectionEnabled = false`)
-/// - No gamut mapping (`isGamutMappingEnabled = false`)
+/// Every subjective enhancement `CIRAWFilter` declares is explicitly
+/// neutralized — see ``recipe``, the single source of truth, pinned against
+/// the SDK's own property set by `PikicamPipelineTests`.
 ///
 /// Zero-process is the only recipe; there are no development modes.
 nonisolated struct CIRAWZeroProcessor: RAWProcessor {
@@ -49,43 +43,85 @@ nonisolated struct CIRAWZeroProcessor: RAWProcessor {
 
     // MARK: - Zero Recipe
 
-    /// Applies the zero-process recipe to a CIRAWFilter: every enhancement
-    /// knob zeroed or disabled explicitly.
+    /// The complete zero-process recipe: every enhancement control declared by
+    /// the iOS SDK's `CIRAWFilter.h`, paired with the typed setter that
+    /// neutralizes it.
     ///
-    /// Each control is set through its typed `CIRAWFilter` property when the
-    /// runtime implements the setter. Some runtimes (the iOS Simulator's
-    /// `CIRAWFilterImpl`, and certain devices such as the iPhone 12 mini) do
-    /// not implement every control and would raise `NSInvalidArgumentException`
-    /// on set; there, the enhancement is simply **absent** — the filter's
-    /// default is already the neutral value (0 for amounts, false for flags) —
-    /// so skipping the assignment cannot violate the recipe. The recipe's
-    /// invariant is "no enhancement is applied", and a missing control
-    /// guarantees that by construction. A missing setter is therefore never
-    /// an error; only a filter that cannot be created or produces no output
-    /// fails.
+    /// This list is the recipe's single source of truth. `PikicamPipelineTests`
+    /// asserts it matches the SDK's declared set, so a control can no longer
+    /// silently drop out of the recipe the way chroma noise reduction, detail,
+    /// moiré reduction, shadow boost, extended dynamic range, lens correction
+    /// and gamut mapping all had.
     ///
-    /// White balance is left at the DNG's AsShot neutral (the filter's
-    /// default): temperature/tint are not subjective knobs.
-    private func applyZeroRecipe(_ filter: CIRAWFilter) {
-        apply(filter, "baselineExposure") { filter.baselineExposure = 0.0 }
-        apply(filter, "exposure") { filter.exposure = 0.0 }
-        apply(filter, "boostAmount") { filter.boostAmount = 0.0 }
-        apply(filter, "shadowBias") { filter.shadowBias = 0.0 }
-        apply(filter, "localToneMapAmount") { filter.localToneMapAmount = 0.0 }
-        apply(filter, "luminanceNoiseReductionAmount") { filter.luminanceNoiseReductionAmount = 0.0 }
-        apply(filter, "sharpnessAmount") { filter.sharpnessAmount = 0.0 }
-        apply(filter, "contrastAmount") { filter.contrastAmount = 0.0 }
-        apply(filter, "isLensCorrectionEnabled") { filter.isLensCorrectionEnabled = false }
-        apply(filter, "isGamutMappingEnabled") { filter.isGamutMappingEnabled = false }
+    /// Deliberately **not** neutralized:
+    /// - `neutralTemperature` / `neutralTint` — white balance comes from the
+    ///   DNG's AsShotNeutral; temperature and tint are not subjective knobs.
+    /// - `decoderVersion` — the demosaic/decoder algorithm, not a post-filter.
+    /// - `highlightRecoveryEnabled` — deprecated as of iOS 19
+    ///   (`NS_AVAILABLE(16_0, 19_0)`); referencing it emits a deprecation
+    ///   warning, and Apple no longer treats it as a supported control.
+    static var recipe: [(objcProperty: String, neutralize: (CIRAWFilter) -> Void)] {
+        [
+            ("baselineExposure", { $0.baselineExposure = 0.0 }),
+            ("exposure", { $0.exposure = 0.0 }),
+            ("boostAmount", { $0.boostAmount = 0.0 }),
+            ("boostShadowAmount", { $0.boostShadowAmount = 0.0 }),
+            ("shadowBias", { $0.shadowBias = 0.0 }),
+            ("localToneMapAmount", { $0.localToneMapAmount = 0.0 }),
+            ("luminanceNoiseReductionAmount", { $0.luminanceNoiseReductionAmount = 0.0 }),
+            ("colorNoiseReductionAmount", { $0.colorNoiseReductionAmount = 0.0 }),
+            ("sharpnessAmount", { $0.sharpnessAmount = 0.0 }),
+            ("detailAmount", { $0.detailAmount = 0.0 }),
+            ("moireReductionAmount", { $0.moireReductionAmount = 0.0 }),
+            ("contrastAmount", { $0.contrastAmount = 0.0 }),
+            ("extendedDynamicRangeAmount", { $0.extendedDynamicRangeAmount = 0.0 }),
+            ("lensCorrectionEnabled", { $0.isLensCorrectionEnabled = false }),
+            ("gamutMappingEnabled", { $0.isGamutMappingEnabled = false }),
+        ]
+    }
+
+    /// Applies the zero-process recipe: every control in ``recipe`` set to its
+    /// neutral value wherever the runtime implements the setter.
+    ///
+    /// A missing setter is skipped rather than raised — some runtimes (the iOS
+    /// Simulator's `CIRAWFilterImpl`, and certain devices such as the iPhone 12
+    /// mini) do not implement every control and would trap on set. The skip is
+    /// safe because ``recipe`` enumerates the controls explicitly; coverage —
+    /// not the probe — is what guarantees the recipe.
+    ///
+    /// Internal rather than private so `PikicamPipelineTests` can apply the
+    /// recipe to a filter it holds and read each control back off it: a
+    /// complete recipe list is not proof that the probe reached every entry.
+    func applyZeroRecipe(_ filter: CIRAWFilter) {
+        for entry in Self.recipe {
+            apply(filter, entry.objcProperty, entry.neutralize)
+        }
     }
 
     /// Assigns a `CIRAWFilter` control through its typed property when the
-    /// runtime implements the setter. A missing setter is skipped: the
-    /// control's default is already the neutral value, so the zero-process
-    /// invariant holds without it.
-    private func apply(_ filter: CIRAWFilter, _ control: String, _ assign: () -> Void) {
-        let setter = Selector("set" + control.prefix(1).uppercased() + control.dropFirst() + ":")
+    /// runtime implements the setter; a missing setter is skipped.
+    ///
+    /// - Parameters:
+    ///   - filter: The filter to assign to.
+    ///   - objcProperty: The **Objective-C** property name, because that is
+    ///     what the runtime's setter is derived from. This is deliberately not
+    ///     always the Swift spelling: the flags are declared
+    ///     `@property(readwrite, getter= isLensCorrectionEnabled) BOOL
+    ///     lensCorrectionEnabled`, so the setter is `setLensCorrectionEnabled:`
+    ///     — deriving it from the Swift name (`isLensCorrectionEnabled`) yields
+    ///     `setIsLensCorrectionEnabled:`, which no runtime implements, and the
+    ///     probe would then skip the control in silence.
+    ///   - neutralize: The typed assignment that returns the control to its
+    ///     neutral value.
+    private func apply(
+        _ filter: CIRAWFilter,
+        _ objcProperty: String,
+        _ neutralize: (CIRAWFilter) -> Void
+    ) {
+        let setter = Selector(
+            "set" + objcProperty.prefix(1).uppercased() + objcProperty.dropFirst() + ":"
+        )
         guard filter.responds(to: setter) else { return }
-        assign()
+        neutralize(filter)
     }
 }

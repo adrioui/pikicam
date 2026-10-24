@@ -50,9 +50,59 @@ actor CaptureService {
     /// re-entering while a RAW photo is in flight.
     private var isCaptureInFlight = false
 
+    /// Notification observer tokens for out-of-band session death
+    /// (runtime error, interruption). Removed in `deinit`.
+    private var sessionObservers: [NSObjectProtocol] = []
+
     // MARK: - Initialization
 
-    init() {}
+    deinit {
+        for observer in sessionObservers {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
+    /// AVFoundation can kill or pause the session out-of-band (media
+    /// services reset, another app seizing the camera, backgrounding): those
+    /// events never flow through `startSession`/`stopSession`, so without
+    /// these observers the `isRunning` flag would keep claiming a session
+    /// AVFoundation has already torn down — and every future `start()` would
+    /// silently no-op behind a black preview.
+    ///
+    /// Registered on the actor the first time the session starts rather than
+    /// from `init`: `init` is nonisolated, so calling an isolated method there
+    /// is an actor-isolation violation (a warning today, an error under the
+    /// Swift 6 language mode). There is nothing to observe before the first
+    /// start, so the first start is the correct place.
+    private func registerSessionLifecycleObserversIfNeeded() {
+        guard sessionObservers.isEmpty else { return }
+        let center = NotificationCenter.default
+        sessionObservers.append(center.addObserver(
+            forName: AVCaptureSession.runtimeErrorNotification,
+            object: session,
+            queue: nil
+        ) { [weak self] notification in
+            // Extract what matters on the delivering queue; only a plain
+            // value hops into the actor.
+            let mediaServicesReset = (notification.userInfo?[AVCaptureSessionErrorKey] as? NSError)?
+                .code == AVError.mediaServicesWereReset.rawValue
+            Task { await self?.handleSessionRuntimeError(mediaServicesReset: mediaServicesReset) }
+        })
+        sessionObservers.append(center.addObserver(
+            forName: AVCaptureSession.wasInterruptedNotification,
+            object: session,
+            queue: nil
+        ) { [weak self] _ in
+            Task { await self?.handleSessionInterrupted() }
+        })
+        sessionObservers.append(center.addObserver(
+            forName: AVCaptureSession.interruptionEndedNotification,
+            object: session,
+            queue: nil
+        ) { [weak self] _ in
+            Task { await self?.handleSessionInterruptionEnded() }
+        })
+    }
 
     // MARK: - Session Configuration
 
@@ -101,9 +151,17 @@ actor CaptureService {
     // MARK: - Session Management
 
     /// Starts the capture session asynchronously.
+    ///
+    /// Reconciles out-of-band stops first (interruption, runtime error):
+    /// an explicit start must always attempt recovery even when our flag
+    /// still claims the session is running.
     func startSession() async throws {
+        if isRunning, !session.isRunning {
+            isRunning = false
+        }
         guard !isRunning else { return }
 
+        registerSessionLifecycleObserversIfNeeded()
         try configureSessionIfNeeded()
         session.startRunning()
         isRunning = true
@@ -111,10 +169,42 @@ actor CaptureService {
 
     /// Stops the capture session asynchronously.
     func stopSession() async {
+        if !isRunning, session.isRunning {
+            isRunning = true
+        }
         guard isRunning else { return }
 
         session.stopRunning()
         isRunning = false
+    }
+
+    /// The session died at AVFoundation's initiative. Only a media-services
+    /// reset additionally invalidates the configuration itself — everything
+    /// else leaves `isConfigured` intact so the next start reuses the inputs.
+    private func handleSessionRuntimeError(mediaServicesReset: Bool) {
+        isRunning = false
+        if mediaServicesReset {
+            isConfigured = false
+        }
+    }
+
+    /// The system paused the capture session (e.g. another app took the
+    /// camera). Publish honest stopped state; `interruptionEnded` or an
+    /// explicit `start()` recovers.
+    private func handleSessionInterrupted() {
+        if isRunning {
+            isRunning = false
+        }
+    }
+
+    /// Best-effort auto-resume when the interruption clears. Skipped while a
+    /// RAW capture is in flight (the next explicit start recovers instead of
+    /// racing the exposure) and when unconfigured (a media-services reset
+    /// needs the full `start()` path).
+    private func handleSessionInterruptionEnded() {
+        guard isConfigured, !isRunning, !isCaptureInFlight else { return }
+        session.startRunning()
+        isRunning = session.isRunning
     }
 
     /// Returns the capture session for preview layer binding.
@@ -397,8 +487,15 @@ actor CaptureService {
     /// crop is never a capture decision).
     ///
     /// - Returns: The captured full-sensor DNG and the capture timestamp.
+    /// - Parameter orientation: Provenance orientation sampled by the caller
+    ///   on the main actor **at shutter press**; when nil, sampled here
+    ///   after the exposure completes (which can mis-tag a rotation during
+    ///   the capture).
     /// - Throws: `CaptureError` if capture fails.
-    func capturePhoto(aspectRatio: AspectRatio = .ratio4x3) async throws -> CapturedDNG {
+    func capturePhoto(
+        aspectRatio: AspectRatio = .ratio4x3,
+        orientation: CaptureOrientation? = nil
+    ) async throws -> CapturedDNG {
         #if os(iOS)
         guard !isCaptureInFlight else { throw CaptureError.captureInProgress }
         isCaptureInFlight = true
@@ -492,11 +589,21 @@ actor CaptureService {
             try applyVideoZoomFactor(captureZoom, to: device)
         }
 
-        let orientation = await MainActor.run { CaptureOrientation(orientation: UIDevice.current.orientation) }
-        return CapturedDNG(
+        // Provenance orientation: prefer the caller's shutter-press sample;
+        // otherwise fall back to sampling here. (`??` cannot take an `await`
+        // on its right — autoclosures do not support concurrency.)
+        let resolvedOrientation: CaptureOrientation
+        if let orientation {
+            resolvedOrientation = orientation
+        } else {
+            resolvedOrientation = await MainActor.run {
+                CaptureOrientation(orientation: UIDevice.current.orientation)
+            }
+        }
+        return try CapturedDNG(
             data: dngData,
             capturedAt: Date(),
-            orientation: orientation,
+            orientation: resolvedOrientation,
             aspectRatio: aspectRatio,
             zoomFactor: captureZoom
         )

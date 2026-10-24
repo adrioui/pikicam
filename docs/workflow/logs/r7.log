@@ -1,0 +1,26 @@
+== attempt 1 Sat Oct  3 10:49:59 WIB 2026
+[0m[31m[33mWarning: No project session found with id 'pikicam-r7'; creating a new session with that id.[39m[0m
+== attempt 1 Sat Oct  3 10:50:13 WIB 2026
+[0m[31m[33mWarning: No project session found with id 'pikicam-r7b'; creating a new session with that id.[39m[0m
+Review complete. Output written to `docs/workflow/research/07-prompt-review.md` (1,249 lines). The uncommitted working tree is byte-for-byte untouched; all probes lived in `/tmp/pikicam-review/` and have been removed.
+
+## Verdict
+
+The prompt's **technical spine is genuinely good** — the `CIRAWFilter(imageData:)` root cause, the `photoQualityPrioritization = .speed` correction, the GDC/Center-Stage fixes, the `linearSpaceFilter` measurement and the `render(_:toBitmap:)` trap all match research 06 and the26.5 headers. But **the prompt's own executable code, its own design tokens and its own test list are internally inconsistent**, and four §6.10 exemplar snippets don't compile.
+
+### Top findings
+
+**3 BLOCKERs**
+- §6.10 rule 1's exemplar flow fails four ways: no return type yet `return item`; `mapError` never defined with an untyped closure; `isTransient: \.isTransient` → *"`any Error` has no member `isTransient`"*; nested `traced{retrying{…}}` → *"invalid conversion of thrown error type `any Error`"*.
+- §5.1's colour tokens fail §5.7/§7.5's own contrast gate: `inkSecondary` **4.00:1**, `clip` **3.39:1** (1.83:1 unscrimmed), `fail` **1.82:1** under the stated scrim.
+- §6.9's custom `actor` executor **crashes the Swift 6.3.3 type-checker** on this machine (*"please submit a bug report"*) with no fallback given.
+
+**Notable MAJORs**
+- `.onCameraCaptureEvent` is in `_AVKit_SwiftUI`, not SwiftUI (`import AVKit`, `AVKit.AVCaptureEvent`).
+- §4.3.2's asset shape **inverts Apple's documented convention** (02 D17 quotes Apple directly) and contradicts its own fallback.
+- `attachPreview(to: AVCaptureVideoPreviewLayer)` makes DoD item 6's fake-mode UI tests unimplementable.
+- §4.2.3 mandates `CIColorKernel` for a kernel that must `sample()` — the SDK can't, per 06 C5.3.
+- §7.3's "0 unapplied controls" is unsatisfiable on the only fixture (`isLensCorrectionSupported == false`).
+- 5 wrong API spellings: `AVCapturePhotoSettings.isAutoDeferredPhotoDeliveryEnabled`, `AVCaptureDevice.aperture`, `Font.system(…relativeTo:)`, `CIRAWDecoderVersion9/9DNG`, `PHAssetCreationRequest.originalFilename/.uniformTypeIdentifier`.
+
+**Verified correct (no change needed)** — ~60 names: `AVCaptureDevice.centerStageControlMode`/`isCenterStageEnabled` as class properties, `RotationCoordinator` + both `videoRotationAngleForHorizonLevel*`, all `CIRAWFilter` controls, `CIContextOption` members, `heif10Representation`, `onCameraCaptureEvent` (in AVKit), PhotoKit resource types, `INFOPLIST_KEY_UIRequiredDeviceCapabilities` (StringList), plus ~20 of §2's `file:line` citations and all of research 06's headline adjudications.

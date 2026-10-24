@@ -1,0 +1,30 @@
+[0m[31m[33mWarning: No project session found with id 'pikicam-r4b'; creating a new session with that id.[39m[0m
+[0m[31mStream ended without finish_reason[0m
+== attempt 1 Sat Oct  3 10:28:35 WIB 2026
+Written to `docs/workflow/research/04-code-quality.md` (570 lines). Working tree untouched apart from that file.
+
+## What I did
+
+**Read everything**: all 21 app Swift files (4,535 lines), all 3 test files (2,648 lines), `project.yml`, the pbxproj, the shared scheme, `.github/`, `scripts/`, `.swiftlint.yml`, `.pre-commit-config.yaml`, `.gitignore`, the deleted `AGENTS.md`/`verify.sh` via `git show`, `.agents/skills/`, README, and the heads of `docs/.P.DESIGN.md` + `docs/prompt-next.md`.
+
+**Ran three headless builds** (no `xcodegen`, no file modified):
+1. `build test` → **BUILD SUCCEEDED / TEST FAILED** — 26 design-lint tests with 6 failures (reporting **777 violations for 63 unique defects**, a 7× duplication bug in `DesignLint.run()`), and `testZeroRecipeReachesEveryControlOnARealFilter` **crashed the test host** with `-[CIRAWFilterImpl baselineExposure]: unrecognized selector`, truncating the suite to "Executed 0 tests". `pikicamUITests` never ran.
+2. `SWIFT_VERSION=6.0` → **BUILD FAILED** at `PhotoLibraryManager.swift:829`.
+3. `SWIFT_STRICT_CONCURRENCY=complete` → succeeded with 5 errors-as-warnings, including `nonisolated deinit` on actor state and a `@objc` action touching main-actor UIKit.
+
+**Verified external facts against the local iOS 26.5 SDK headers** rather than memory — which is where the strongest finding came from: `AVCapturePhotoOutput.h:85` states Bayer RAW **must** use `photoQualityPrioritization == .speed` and pin `videoScaleAndCropFactor == 1.0`, while `CaptureService.swift:433-436` explicitly refuses to set it. I also checked and *cleared* a suspected defect (the mandatory RAW delegate callback is satisfied by `didFinishProcessingPhoto:error:` per `:984`) so the implementer doesn't chase a non-bug.
+
+## Top findings
+
+1. **P0** — the zero-process recipe is inert: `responds(to:)` skips every knob, so the app ships Apple's default full-tone-curve render while calling it "zero-process". Its own test proves it by crashing.
+2. **P0** — `Core/Design` is referenced by **zero app lines**; `DesignLintTests.swift` allowlists six files that don't exist and demands `.environment(\.room)` on six screens that have none.
+3. **P0** — capture config relies on an Apple-documented-invalid default → latent SIGABRT.
+4. **P0** — the scheme omits `pikicamUITests`, `verify.sh` is deleted but still referenced by pre-commit, and the 812-line UI suite targets identifiers the app doesn't implement (the shutter has *no* identifier at all), making its delete half permanently unreachable.
+5. **P1** — Swift 6 doesn't compile; strict concurrency is off; `CaptureSessionBox: @unchecked Sendable` defeats the custom serial executor; `stopSession()` lacks the in-flight guard;39 decorative `nonisolated` annotations.
+6. **P1** — `CameraViewModel`: 20 published properties, three overlapping busy-state machines, mirrored actor state.
+7. **P1** — 1,015-line storage journal whose failure mode is "photos vanish from the app", with a whole-library resource scan on the shutter path.
+8. **P1** — zero tests for any behavior-bearing type (no injection seams); 35 of 36 tests assert pure arithmetic.
+9. **P1** — `@State private var developService = DevelopService()` rebuilds a Metal `CIContext` on every parent re-render, contradicting the comment directly above it.
+10. **P2** — two Info.plist sources with divergent usage strings; a privacy manifest declaring three required-reason APIs never called; duplicated thumbnail views; the `SKILL.md` describing `StorageServiceError`/`Core/Metal`/a DNG parser that don't exist.
+
+Plus per-file verdicts (keep/rewrite/delete with reasons) for all 24 Swift files and every config/script/doc, and a proposed from-scratch module layout with four state enums replacing today's booleans and generation counters.

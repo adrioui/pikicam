@@ -1,0 +1,45 @@
+{
+  "changes": [
+    "Re-expressed ALL type onto the canonical six tokens; deleted the prior T-HUD/T-chip/T-zoom/T-readout/T-error/T-countdown scale and mapped: chip 12→label 13, zoom readout 15→tick 11, error 12→body 14, countdown 96 Regular→display 96 Bold tabular.",
+    "Mapped all ink onto the canonical BLACK-room table; deleted the `veil` pill values (black 0.45/0.5) and the black-0.6 countdown disc; introduced the single `scrim` Black 45%→0% 88pt; removed the `secondary-text #A6A6A6 dark` value (white-room grey, not used on this black-room screen).",
+    "SHUTTER OVERRULE applied: square hairline ring 80×80, 1pt ink stroke, sharp corners, inner 64×64 square fill, press ×0.9, capturing 30%; deleted the prior circular disc / 2pt ring / 56 circle recommendation and its 'shape stays circular' claim.",
+    "Added SHARE, HIDE|SHOW, CAMERA FRONT|BACK to the closed vocabulary so it is genuinely closed (critic #13).",
+    "Added the LANDSCAPE camera layout with diagrams (667×375 smallest, 956×440 largest); landscape bar metrics 44/64pt as PROPOSAL; stated iPad is OUT OF SCOPE.",
+    "Deleted the 40pt ZERO-PROCESS/manifesto strip and all enhancement words from the camera chrome (bypass by absence, single DNG mark); stated the bypass is STATED on the viewer sheet; banned NO PROCESSING/PURE SENSOR/UNTOUCHED.",
+    "Countdown: 96 Bold tabular, square, no disc, lineLimit(1)+minimumScaleFactor(0.6); fixed the false 'tap anywhere cancels' comment.",
+    "EV: kept the owner-ruled 220pt height + 40pt column; added +/- stepper words and restyled the track/ticks/bubble to radius 0 with monochrome select tokens.",
+    "Moved the error banner INSIDE the isConfigured gate and reserved fail (#EA0000) for failure/interruption only (black room).",
+    "Completed the shape-deletion list: added CameraView:417 (EV track capsule), :444 (EV bubble capsule), :423 (EV tick circle), ZoomIndicatorView:15 (background capsule).",
+    "Stated rule locations explicitly, including above the error banner; dropped the 'exactly four' claim.",
+    "Gave tracking in pt as well as em (0.68/1.04/0.88pt DERIVED from the em values).",
+    "Fixed the shutter identifier to `camera-shutter` (single name; was 'shutter').",
+    "Fixed motion: easeInOut 0.2 in / 0.25 out, shutter 0.15, EV dismiss 2500ms, ALL durations 0 under Reduce Motion.",
+    "Re-expressed 18pt margins to 16 to honor the mandated space scale; declared element sizes/bar metrics (shutter, EV, bars) exempt from the spacing scale.",
+    "Replaced icon controls with words: flip becomes CAMERA FRONT|BACK (SF symbol deleted), added the reticle and AE/AF LOCK surfaces, deleted the Tabi-split thumbnail mark.",
+    "Reframed baselineExposure as a PROPOSAL-to-remove (leave the decoder default), and flagged the header-comment R3 defect.",
+    "Added section 8 mapping each VERIFICATION.md §6 correction to where it landed."
+  ],
+  "provenanceFixes": [
+    "Vocabulary words (GRID/FLASH/TIMER/RATIO/CAMERA FRONT|BACK/LIBRARY/SHARE/HIDE|SHOW/DELETE/RETRY/DISMISS/OPEN SETTINGS/CANCEL) were implied as descriptions of existing strings; re-tagged PROPOSAL because every word differs in case/wording from current code (VERIFICATION #16).",
+    "White-room secondary provenance: the prior `#A6A6A6` dark value was a derived PROPOSAL; re-tagged and dropped for this black-room screen; the fabricated token names --color-mm-base-strong-grey / --color-mm-base-light-grey corrected to --color-mm-base-neutral-500 (real value #6c6c6c) and --color-mm-base-neutral-100 (real value #e5e5e5) (VERIFICATION #1).",
+    "`@font-face` weight-400 (Recast) observation re-attributed from global.css to fonts.css (VERIFICATION #2).",
+    "`#595959` contrast corrected to 6.83:1 (was stated 6.82/6.83 inconsistently) (VERIFICATION #3).",
+    "`baselineExposure = 0.0` neutralization re-tagged from an implied settled design value to PROPOSAL-to-remove (leave the file-derived decoder default) (VERIFICATION §5).",
+    "Zoom live readout: source value OBSERVED at 15pt (ZoomIndicatorView.swift:10), but re-tagged as PROPOSAL once mapped to the canonical `tick` 11pt token (VERIFICATION §0.5 #7).",
+    "The countdown 'Regular / commerce-banner voice' rationale deleted (overruled by §0.5 #2 — Bold).",
+    "The shutter 'shape stays circular' recommendation deleted (overruled by §0.5 #1 / owner #6).",
+    "The manifesto-copy claims (ZERO PROCESSING AT CAPTURE / NO ENHANCEMENTS ADDED / CONVERSION ALWAYS ON) deleted as owner-overruled (bypass by absence).",
+    "Shapes in the deletion list re-tagged OBSERVED with the corrected/complete line set (CameraView:417/444/423, ZoomIndicatorView:15) (VERIFICATION #5)."
+  ],
+  "unresolved": [
+    "VERIFICATION #11 (state-matrix completeness gate): the six-field gate with no hit-area column belongs to spec-state-matrix.md and .P.DESIGN.md §5/§11, not this camera file — must be fixed there before DESIGN-LOCK can terminate.",
+    "VERIFICATION #15 (VIEWER DATA sheet full residual row set): belongs to spec-gallery-viewer-spec.md; owner ruled FULL provenance sheet (FILE/BYTES/SENSOR/BAYER/EXPOSURE + recipe list). This camera file can only state that the bypass lives there; the row set cannot be settled here.",
+    "VERIFICATION #4 (white-room dark-appearance ink values) and #10 (empty-state `0` numeral token) belong to the gallery/viewer spec, not this black-room camera file.",
+    "baselineExposure remains NEEDS_MEASUREMENT per VERIFICATION §5 (device-only: exiftool tag vs decoder default, then develop-twice ratio). The PROPOSAL to leave the decoder default cannot be confirmed on the simulator.",
+    "Landscape bar/dock heights (44/64pt) are PROPOSAL — no house metric exists for landscape; they need on-device measurement against runtime safe-area insets.",
+    "The 18pt→16pt margin re-expression contradicts .P.DESIGN.md §2.6 (which lists 18); the mandated canonical scale permits only 2/4/8/12/16/20/24/32, so 18 was re-expressed to 16. Flagged for owner confirmation.",
+    "Whether to keep the transient FRAMING 2.0X · CAPTURING AT 1X line: kept as PROPOSAL (behavior explanation, not a manifesto) but the owner may prefer pure absence.",
+    "Volume-button capture is kept and the system volume HUD is accepted, but no visual treatment is specified for the HUD's collision with the word chrome — accepted as-is per owner ruling (Q4 resolved, not designed).",
+    "The transient FRONT · 1.0X · EV 0 flip-confirmation line and the reticle 72pt/1.5pt geometry are PROPOSAL element metrics not covered by an owner ruling or the space scale."
+  ]
+}

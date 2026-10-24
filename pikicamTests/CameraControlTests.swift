@@ -300,4 +300,29 @@ final class CameraControlTests: XCTestCase {
         XCTAssertFalse(ZoomPresets.isSelected(1.5, of: 2.0))
         XCTAssertFalse(ZoomPresets.isSelected(3.0, of: 2.0))
     }
+
+    // MARK: - Non-finite input saturation
+
+    /// NaN/±∞ must saturate at the range bounds instead of propagating:
+    /// `AVCaptureDevice.videoZoomFactor` is an ObjC setter that raises on
+    /// nonsense values.
+    func testZoomClampedSaturatesNonFiniteValues() {
+        XCTAssertEqual(ZoomMath.clamped(.nan, range: 1.0...10.0), 1.0)
+        XCTAssertEqual(ZoomMath.clamped(.infinity, range: 1.0...10.0), 10.0)
+        XCTAssertEqual(ZoomMath.clamped(-.infinity, range: 1.0...10.0), 1.0)
+    }
+
+    /// `Int(NaN)` traps at runtime; the snapping initializer must saturate
+    /// non-finite stops instead (NaN is neutral).
+    func testExposureCompensationNonFiniteStopsDoNotTrap() {
+        XCTAssertEqual(ExposureCompensation(stops: .nan), .zero)
+        XCTAssertEqual(
+            ExposureCompensation(stops: .infinity),
+            ExposureCompensation(thirds: ExposureCompensation.maxThird)
+        )
+        XCTAssertEqual(
+            ExposureCompensation(stops: -.infinity),
+            ExposureCompensation(thirds: ExposureCompensation.minThird)
+        )
+    }
 }

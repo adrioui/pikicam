@@ -118,10 +118,10 @@ final class SmokeLaunchTest: XCTestCase {
             // Record the camera prompt itself before accepting it.
             RunLoop.current.run(until: Date().addingTimeInterval(1.5))
             attachScreenshot(of: app, named: "02b-permission-prompt")
-            acceptSystemPermissions(app: app, waitFor: app.buttons["Capture photo"])
+            acceptSystemPermissions(app: app, waitFor: app.buttons["camera-shutter"])
         }
 
-        let shutter = app.buttons["Capture photo"]
+        let shutter = app.buttons["camera-shutter"]
         XCTAssertTrue(
             shutter.waitForExistence(timeout: 30),
             "Camera UI did not appear on the device within timeout. "
@@ -214,23 +214,23 @@ final class SmokeLaunchTest: XCTestCase {
         // condition for the commit-delete. Uses only existing app-owned
         // semantics — no arbitrary positional assumption.
         var baselineCount: Int?
-        let galleryThumbnail = app.buttons["gallery-thumbnail"]
+        let galleryThumbnail = app.buttons["camera-library"]
         if galleryThumbnail.waitForExistence(timeout: 5) {
             galleryThumbnail.tap()
-            let libraryTitleBaseline = app.navigationBars["Library"]
+            let libraryTitleBaseline = app.navigationBars["LIBRARY"]
             if libraryTitleBaseline.waitForExistence(timeout: 10) {
                 // Give the library a moment to reconcile (pending → stored).
                 RunLoop.current.run(until: Date().addingTimeInterval(1))
                 let libraryGridBaseline = app.descendants(matching: .any)["library-grid"]
                 if libraryGridBaseline.waitForExistence(timeout: 5) {
                     baselineCount = galleryCellCount(in: libraryGridBaseline)
-                } else if app.staticTexts["No captures"].waitForExistence(timeout: 2) {
+                } else if app.staticTexts["0 / NO CAPTURES"].waitForExistence(timeout: 2) {
                     baselineCount = 0
                 } else {
                     baselineCount = 0
                 }
                 attachScreenshot(of: app, named: "04-baseline-gallery")
-                let galleryCameraBaseline = app.buttons["gallery-camera"]
+                let galleryCameraBaseline = app.buttons["room-shoot"]
                 if galleryCameraBaseline.waitForExistence(timeout: 5) {
                     galleryCameraBaseline.tap()
                     XCTAssertTrue(
@@ -244,8 +244,8 @@ final class SmokeLaunchTest: XCTestCase {
             } else {
                 // Gallery did not open for baseline — proceed without baseline;
                 // later assertions fall back to relative counts.
-                if app.buttons["gallery-camera"].exists {
-                    app.buttons["gallery-camera"].tap()
+                if app.buttons["room-shoot"].exists {
+                    app.buttons["room-shoot"].tap()
                     _ = galleryThumbnail.waitForExistence(timeout: 5)
                 }
             }
@@ -300,9 +300,9 @@ final class SmokeLaunchTest: XCTestCase {
         // The viewer shows ProgressView while loading, then the rendered
         // image; on failure it shows "Unable to load DNG". Assert the
         // failure text never appears and the chrome stays usable.
-        let chromeToggle = app.buttons["viewer-chrome-toggle"]
+        let chromeToggle = app.buttons["viewer-hide-show"]
         let unableToLoad = app.staticTexts["Unable to load DNG"]
-        let progress = app.activityIndicators.firstMatch
+        let progress = app.activityIndicators["viewer-loading"]
 
         openViewerAndAssertLoaded(
             in: app,
@@ -444,14 +444,14 @@ final class SmokeLaunchTest: XCTestCase {
             )
             // Gallery grid must remain (fullScreenCover galleryPresented still true)
             // and reflect the committed index removal.
-            let libraryTitle = app.navigationBars["Library"]
+            let libraryTitle = app.navigationBars["LIBRARY"]
             XCTAssertTrue(
                 libraryTitle.waitForExistence(timeout: 10),
                 "Gallery disappeared after viewer delete commit (expected to stay on Library)."
             )
             let libraryGridAfterDelete = app.descendants(matching: .any)["library-grid"]
             XCTAssertTrue(
-                libraryGridAfterDelete.waitForExistence(timeout: 10) || app.staticTexts["No captures"].waitForExistence(timeout: 5),
+                libraryGridAfterDelete.waitForExistence(timeout: 10) || app.staticTexts["0 / NO CAPTURES"].waitForExistence(timeout: 5),
                 "Neither library grid nor empty state appeared after delete commit."
             )
             // The baseline was empty (that is what made the delete safe), so
@@ -460,8 +460,8 @@ final class SmokeLaunchTest: XCTestCase {
             // the empty state is the deterministic assertion.
             RunLoop.current.run(until: Date().addingTimeInterval(1))
             XCTAssertTrue(
-                app.staticTexts["No captures"].waitForExistence(timeout: 5),
-                "Empty gallery did not show 'No captures' after deleting the sole walkthrough asset."
+                app.staticTexts["0 / NO CAPTURES"].waitForExistence(timeout: 5),
+                "Empty gallery did not show '0 / NO CAPTURES' after deleting the sole walkthrough asset."
             )
             assertNoErrorShown(in: app)
             XCTAssertEqual(app.state, .runningForeground,
@@ -469,7 +469,7 @@ final class SmokeLaunchTest: XCTestCase {
             attachScreenshot(of: app, named: "11-after-delete-commit")
 
             // Return to camera; gallery dismiss via gallery-camera.
-            let galleryCameraAfterDelete = app.buttons["gallery-camera"]
+            let galleryCameraAfterDelete = app.buttons["room-shoot"]
             XCTAssertTrue(
                 galleryCameraAfterDelete.waitForExistence(timeout: 5),
                 "Gallery camera button missing after delete commit."
@@ -488,7 +488,7 @@ final class SmokeLaunchTest: XCTestCase {
             // to load in the viewer; dismiss and return to camera.
             attachScreenshot(of: app, named: "11-delete-commit-skipped-pre-existing-captures")
             // We are still in gallery grid after cancel verification; dismiss safely.
-            let galleryCameraFallback = app.buttons["gallery-camera"]
+            let galleryCameraFallback = app.buttons["room-shoot"]
             if galleryCameraFallback.waitForExistence(timeout: 5) {
                 galleryCameraFallback.tap()
                 XCTAssertTrue(galleryThumbnail.waitForExistence(timeout: 10),
@@ -524,10 +524,10 @@ final class SmokeLaunchTest: XCTestCase {
         if app.buttons["Continue"].waitForExistence(timeout: 5) {
             app.buttons["Continue"].tap()
             RunLoop.current.run(until: Date().addingTimeInterval(1.5))
-            acceptSystemPermissions(app: app, waitFor: app.buttons["Capture photo"])
+            acceptSystemPermissions(app: app, waitFor: app.buttons["camera-shutter"])
         }
 
-        let shutter = app.buttons["Capture photo"]
+        let shutter = app.buttons["camera-shutter"]
         XCTAssertTrue(
             shutter.waitForExistence(timeout: 30),
             "Camera UI did not appear on the device within timeout."
@@ -624,13 +624,13 @@ final class SmokeLaunchTest: XCTestCase {
     /// never leak into other screens (e.g. a viewer cover still up).
     @discardableResult
     private func openGalleryAndAssertLibraryGrid(in app: XCUIApplication) -> XCUIElement {
-        let galleryThumbnail = app.buttons["gallery-thumbnail"]
+        let galleryThumbnail = app.buttons["camera-library"]
         XCTAssertTrue(
             galleryThumbnail.waitForExistence(timeout: 5),
             "Gallery thumbnail did not appear on the camera."
         )
         galleryThumbnail.tap()
-        let libraryTitle = app.navigationBars["Library"]
+        let libraryTitle = app.navigationBars["LIBRARY"]
         XCTAssertTrue(
             libraryTitle.waitForExistence(timeout: 10),
             "Gallery did not open: Library navigation bar did not appear."

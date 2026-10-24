@@ -84,15 +84,23 @@ final class CameraViewModel {
 
     // MARK: - Authorization
 
-    /// Re-reads the current camera authorization without prompting.
-    func refreshCameraAuthorization() {
+    /// Re-reads the current camera and Photos authorization without prompting.
+    ///
+    /// Called when the app returns to the foreground: the user may have
+    /// changed access in Settings while pikicam was away, and the published
+    /// statuses would otherwise still describe the earlier decision — leaving
+    /// a user who just granted access stranded on `PermissionsDeniedView`.
+    func refreshAuthorizationStatuses() {
         cameraAuthStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        photoAuthStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }
 
     @discardableResult
     func requestCameraAccess() async -> Bool {
         let granted = await AVCaptureDevice.requestAccess(for: .video)
-        cameraAuthStatus = granted ? .authorized : .denied
+        // Re-read rather than assuming `.denied`: `.restricted` (parental
+        // controls) must not be collapsed into a user denial.
+        cameraAuthStatus = granted ? .authorized : AVCaptureDevice.authorizationStatus(for: .video)
         return granted
     }
 
@@ -236,14 +244,6 @@ final class CameraViewModel {
         selfTimer = selfTimer.next()
     }
 
-    /// Cancels an in-flight self-timer countdown (e.g. on shutter cancel).
-    func cancelSelfTimer() {
-        guard phase == .countdown else { return }
-        selfTimerTask?.cancel()
-        selfTimerRemaining = 0
-        phase = .idle
-    }
-
     /// Begins the shutter operation: countdown (if armed) → capture → single
     /// DNG save. Mutually exclusive with any in-flight phase; a second shutter
     /// while `countdown` cancels the countdown instead.
@@ -275,7 +275,11 @@ final class CameraViewModel {
             } else {
                 guard !Task.isCancelled, captureGeneration == gen, phase == .capturing else { return }
             }
-            let dng = try await captureService.capturePhoto(aspectRatio: aspectRatio)
+            // Sample provenance orientation here at shutter press (main
+            // actor): sampling after the exposure completes would mis-tag a
+            // rotation that happened during the capture.
+            let shutterOrientation = CaptureOrientation(orientation: UIDevice.current.orientation)
+            let dng = try await captureService.capturePhoto(aspectRatio: aspectRatio, orientation: shutterOrientation)
             guard !Task.isCancelled, captureGeneration == gen else { return }
             phase = .savingDNG
             let capture = try await libraryModel.save(dng)

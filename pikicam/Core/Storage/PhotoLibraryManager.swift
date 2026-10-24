@@ -20,12 +20,37 @@ nonisolated public struct CapturedDNG: Equatable, Sendable {
     /// developing/viewing.
     public let zoomFactor: CGFloat
 
-    public init(data: Data, capturedAt: Date, orientation: CaptureOrientation = .up, aspectRatio: AspectRatio = .ratio4x3, zoomFactor: CGFloat = 1.0) {
+    /// Validated at construction (parse-don't-validate): an empty payload
+    /// would otherwise persist as an unopenable asset that still passes the
+    /// DNG-resource check, and a non-finite zoom cannot round-trip through
+    /// the JSON index at all.
+    public init(data: Data, capturedAt: Date, orientation: CaptureOrientation = .up, aspectRatio: AspectRatio = .ratio4x3, zoomFactor: CGFloat = 1.0) throws {
+        guard !data.isEmpty else {
+            throw CapturedDNGError.emptyData
+        }
+        guard zoomFactor.isFinite, zoomFactor >= 1 else {
+            throw CapturedDNGError.invalidZoomFactor(zoomFactor)
+        }
         self.data = data
         self.capturedAt = capturedAt
         self.orientation = orientation
         self.aspectRatio = aspectRatio
         self.zoomFactor = zoomFactor
+    }
+}
+
+/// Typed failures for constructing a `CapturedDNG`.
+nonisolated public enum CapturedDNGError: LocalizedError, Equatable, Sendable {
+    case emptyData
+    case invalidZoomFactor(CGFloat)
+
+    public var errorDescription: String? {
+        switch self {
+        case .emptyData:
+            return "The captured DNG contains no data."
+        case .invalidZoomFactor(let zoomFactor):
+            return "The framing zoom \(zoomFactor) is invalid; it must be finite and ≥ 1."
+        }
     }
 }
 
@@ -131,7 +156,6 @@ nonisolated public enum PhotoLibraryError: LocalizedError, Equatable, Sendable {
     case indexWriteFailed(PhotoFailure)
     case indexCommitFailed(PhotoFailure)
     case indexRemovalFailed(PhotoFailure)
-    case indexInconsistent(CaptureID)
     case deleteFailed(PhotoFailure)
     case loadFailed(PhotoFailure)
     case thumbnailFailed(PhotoFailure)
@@ -153,8 +177,6 @@ nonisolated public enum PhotoLibraryError: LocalizedError, Equatable, Sendable {
             return "The DNG was saved to Photos but the capture record could not be committed; it will be recovered on the next refresh."
         case .indexRemovalFailed:
             return "The asset was deleted from Photos but its capture record could not be removed; it will be reconciled on the next refresh."
-        case .indexInconsistent:
-            return "The capture index is inconsistent and the affected record stays hidden."
         case .deleteFailed(let failure):
             return "Photos rejected the deletion: \(failure.message)"
         case .loadFailed(let failure):
@@ -397,8 +419,10 @@ actor PhotoLibraryManager {
     /// are matched by the exact namespaced filename. One match commits its
     /// asset ID; no match removes the abandoned record under full
     /// authorization but retains it hidden under limited authorization;
-    /// multiple matches raise a typed index-inconsistency error and remain
-    /// hidden. Stored records are fetched directly by local identifier;
+    /// multiple matches (a duplicate import of the same DNG) commit the
+    /// deterministically smallest local identifier, so one ambiguous record
+    /// can never poison the whole fetch. Stored records are fetched directly
+    /// by local identifier;
     /// missing stored IDs are pruned under full authorization but retained
     /// (and omitted from the visible projection) under limited authorization,
     /// preserving provenance if the limited selection later changes.
@@ -415,7 +439,7 @@ actor PhotoLibraryManager {
             // across any await.
             index = try Self.indexLock.withLock {
                 var latest = try loadIndex()
-                let reconciled = try reconcilePendingRecords(in: &latest, limited: isLimited)
+                let reconciled = reconcilePendingRecords(in: &latest, limited: isLimited)
                 let pruned = pruneVanishedRecords(in: &latest, limited: isLimited)
                 if reconciled || pruned {
                     do {
@@ -495,9 +519,18 @@ actor PhotoLibraryManager {
 
     private func fetchAssetsByLocalIdentifier(_ identifiers: [String]) -> [String: PHAsset] {
         var assetByID: [String: PHAsset] = [:]
-        let result = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
-        result.enumerateObjects { asset, _, _ in
-            assetByID[asset.localIdentifier] = asset
+        // PhotoKit identifier fetches have undocumented practical limits; a
+        // dropped result would misprune its record as vanished under full
+        // authorization, so batch defensively instead of trusting one fetch
+        // with the whole gallery.
+        var offset = 0
+        while offset < identifiers.count {
+            let batch = Array(identifiers[offset..<min(offset + 100, identifiers.count)])
+            let result = PHAsset.fetchAssets(withLocalIdentifiers: batch, options: nil)
+            result.enumerateObjects { asset, _, _ in
+                assetByID[asset.localIdentifier] = asset
+            }
+            offset += 100
         }
         return assetByID
     }
@@ -507,7 +540,7 @@ actor PhotoLibraryManager {
     /// namespaced filename and commits single matches.
     ///
     /// - Returns: `true` if any record changed (the index must be persisted).
-    private func reconcilePendingRecords(in index: inout CaptureIndex, limited: Bool) throws -> Bool {
+    private func reconcilePendingRecords(in index: inout CaptureIndex, limited: Bool) -> Bool {
         let pendingRecords = index.records.filter {
             $0.state.isPending && !Self.isSaving(captureID: $0.captureID)
         }
@@ -545,7 +578,19 @@ actor PhotoLibraryManager {
                     didChange = true
                 }
             default:
-                throw PhotoLibraryError.indexInconsistent(record.captureID)
+                // Multiple assets share this pending filename — a duplicate
+                // import (Image Capture re-import, AirDrop round-trip,
+                // Photos "Duplicate") of one pikicam DNG. Namespaced
+                // filenames make every match a capture of the same exposure,
+                // so commit the deterministically smallest local identifier:
+                // the record resolves instead of throwing out of `captures()`
+                // and poisoning every future fetch with an unresolvable
+                // inconsistency.
+                if let assetID = matches.min(),
+                   let slot = index.records.firstIndex(where: { $0.captureID == record.captureID }) {
+                    index.records[slot].state = .stored(assetID: PhotoAssetID(localIdentifier: assetID))
+                    didChange = true
+                }
             }
         }
         return didChange
@@ -793,7 +838,12 @@ actor PhotoLibraryManager {
         guard FileManager.default.fileExists(atPath: url.path) else { return .empty() }
         do {
             let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode(CaptureIndex.self, from: data)
+            let index = try JSONDecoder().decode(CaptureIndex.self, from: data)
+            // A schema version this build does not understand decodes like
+            // corruption in slow motion; start empty rather than misdecode
+            // records written by another schema (same false-negative bias).
+            guard index.version == Self.indexFileVersion else { return .empty() }
+            return index
         } catch {
             // Corrupt or unreadable index: start empty. The index is
             // provenance-only, so losing it errs toward false negatives,

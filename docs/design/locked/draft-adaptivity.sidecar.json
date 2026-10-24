@@ -1,0 +1,49 @@
+{
+  "changes": [
+    "Rewrote every type value onto the canonical six-token scale (display/title/body/label/caption/tick) via a mapping table (HUD 11 rounded→caption, chips 13/12 rounded→label, zoom 15 rounded→tick, exposure 12 bold rounded→tick, countdown 96 rounded→display, titles→title, error body→body).",
+    "Replaced the invented type names (HUD-13/chip-13/readout-12/countdown-96) and the DISPLAY-28 empty-state numeral with canonical tokens; mapped the empty-state `0` onto `display` (VERIFICATION correction #10).",
+    "Added tracking in pt as well as em (correction #7): +40/1000em=0.68pt at 17pt; +80/1000em=1.04pt at 13pt and 0.88pt at 11pt.",
+    "Expressed all ink on the canonical room tables; deleted the two fabricated stylesheet token names (correction #1).",
+    "SUPPLIED the white-room DARK-appearance ink the doc promised but never provided (correction #4): new §5 with bg #000000, ink #FFFFFF, secondary #A8A8A8 (8.83:1), secondary-IC #BBBBBB (10.94:1), rule White 25%, tagged PROPOSAL, with a four-point justification for choosing #A8A8A8 over #A6A6A6.",
+    "Locked the Increase-Contrast secondary ratio at 6.83:1 and deleted the vestigial #6C6C6C-on-#FFFFFF 5.25:1 row; set secondary=#6C6C6C (5.12:1) default and secondary-IC=#595959 (correction #3).",
+    "Fixed the rule-location list: dropped the 'exactly four' claim and enumerated six locations incl. above the error banner and the grid-banner border (correction #6).",
+    "Completed the shape-deletion list reference (Capsule at CameraView:417/444, tick Circle at :423, ZoomIndicatorView:15) (correction #5).",
+    "Removed red from the white room entirely and corrected the mis-cited evidence — the prior spec kept red in both modes citing spec-a11y:131, the opposite of the ruling (correction #8).",
+    "Resolved the shutter identifier to one name, camera-shutter, for both the control and its tests (correction #14).",
+    "Rebuilt the identifier section on ControlIDRegistry (room-shoot/room-delete/room-cancel/camera-* /viewer-*) and corrected the R1–R3 identifier-breakage claims (corrections #17).",
+    "Reworked VoiceOver to the single pattern word→button→optional value→optional hint, with visible label equal to accessible label, and enumerated values from the real value contracts.",
+    "Closed the vocabulary: added SHARE, HIDE|SHOW, CAMERA BACK|FRONT and marked the whole set PROPOSAL (corrections #13, #16).",
+    "Stated the viewer per-image sheet as the FULL provenance sheet (FILE/BYTES/SENSOR/BAYER/EXPOSURE + recipe list) per the owner ruling, and placed the bypass statement there while keeping the camera chrome manifesto-free (correction #15).",
+    "Left baselineExposure at the decoder default and flagged it PROPOSAL, and required the stale CIRAWZeroProcessor header comment to be corrected (correction #18).",
+    "Changed orientation to LANDSCAPE and stated iPad explicitly out of scope; reworked the device-class section around a landscape canvas and safe-area edges (correction #9).",
+    "Replaced underline-as-selection with the sewn tack and stated the tag is genuinely blank (hybrid, Pole B on the gesture layer only).",
+    "Renamed every delivery-layer symbol to be house-name-free (ChromeType/ChromeInk/ChromeRule/WordControl/Room) per the owner ruling and .P.DESIGN §7.",
+    "Defined §11 as the four R-swaps (Increase Contrast, Reduce Transparency, Reduce Motion, both colour schemes) as snapshot-test dimensions, cross-producted with room and Dynamic Type at 375pt and 440pt.",
+    "Raised the EV column width from 40pt to the 44pt minimum hit area; kept every word control at ≥44×44pt.",
+    "Kept the date header, DNG count readout, and index chip in the gallery/viewer reading order and assigned them tokens (title/caption+tick/tick)."
+  ],
+  "provenanceFixes": [
+    "Re-tagged the white-room `secondary` provenance: it is #6C6C6C from the OBSERVED house token --color-mm-base-neutral-500 (was built on the fabricated name --color-mm-base-strong-grey).",
+    "Re-tagged the two fabricated stylesheet token names as deleted: --color-mm-base-strong-grey and --color-mm-base-light-grey do not exist; the real names are --color-mm-base-neutral-500 (#6c6c6c) and --color-mm-base-neutral-100 (#e5e5e5).",
+    "Marked the entire §5 white-room dark-appearance ink table PROPOSAL (was promised as a pair but never supplied; the two sources disagree).",
+    "Marked the closed vocabulary PROPOSAL rather than a description of code (was presented as an observed set).",
+    "Marked #BBBBBB as a DERIVED 10.94:1 value and #A8A8A8 / #A6A6A6 as DERIVED 8.83:1 / 8.63:1 from the WCAG formula.",
+    "Re-expressed the tracking values as DERIVED (em→pt), noting the pt pairs exist only in the token spec, not in the design doc.",
+    "Re-tagged the empty-state `0` numeral mapping onto `display` as PROPOSAL (a token map, not a code fact).",
+    "Re-tagged the date-header/readout/chip token assignments as PROPOSAL (they are owner-directed content, not code).",
+    "Confirmed the black-room wash (Black 55%) and rule (White 25%) as OBSERVED at CameraView.swift:384 and :389, and kept scrim as PROPOSAL.",
+    "Corrected the identifier-breakage claims R1–R3 (gallery-thumbnail vs gallery-latest-thumbnail are two controls; app.activityIndicators.firstMatch is not in the current tree; the shutter has no identifier in code).",
+    "Reclassified the shutter as having no identifier at all today, with camera-shutter assigned at the wiring phase (VERIFICATION R3), rather than presenting camera-shutter as OBSERVED in code."
+  ],
+  "unresolved": [
+    "The white-room DARK secondary ink remains a PROPOSAL: the two in-repo sources disagree (#A6A6A6 vs #A8A8A8), no house token matches, and neither is fetch-verified. #A8A8A8 was chosen with a stated justification, but an owner/designer confirmation is still needed.",
+    "Whether the white room's dark appearance should carry red: I resolved it as NO RED (room identity governs both appearances), but the canonical scale does not state this explicitly — it is an inference from 'NO RED IN THIS ROOM'.",
+    "The exact 2px Increase-Contrast rule step has no Apple source; kept as an explicit PROPOSAL.",
+    "Courier New CJK/Arabic shaping is undocumented and needs a device test; the word-only fallback mitigates but does not settle it.",
+    "baselineExposure classification is NEEDS_MEASUREMENT (VERIFICATION §5) — the sheet lists it as 'decoder default' pending the two-step measurement; this spec does not settle the pipeline decision.",
+    "The state-matrix completeness gate (VERIFICATION §6 #11) is out of this target and remains unsatisfiable until a hit-area column is added to spec-state-matrix.md; reported here, not fixed here.",
+    "Landscape component heights (top bar 60, dock 88) are not on the space scale (they are component sizes, not spacing); their landscape values are PROVISIONAL and should be re-validated on the iOS 26 simulator.",
+    "Volume-button divergence copy placement: I put it on the viewer per-image sheet per the owner's bypass ruling, but the owner ruling did not explicitly say where the burst divergence lives — confirm.",
+    "Whether the camera top-bar `DNG` word conflicts with the 'genuinely blank tag / no wordmark' Pole-B ruling: I read the blank tag as the permission-surface graphic and the `DNG` word as a caption status readout; this reading should be confirmed."
+  ]
+}

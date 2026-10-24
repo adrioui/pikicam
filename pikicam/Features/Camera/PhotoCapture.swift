@@ -38,8 +38,12 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
     private var photo: AVCapturePhoto?
     private var processingError: Error?
     private var timeoutTask: Task<Void, Never>?
+    /// The output retaining this delegate via associated object. Weak: the
+    /// association itself keeps the delegate alive until it is cleared.
+    private weak var output: AVCapturePhotoOutput?
 
-    init(continuation: CheckedContinuation<AVCapturePhoto, Error>) {
+    init(output: AVCapturePhotoOutput, continuation: CheckedContinuation<AVCapturePhoto, Error>) {
+        self.output = output
         self.continuation = continuation
         super.init()
         self.timeoutTask = Task { [weak self] in
@@ -49,13 +53,31 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
         }
     }
 
+    /// Fails the capture with `.captureTimedOut` unless a delegate callback
+    /// already claimed the continuation.
+    ///
+    /// This runs on the timeout task's executor, which is *not* AVFoundation's
+    /// delegate queue — so every field it shares with the callbacks is touched
+    /// under `lock`, including `timeoutTask` itself (the callback path cancels
+    /// and clears that same property).
     private func failWithTimeout() {
-        lock.withLock {
-            guard let continuation else { return }
-            self.continuation = nil
-            timeoutTask = nil
-            continuation.resume(throwing: CaptureError.captureTimedOut)
+        let claimed: CheckedContinuation<AVCapturePhoto, Error>? = lock.withLock {
+            defer {
+                self.continuation = nil
+                timeoutTask = nil
+            }
+            guard let continuation else { return nil }
+            return continuation
         }
+        // A timed-out capture whose `didFinishCaptureFor` never fires must not
+        // leak the delegate through its associated object — perform the same
+        // teardown as the callback path. The delegate path may have already
+        // detached us; clearing twice is harmless.
+        if let output {
+            let key = Unmanaged.passUnretained(self).toOpaque()
+            objc_setAssociatedObject(output, key, nil, .OBJC_ASSOCIATION_ASSIGN)
+        }
+        claimed?.resume(throwing: CaptureError.captureTimedOut)
     }
 
     nonisolated func photoOutput(
@@ -63,10 +85,14 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
         didFinishProcessingPhoto photo: AVCapturePhoto,
         error: Error?
     ) {
-        if let error = error {
-            processingError = error
-        } else {
-            self.photo = photo
+        // Written under the lock so `didFinishCaptureFor` can take the payload
+        // and the continuation as one consistent snapshot.
+        lock.withLock {
+            if let error = error {
+                processingError = error
+            } else {
+                self.photo = photo
+            }
         }
     }
 
@@ -76,29 +102,33 @@ nonisolated final class PhotoCapture: NSObject, AVCapturePhotoCaptureDelegate {
         error: Error?
     ) {
         let key = Unmanaged.passUnretained(self).toOpaque()
+
+        // One locked snapshot of everything the resume decision needs: the
+        // continuation, the delegate-reported payload, and the timeout task.
+        // Taking the continuation clears it, so the timeout path — which runs
+        // on another executor — cannot resume it after this point.
+        let (pending, capturedPhoto, capturedError, pendingTimeout) = lock.withLock {
+            defer {
+                self.continuation = nil
+                timeoutTask = nil
+            }
+            return (continuation, photo, processingError, timeoutTask)
+        }
+
         defer {
-            timeoutTask?.cancel()
-            timeoutTask = nil
+            pendingTimeout?.cancel()
             objc_setAssociatedObject(output, key, nil, .OBJC_ASSOCIATION_ASSIGN)
         }
+        guard let pending else { return }
 
-        // Take the continuation under the lock so a timeout firing on another
-        // executor cannot resume it after this point.
-        let continuation: CheckedContinuation<AVCapturePhoto, Error>? = lock.withLock {
-            let pending = self.continuation
-            self.continuation = nil
-            return pending
-        }
-        guard let continuation else { return }
-
-        if let error = error ?? processingError {
+        if let error = error ?? capturedError {
             // Translate the delegate failure into a typed CaptureError so no
             // arbitrary Error crosses the capture boundary.
-            continuation.resume(throwing: CaptureError.captureFailed(underlying: error))
-        } else if let photo {
-            continuation.resume(returning: photo)
+            pending.resume(throwing: CaptureError.captureFailed(underlying: error))
+        } else if let capturedPhoto {
+            pending.resume(returning: capturedPhoto)
         } else {
-            continuation.resume(throwing: CaptureError.missingImageData)
+            pending.resume(throwing: CaptureError.missingImageData)
         }
     }
 }
@@ -113,7 +143,7 @@ extension AVCapturePhotoOutput {
     /// - Returns: The captured `AVCapturePhoto`.
     func capturePhoto(with settings: AVCapturePhotoSettings) async throws -> AVCapturePhoto {
         try await withCheckedThrowingContinuation { continuation in
-            let captureDelegate = PhotoCapture(continuation: continuation)
+            let captureDelegate = PhotoCapture(output: self, continuation: continuation)
             // Keep the delegate alive (keyed on its own address) until the
             // capture callbacks fire; `didFinishCaptureFor` clears it.
             let key = Unmanaged.passUnretained(captureDelegate).toOpaque()

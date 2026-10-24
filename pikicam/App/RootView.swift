@@ -34,8 +34,16 @@ struct RootView: View {
             // the foreground (AVFoundation interrupts capture anyway) and
             // start it again when the app returns.
             switch phase {
-            case .active where viewModel.hasRequiredAuth:
-                Task { await viewModel.start() }
+            case .active:
+                // Re-read access before deciding anything. A user sent to
+                // Settings by `PermissionsDeniedView` grants it there and
+                // comes back authorized, but the published status still says
+                // denied — without this the denial screen is permanent for
+                // the life of the process.
+                viewModel.refreshAuthorizationStatuses()
+                if viewModel.hasRequiredAuth {
+                    Task { await viewModel.start() }
+                }
             case .background, .inactive:
                 Task { await viewModel.stop() }
             default:

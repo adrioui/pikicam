@@ -73,8 +73,16 @@ nonisolated enum FlashMode: Equatable, CaseIterable {
 nonisolated enum ZoomMath {
 
     /// Clamps a raw zoom value into the device's available zoom range.
+    ///
+    /// Non-finite input saturates instead of propagating: NaN/±∞ must never
+    /// reach `AVCaptureDevice.videoZoomFactor` (an ObjC setter that raises
+    /// on nonsense). NaN compares false against everything, so it lands on
+    /// the lower bound.
     static func clamped(_ value: CGFloat, range: ClosedRange<CGFloat>) -> CGFloat {
-        min(max(value, range.lowerBound), range.upperBound)
+        guard value.isFinite else {
+            return value > 0 ? range.upperBound : range.lowerBound
+        }
+        return min(max(value, range.lowerBound), range.upperBound)
     }
 
     /// The zoom factor for `base × magnification`, clamped to `range`.
@@ -253,7 +261,14 @@ nonisolated struct ExposureCompensation: Equatable, Sendable {
     }
 
     init(stops: Double) {
-        let clamped = min(max(stops, Self.minStop), Self.maxStop)
+        // Non-finite stops must never reach the Int conversion — Int(NaN)
+        // traps at runtime. NaN is neutral (0); ±∞ saturate at the limits.
+        let clamped: Double
+        if stops.isFinite {
+            clamped = min(max(stops, Self.minStop), Self.maxStop)
+        } else {
+            clamped = stops > 0 ? Self.maxStop : (stops < 0 ? Self.minStop : 0)
+        }
         self.init(thirds: Int((clamped / Self.step).rounded()))
     }
 
