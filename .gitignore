@@ -36,7 +36,10 @@
 !/scripts/calibrate.py
 # Why: Phase A analysis over the captured flat series.
 !/scripts/reference-diff.py
-# Why: LibRaw/RawTherapee bracket oracle for the develop pipeline.
+# Why: LibRaw bracket oracle for the develop pipeline.
+!/scripts/host-render.swift
+# Why: the our-side neutral render feeding the bracket (same CIRAWFilter
+# front end as the app, on the macOS host).
 !/scripts/colorcheck.py
 # Why: deltaE2000 per ColorChecker patch (Tier 1 calibration).
 !/scripts/p3-luminance.py

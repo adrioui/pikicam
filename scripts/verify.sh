@@ -13,11 +13,10 @@ if [ -n "${CI:-}" ]; then
 fi
 
 echo "== device destination =="
-UDID=$(xcrun devicectl list devices 2>/dev/null | awk '/available/ && /iPhone/ {print $NF; exit}')
-if [ -z "$UDID" ]; then
-  # devicectl prints the identifier as the last column only in some versions; parse robustly
-  UDID=$(xcrun devicectl list devices 2>/dev/null | grep -E "iPhone.*available" | awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9A-F-]{36}$/) {print $i; exit}}')
-fi
+UDID=$(xcrun devicectl list devices 2>/dev/null \
+  | grep -E "available \\(paired|unlocked" \
+  | grep -oE "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}" \
+  | head -1)
 if [ -z "$UDID" ]; then
   echo "FAIL: no available iPhone destination (connect and unlock the device)"; exit 1
 fi
