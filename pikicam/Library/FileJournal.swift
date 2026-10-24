@@ -13,7 +13,9 @@ actor FileJournal: Journal {
         }
     }
 
-    func persist(_ raw: RawCapture, geometry: FrameGeometry, look: LookParameters) throws(JournalError) -> JournalEntry {
+    func persist(
+        _ raw: RawCapture, geometry: FrameGeometry, look: LookParameters
+    ) throws(JournalError) -> JournalEntry {
         let entry = JournalEntry(
             id: raw.id,
             capturedAt: raw.provenance.capturedAt,
@@ -35,9 +37,11 @@ actor FileJournal: Journal {
     }
 
     func pending() throws(JournalError) -> [JournalEntry] {
-        guard let directories = try? fileManager.contentsOfDirectory(
-            at: root, includingPropertiesForKeys: [.isDirectoryKey]
-        ) else {
+        guard
+            let directories = try? fileManager.contentsOfDirectory(
+                at: root, includingPropertiesForKeys: [.isDirectoryKey]
+            )
+        else {
             return []
         }
         var entries: [JournalEntry] = []

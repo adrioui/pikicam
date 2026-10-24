@@ -2945,7 +2945,7 @@
             "mean" : 0.31352691082760714,
             "min" : 0.006549835205078125,
             "samples" : 2286144,
-            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+            "tag" : "<CGColorSpace 0x110247ea0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
           },
           {
             "above1" : 1948,
@@ -2955,7 +2955,7 @@
             "mean" : 0.28737627726907256,
             "min" : 0.005565643310546875,
             "samples" : 2286144,
-            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+            "tag" : "<CGColorSpace 0x110247ea0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
           },
           {
             "above1" : 2324,
@@ -2965,7 +2965,7 @@
             "mean" : 0.25617929851817595,
             "min" : 0.004581451416015625,
             "samples" : 2286144,
-            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+            "tag" : "<CGColorSpace 0x110247ea0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
           }
         ]
       },
@@ -2993,7 +2993,7 @@
           {
             "duration" : 1.4e-05,
             "error" : "",
-            "fileBytes" : 9747619,
+            "fileBytes" : 9779715,
             "isRaw" : true,
             "iso" : 33,
             "name" : "flat_iso33_exp14",
@@ -3004,7 +3004,7 @@
           {
             "duration" : 0.0001869440321068127,
             "error" : "",
-            "fileBytes" : 8125977,
+            "fileBytes" : 8125396,
             "isRaw" : true,
             "iso" : 33,
             "name" : "flat_iso33_exp186",
@@ -3015,7 +3015,7 @@
           {
             "duration" : 0.002496290795739501,
             "error" : "",
-            "fileBytes" : 8128927,
+            "fileBytes" : 8156656,
             "isRaw" : true,
             "iso" : 33,
             "name" : "flat_iso33_exp2496",
@@ -3026,7 +3026,7 @@
           {
             "duration" : 0.03333333333333333,
             "error" : "",
-            "fileBytes" : 8127418,
+            "fileBytes" : 8156281,
             "isRaw" : true,
             "iso" : 33,
             "name" : "flat_iso33_exp33333",
@@ -3037,7 +3037,7 @@
           {
             "duration" : 1.4e-05,
             "error" : "",
-            "fileBytes" : 8126393,
+            "fileBytes" : 8162290,
             "isRaw" : true,
             "iso" : 1188,
             "name" : "flat_iso1188_exp14",
@@ -3048,7 +3048,7 @@
           {
             "duration" : 0.0001869440321068127,
             "error" : "",
-            "fileBytes" : 8128715,
+            "fileBytes" : 8162650,
             "isRaw" : true,
             "iso" : 1188,
             "name" : "flat_iso1188_exp186",
@@ -3059,7 +3059,7 @@
           {
             "duration" : 0.002496290795739501,
             "error" : "",
-            "fileBytes" : 8128341,
+            "fileBytes" : 9746187,
             "isRaw" : true,
             "iso" : 1188,
             "name" : "flat_iso1188_exp2496",
@@ -3070,7 +3070,7 @@
           {
             "duration" : 0.03333333333333333,
             "error" : "",
-            "fileBytes" : 9748676,
+            "fileBytes" : 9748801,
             "isRaw" : true,
             "iso" : 1188,
             "name" : "flat_iso1188_exp33333",
@@ -3081,7 +3081,7 @@
           {
             "duration" : 1.4e-05,
             "error" : "",
-            "fileBytes" : 9747047,
+            "fileBytes" : 9752391,
             "isRaw" : true,
             "iso" : 2343,
             "name" : "flat_iso2343_exp14",
@@ -3092,7 +3092,7 @@
           {
             "duration" : 0.0001869440321068127,
             "error" : "",
-            "fileBytes" : 9747792,
+            "fileBytes" : 9810331,
             "isRaw" : true,
             "iso" : 2343,
             "name" : "flat_iso2343_exp186",
@@ -3103,7 +3103,7 @@
           {
             "duration" : 0.002496290795739501,
             "error" : "",
-            "fileBytes" : 9747812,
+            "fileBytes" : 9747458,
             "isRaw" : true,
             "iso" : 2343,
             "name" : "flat_iso2343_exp2496",
@@ -3125,7 +3125,7 @@
           {
             "duration" : 1.4e-05,
             "error" : "",
-            "fileBytes" : 9748080,
+            "fileBytes" : 9748869,
             "isRaw" : true,
             "iso" : 3498,
             "name" : "flat_iso3498_exp14",
@@ -3136,7 +3136,7 @@
           {
             "duration" : 0.0001869440321068127,
             "error" : "",
-            "fileBytes" : 9748534,
+            "fileBytes" : 9810756,
             "isRaw" : true,
             "iso" : 3498,
             "name" : "flat_iso3498_exp186",
@@ -3147,7 +3147,7 @@
           {
             "duration" : 0.002496290795739501,
             "error" : "",
-            "fileBytes" : 9747234,
+            "fileBytes" : 9747094,
             "isRaw" : true,
             "iso" : 3498,
             "name" : "flat_iso3498_exp2496",
@@ -3158,7 +3158,7 @@
           {
             "duration" : 0.03333333333333333,
             "error" : "",
-            "fileBytes" : 9747533,
+            "fileBytes" : 9747797,
             "isRaw" : true,
             "iso" : 3498,
             "name" : "flat_iso3498_exp33333",
@@ -3169,7 +3169,7 @@
           {
             "duration" : 1.4e-05,
             "error" : "",
-            "fileBytes" : 9748165,
+            "fileBytes" : 9748436,
             "isRaw" : true,
             "iso" : 4653,
             "name" : "flat_iso4653_exp14",
@@ -3180,7 +3180,7 @@
           {
             "duration" : 0.0001869440321068127,
             "error" : "",
-            "fileBytes" : 9748146,
+            "fileBytes" : 9810461,
             "isRaw" : true,
             "iso" : 4653,
             "name" : "flat_iso4653_exp186",
@@ -3191,7 +3191,7 @@
           {
             "duration" : 0.002496290795739501,
             "error" : "",
-            "fileBytes" : 9750316,
+            "fileBytes" : 9754606,
             "isRaw" : true,
             "iso" : 4653,
             "name" : "flat_iso4653_exp2496",
@@ -3202,7 +3202,7 @@
           {
             "duration" : 0.03333333333333333,
             "error" : "",
-            "fileBytes" : 9749676,
+            "fileBytes" : 9755184,
             "isRaw" : true,
             "iso" : 4653,
             "name" : "flat_iso4653_exp33333",
@@ -3213,7 +3213,7 @@
           {
             "duration" : 1.4e-05,
             "error" : "",
-            "fileBytes" : 9748693,
+            "fileBytes" : 9754460,
             "isRaw" : true,
             "iso" : 5808,
             "name" : "flat_iso5808_exp14",
@@ -3224,7 +3224,7 @@
           {
             "duration" : 0.0001869440321068127,
             "error" : "",
-            "fileBytes" : 9750711,
+            "fileBytes" : 9810453,
             "isRaw" : true,
             "iso" : 5808,
             "name" : "flat_iso5808_exp186",
@@ -3235,7 +3235,7 @@
           {
             "duration" : 0.002496290795739501,
             "error" : "",
-            "fileBytes" : 9750315,
+            "fileBytes" : 9749358,
             "isRaw" : true,
             "iso" : 5808,
             "name" : "flat_iso5808_exp2496",
@@ -3246,7 +3246,7 @@
           {
             "duration" : 0.03333333333333333,
             "error" : "",
-            "fileBytes" : 9749523,
+            "fileBytes" : 9749858,
             "isRaw" : true,
             "iso" : 5808,
             "name" : "flat_iso5808_exp33333",
@@ -3255,14 +3255,14 @@
             "success" : true
           },
           {
-            "fileBytes" : 9749356,
+            "fileBytes" : 9751265,
             "name" : "fixture-bayer-rich",
             "rawDims" : "4032x3024",
             "success" : true
           },
           {
             "error" : "",
-            "fileBytes" : 10036633,
+            "fileBytes" : 8685957,
             "flashEnabled" : true,
             "isRaw" : true,
             "name" : "flash-raw-probe",
@@ -3430,8 +3430,8 @@
         "highlightRecoveryAssigned" : true,
         "highlightRecoveryReadback" : "false",
         "isDraftModeEnabledDefault" : "false",
-        "neutralTemperatureDefault" : "4049.9456",
-        "neutralTintDefault" : "22.045004",
+        "neutralTemperatureDefault" : "3065.8235",
+        "neutralTintDefault" : "8.284998",
         "orientationDefault" : "6",
         "scaleFactorDefault" : "1.0"
       },
@@ -3445,31 +3445,31 @@
             "above1" : 0,
             "below0" : 0,
             "edr" : 0,
-            "max" : 0.24267578125,
-            "mean" : 0.019519500668526382,
-            "min" : -0,
+            "max" : 0.33251953125,
+            "mean" : 0.02281424468662947,
+            "min" : 0,
             "samples" : 2286144,
-            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+            "tag" : "<CGColorSpace 0x110247ea0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
           },
           {
             "above1" : 0,
             "below0" : 0,
             "edr" : 1,
-            "max" : 0.264892578125,
-            "mean" : 0.02290017303648365,
-            "min" : 0,
+            "max" : 0.422119140625,
+            "mean" : 0.025960223478599116,
+            "min" : -0,
             "samples" : 2286144,
-            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+            "tag" : "<CGColorSpace 0x110247ea0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
           },
           {
             "above1" : 0,
             "below0" : 0,
             "edr" : 2,
-            "max" : 0.265869140625,
-            "mean" : 0.023777869235015986,
-            "min" : 0,
+            "max" : 0.43115234375,
+            "mean" : 0.026747038490235544,
+            "min" : -0,
             "samples" : 2286144,
-            "tag" : "<CGColorSpace 0x12a11aee0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
+            "tag" : "<CGColorSpace 0x110247ea0> (kCGColorSpaceICCBased; kCGColorSpaceModelRGB; Display P3)"
           }
         ]
       },
@@ -3536,5 +3536,5 @@
       "status" : "ok"
     }
   ],
-  "startedAt" : "2026-10-24T10:34:22Z"
+  "startedAt" : "2026-10-24T13:32:05Z"
 }
