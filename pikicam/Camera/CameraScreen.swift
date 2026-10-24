@@ -81,7 +81,7 @@ struct CameraScreen: View {
                 Spacer()
                 shutterButton
                 Spacer()
-                Color.clear.frame(width: 64, height: 64)
+                flipButton
             }
             .padding(.horizontal, 32)
         }
@@ -148,6 +148,18 @@ struct CameraScreen: View {
                 .frame(width: 64, height: 64)
         }
         .accessibilityLabel("Open archive")
+    }
+
+    private var flipButton: some View {
+        Button {
+            Task { await engine.flipCamera() }
+        } label: {
+            Image(systemName: "arrow.triangle.2.circlepath.camera")
+                .skin(.title)
+                .frame(width: 64, height: 64)
+        }
+        .accessibilityLabel("Flip camera")
+        .accessibilityIdentifier("camera.flip")
     }
 
     private var shutterButton: some View {

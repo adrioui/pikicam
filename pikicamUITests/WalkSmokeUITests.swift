@@ -115,3 +115,64 @@ extension WalkSmokeUITests {
         XCTAssertTrue(saved.waitForExistence(timeout: 45), "mono export + save completes")
     }
 }
+
+final class ArchiveHealthUITests: XCTestCase {
+    @MainActor
+    func testArchiveOpensWithoutCrashing() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-pikicam.reset-migration"]
+        app.launch()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for label in ["Allow While Using App", "Allow Full Access", "Allow", "OK"] {
+            let button = springboard.buttons[label]
+            if button.waitForExistence(timeout: 2) {
+                button.tap()
+            }
+        }
+        let archive = app.buttons["Open archive"]
+        XCTAssertTrue(archive.waitForExistence(timeout: 15), "archive button visible")
+        archive.tap()
+        let anyContent = app.staticTexts["NO CAPTURES"].firstMatch
+            .waitForExistence(timeout: 6)
+            || app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Photo'")).firstMatch
+                .waitForExistence(timeout: 6)
+        XCTAssertTrue(anyContent, "archive shows content or empty state")
+        Thread.sleep(forTimeInterval: 8)
+        let back = app.buttons["archive.back"]
+        XCTAssertTrue(back.exists, "archive chrome still present after scan window")
+        back.tap()
+        let shutter = app.buttons["camera.shutter"]
+        XCTAssertTrue(
+            shutter.waitForExistence(timeout: 10),
+            "archive must stay responsive (regression: whole-library legacy scan froze main thread)"
+        )
+        XCTAssertTrue(app.state == .runningForeground)
+    }
+}
+
+final class FrontCameraUITests: XCTestCase {
+    @MainActor
+    func testFlipToFrontAndBack() {
+        let app = XCUIApplication()
+        app.launch()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for label in ["Allow While Using App", "Allow Full Access", "Allow", "OK"] {
+            let button = springboard.buttons[label]
+            if button.waitForExistence(timeout: 2) {
+                button.tap()
+            }
+        }
+        let flip = app.buttons["camera.flip"]
+        XCTAssertTrue(flip.waitForExistence(timeout: 15), "flip visible")
+        flip.tap()
+        Thread.sleep(forTimeInterval: 2)
+        let shutter = app.buttons["camera.shutter"]
+        XCTAssertTrue(shutter.waitForExistence(timeout: 5))
+        shutter.tap()
+        Thread.sleep(forTimeInterval: 3)
+        XCTAssertTrue(app.state == .runningForeground, "front capture must not crash")
+        flip.tap()
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertTrue(shutter.waitForExistence(timeout: 5), "flip back returns control")
+    }
+}

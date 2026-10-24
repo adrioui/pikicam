@@ -60,15 +60,15 @@ struct ArchiveScreen: View {
 
     private func reload() {
         assets = Archive.fetchArchiveAssets()
-        Task { await runMigrationIfFirstLaunch() }
-    }
-
-    private func runMigrationIfFirstLaunch() async {
-        let dry = Archive.dryRun()
-        guard !dry.alreadyDone, dry.legacyFound > 0 || dry.beforeInAlbum == 0 else { return }
-        guard let report = try? await Archive.migrate() else { return }
-        assets = Archive.fetchArchiveAssets()
-        print("MIGRATION report:", report.beforeInAlbum, report.legacyFound, report.moved, report.foreignTouched)
+        Task.detached(priority: .utility) {
+            let dry = await MainActor.run { Archive.dryRun() }
+            guard !dry.alreadyDone else { return }
+            guard let report = try? await Archive.migrate() else { return }
+            WalkMark.mark("migration-moved-\(report.moved)-foreign-\(report.foreignTouched)")
+            await MainActor.run {
+                assets = Archive.fetchArchiveAssets()
+            }
+        }
     }
 }
 

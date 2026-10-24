@@ -4,7 +4,10 @@ import UIKit
 
 extension CameraEngine {
     func startRecording() async {
-        guard !isRecording else { return }
+        guard !isRecording, isRunning else {
+            clipMessage = isRecording ? clipMessage : "Camera not ready."
+            return
+        }
         if AVCaptureDevice.authorizationStatus(for: .audio) == .notDetermined {
             _ = await AVCaptureDevice.requestAccess(for: .audio)
         }

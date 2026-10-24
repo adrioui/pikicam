@@ -35,8 +35,35 @@ final class CameraEngine {
     var clipMessage: String?
     var mode: Mode = .photo
     var isMonoOn = false
+    private(set) var usingFrontCamera = false
     var movieDelegate: MovieRecorderBox?
     var audioInput: AVCaptureDeviceInput?
+
+    func flipCamera() async {
+        usingFrontCamera.toggle()
+        guard isConfigured else { return }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            let position: AVCaptureDevice.Position = usingFrontCamera ? .front : .back
+            let wideType: AVCaptureDevice.DeviceType = .builtInWideAngleCamera
+            let queue = sessionQueue
+            let session = self.session
+            queue.async {
+                session.beginConfiguration()
+                for input in session.inputs {
+                    session.removeInput(input)
+                }
+                if let device = AVCaptureDevice.default(wideType, for: .video, position: position),
+                    let input = try? AVCaptureDeviceInput(device: device),
+                    session.canAddInput(input)
+                {
+                    session.addInput(input)
+                }
+                session.commitConfiguration()
+                continuation.resume()
+            }
+        }
+        WalkMark.mark(usingFrontCamera ? "flip-front" : "flip-back")
+    }
 
     func start() async {
         guard AVCaptureDevice.authorizationStatus(for: .video) != .denied else {

@@ -31,6 +31,10 @@ struct PlayerSurface: UIViewRepresentable {
 struct PlayerBar: UIViewRepresentable {
     let player: AVQueuePlayer
 
+    func makeCoordinator() -> ObserverBox {
+        ObserverBox()
+    }
+
     func makeUIView(context: Context) -> UIStackView {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -39,7 +43,7 @@ struct PlayerBar: UIViewRepresentable {
         stack.isOpaque = true
         stack.translatesAutoresizingMaskIntoConstraints = false
         let toggle = Self.makeToggle(player: player)
-        let scrubber = Self.makeScrubber(player: player)
+        let scrubber = Self.makeScrubber(player: player, coordinator: context.coordinator)
         stack.addArrangedSubview(toggle)
         stack.addArrangedSubview(scrubber)
         toggle.widthAnchor.constraint(equalToConstant: 88).isActive = true
@@ -65,14 +69,17 @@ struct PlayerBar: UIViewRepresentable {
         return toggle
     }
 
-    private static func makeScrubber(player: AVQueuePlayer) -> UISlider {
+    private static func makeScrubber(
+        player: AVQueuePlayer, coordinator: ObserverBox
+    ) -> UISlider {
         let scrubber = UISlider()
         scrubber.minimumValue = 0
         scrubber.maximumValue = 1
         scrubber.isAccessibilityElement = true
         scrubber.accessibilityLabel = "Scrub"
         let box = ScrubberBox(slider: scrubber)
-        player.addPeriodicTimeObserver(
+        coordinator.player = player
+        coordinator.token = player.addPeriodicTimeObserver(
             forInterval: CMTime(value: 1, timescale: 4), queue: .main
         ) { time in
             DispatchQueue.main.async {
@@ -90,7 +97,21 @@ struct PlayerBar: UIViewRepresentable {
 
     func updateUIView(_ uiView: UIStackView, context: Context) {}
 
-    static func dismantleUIView(_ uiView: UIStackView, coordinator: ()) {}
+    static func dismantleUIView(_ uiView: UIStackView, coordinator: ObserverBox) {
+        coordinator.stop()
+    }
+}
+
+final class ObserverBox {
+    var token: Any?
+    weak var player: AVQueuePlayer?
+
+    func stop() {
+        if let token, let player {
+            player.removeTimeObserver(token)
+        }
+        token = nil
+    }
 }
 
 final class ScrubberBox: @unchecked Sendable {
