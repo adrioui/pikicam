@@ -156,7 +156,7 @@ final class CameraEngine {
 
     func saveToPhotos(_ result: CaptureResult) async {
         var toSave = result
-        if isMonoOn, let heic = await BNWDeveloper.monochromeHEIC(from: result) {
+        if isMonoOn, let heic = await Look.monochromeHEIC(from: result.data) {
             WalkMark.mark("mono-develop-done")
             toSave = CaptureResult(data: heic, isDNG: false, timestamp: result.timestamp)
         }

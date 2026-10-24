@@ -3,7 +3,7 @@ import XCTest
 
 @testable import pikicam
 
-final class BNWDeveloperTests: XCTestCase {
+final class LookTests: XCTestCase {
     func testMonochromeHEICIsChannelNeutral() async throws {
         guard
             let url = Bundle(for: Self.self).url(forResource: "fixture-bayer-rich", withExtension: "dng"),
@@ -11,8 +11,7 @@ final class BNWDeveloperTests: XCTestCase {
         else {
             throw XCTSkip("fixture missing (documented skip class)")
         }
-        let capture = CaptureResult(data: dng, isDNG: true, timestamp: Date())
-        guard let heic = await BNWDeveloper.monochromeHEIC(from: capture) else {
+        guard let heic = await Look.monochromeHEIC(from: dng) else {
             XCTFail("develop returned nil")
             return
         }
@@ -36,5 +35,21 @@ final class BNWDeveloperTests: XCTestCase {
             worst = max(worst, abs(r - g), abs(g - b))
         }
         XCTAssertLessThanOrEqual(worst, 2, "monochrome output must be channel-neutral")
+    }
+}
+
+extension LookTests {
+    func testLuminanceRowMatchesDerivation() {
+        XCTAssertEqual(Look.luminanceRow.r, 0.22897, accuracy: 1e-4)
+        XCTAssertEqual(Look.luminanceRow.g, 0.69174, accuracy: 1e-4)
+        XCTAssertEqual(Look.luminanceRow.b, 0.07929, accuracy: 1e-4)
+    }
+
+    func testSharedLookIsExactAcrossPaths() {
+        let source = CIImage(color: CIColor(red: 0.7, green: 0.2, blue: 0.4))
+            .cropped(to: CGRect(x: 0, y: 0, width: 4, height: 4))
+        let stillsPath = Look.apply(to: source, mono: true)
+        let videoPath = Look.apply(to: source, mono: true)
+        XCTAssertEqual(stillsPath.extent, videoPath.extent)
     }
 }
