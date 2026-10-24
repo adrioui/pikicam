@@ -21,7 +21,7 @@ public enum ShutterState: Hashable, Sendable {
 
 public enum RecordingState: Hashable, Sendable {
     case idle
-    case starting
+    case requesting
     case recording(since: Date)
     case stopping
     case failed(RecordingError)

@@ -113,15 +113,70 @@ struct CameraScreen: View {
         HStack {
             thumbnail
             Spacer()
-            GessoShutterActuator(state: model.shutterState) {
-                Task { await model.pressShutter() }
-            }
+            primaryActuator
             Spacer()
             modeStrip
         }
         .padding(.horizontal, UGrid.medium)
         .frame(height: 96)
         .background(SurfaceColor.low)
+    }
+
+    @ViewBuilder
+    private var primaryActuator: some View {
+        switch model.mode {
+        case .photo:
+            GessoShutterActuator(state: model.shutterState) {
+                Task { await model.pressShutter() }
+            }
+        case .video:
+            Button {
+                Task { await model.toggleRecording() }
+            } label: {
+                ZStack {
+                    Circle()
+                        .strokeBorder(Palette.gesso, lineWidth: 2)
+                        .frame(width: 72, height: 72)
+                    if case .recording = model.recordState {
+                        Rectangle()
+                            .fill(Palette.gesso)
+                            .frame(width: 24, height: 24)
+                    } else {
+                        Circle()
+                            .fill(Palette.gesso)
+                            .frame(width: 56, height: 56)
+                    }
+                }
+            }
+            .buttonStyle(PlainButtonStyle())
+            .accessibilityIdentifier(AccessibilityID.Camera.recordControl)
+            .accessibilityLabel("Record")
+        case .scan:
+            Button {
+                Task { await model.toggleScan() }
+            } label: {
+                ZStack {
+                    Circle()
+                        .strokeBorder(Palette.gesso, lineWidth: 2)
+                        .frame(width: 72, height: 72)
+                    Circle()
+                        .fill(Palette.gesso.opacity(0.85))
+                        .frame(width: 56, height: 56)
+                    scanCaption
+                }
+            }
+            .buttonStyle(PlainButtonStyle())
+            .accessibilityLabel("Scan")
+        }
+    }
+
+    @ViewBuilder
+    private var scanCaption: some View {
+        if case .scanning(let progress, _) = model.scanState {
+            Text("[ SCANNING \(Int(progress * 100))% ]")
+                .font(PikicamFont.mono(.micro))
+                .foregroundStyle(Palette.photometricBlack)
+        }
     }
 
     @ViewBuilder

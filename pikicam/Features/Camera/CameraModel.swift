@@ -22,6 +22,9 @@ final class CameraModel {
     var lastThumbnail: Data?
     var isLevelsVisible = false
     var isLibraryPresented = false
+    var recordState: RecordingState = .idle
+    var scanState: ScanState = .idle
+    var mono: MonoState?
 
     private var sessionTask: Task<Void, Never>?
     private var captureFlow: CaptureFlow { CaptureFlow(deps: deps) }
@@ -98,6 +101,84 @@ final class CameraModel {
             shutterState = .countdown(remaining: remaining)
             try? await deps.clock.sleep(for: .seconds(1))
         }
+    }
+
+    func toggleRecording() async {
+        switch recordState {
+        case .idle, .failed:
+            recordState = .requesting
+            do {
+                try await deps.recording.start(
+                    RecordingIntent(mode: .res1080p30, audio: false),
+                    settings: settings, look: .standard, mono: mono
+                )
+                recordState = .recording(since: Date())
+            } catch {
+                recordState = .failed(error)
+                lastError = "\(error)"
+            }
+        case .recording(let since):
+            recordState = .stopping
+            do {
+                let clip = try await deps.recording.stop()
+                _ = try await deps.library.saveVideo(clip, payload: AdjustmentPayload(
+                    look: .standard, geometry: .placeholder,
+                    recipeVersion: NeutralRecipe.version, decoderVersion: 8, provenance: nil
+                ))
+                recordState = .idle
+            } catch let error as RecordingError {
+                recordState = .failed(error)
+                lastError = "\(error)"
+            } catch let libraryError as LibraryError {
+                lastError = "\(libraryError)"
+            } catch {
+                lastError = "\(error)"
+            }
+            _ = since
+        case .requesting, .stopping:
+            break
+        }
+    }
+
+    func toggleScan() async {
+        switch scanState {
+        case .idle, .failed:
+            let config = ScanConfig(axis: .horizontal, slitWidth: 8, outputLength: 1080, frameRate: 30)
+            do {
+                try await deps.scan.start(config, settings: settings)
+                scanState = .scanning(progress: 0, since: Date())
+            } catch {
+                scanState = .failed(error)
+                lastError = "\(error)"
+            }
+        case .scanning:
+            scanState = .finishing
+            do {
+                let result = try await deps.scan.stop()
+                let rendition = try? await deps.developer.export(
+                    result.assemblyBytes, look: currentLook(), geometry: .placeholder
+                )
+                _ = try? await deps.library.saveScan(
+                    result, rendition: rendition, payload: AdjustmentPayload(
+                        look: currentLook(), geometry: .placeholder,
+                        recipeVersion: NeutralRecipe.version, decoderVersion: 8, provenance: nil
+                    )
+                )
+                scanState = .idle
+            } catch {
+                scanState = .failed(error)
+                lastError = "\(error)"
+            }
+        case .finishing:
+            break
+        }
+    }
+
+    private func currentLook() -> LookParameters {
+        var look = LookParameters()
+        look.mono = mono
+        look.line = activeLine
+        return look
     }
 
     func selectLine(_ number: Int) {
