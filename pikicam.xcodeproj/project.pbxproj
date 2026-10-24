@@ -8,32 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		0B8E190815D2E82E4F62124C /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 98B3374C413622E12D6607E8 /* IMG_1361.DNG */; };
-		1A161F979B61F3E52999863C /* LinearRenderProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6908144C28D3970A79127E41 /* LinearRenderProbes.swift */; };
-		1B6370A173577BEC1A14FAC3 /* CaptureAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */; };
 		2C40C0803CA1117DF8BA2E00 /* PikicamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887529D123CA8228FAD6A638 /* PikicamApp.swift */; };
-		2CCB98A192D6BAAFBD06D8C5 /* DeviceProbeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDBE40BE8358B5CD0BD2DBB /* DeviceProbeTests.swift */; };
-		2DC96402AB338CAA139C2F1F /* CIRAWProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */; };
 		375A37A0A499260885F0C053 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */; };
-		3926848F210E951B51521934 /* VideoProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7235874492D75C7625C45C39 /* VideoProbes.swift */; };
 		3B1A95565BF61DE6FD99F484 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76B9A346F804B0BB91E8939 /* CameraEngine.swift */; };
-		50CDB03EA96802020A32899C /* PhotoKitProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */; };
 		612FA9EE4EDDCD8B2B1A3999 /* ArchiveScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */; };
 		69E3DD46349D8EA6B9EB4423 /* WalkSmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */; };
 		76822977BAA3AEDCD7B8E870 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CF9A0660C9DEBB114750C83 /* Assets.xcassets */; };
 		81A30DFE03410B195350628D /* CameraScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */; };
-		8A5B8B55E31FF7B2E1F23219 /* CompileProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */; };
-		8CC168732F5D8E4CA64BD8BD /* ProbeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */; };
-		9319638C03690CBFE6FE3A0C /* CameraProbes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */; };
-		938BDEC7C044D0F646B6497E /* IMG_1361.DNG in Resources */ = {isa = PBXBuildFile; fileRef = 625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */; };
 		B8180EE680AADE77D710D171 /* BNWDeveloperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */; };
-		C1BA02DD60AB40D8D3F97E8D /* ProbeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */; };
-		CAD68F1664BE24935F1FE457 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */; };
 		DE8289F5DAD675F1000691F7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9400A1986D8108D34D521A2 /* RootView.swift */; };
 		E61D01E217443412CFF94AF1 /* WalkMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C27BCE63799CBDCBDA315B /* WalkMark.swift */; };
-		EAFEFA50A3D2939A439CC1BE /* PhotoDelegateBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */; };
 		EFC70894ACA0C05FECCAE5AF /* fixture-bayer-rich.dng in Resources */ = {isa = PBXBuildFile; fileRef = 08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */; };
 		F1422961B00FB1F370B2FD21 /* BNWDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */; };
-		FE5EAD67229E1969D29138BF /* ProbeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19A85566866AEDF721E8144 /* ProbeApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,21 +30,7 @@
 			remoteGlobalIDString = 1A8385446D59EF8FBD83D345;
 			remoteInfo = pikicam;
 		};
-		64F0D7D4D8AF47FB4A965DC4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D75033E17EA0CC4B5D8DA931 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5A5B546C7EDACAE5DDDCCD85;
-			remoteInfo = pikicamProbes;
-		};
 		6E99A9CF4A60B1E8C87A55C1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D75033E17EA0CC4B5D8DA931 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1A8385446D59EF8FBD83D345;
-			remoteInfo = pikicam;
-		};
-		B8F3E89B4C974A71707C601F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D75033E17EA0CC4B5D8DA931 /* Project object */;
 			proxyType = 1;
@@ -68,41 +40,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeSupport.swift; sourceTree = "<group>"; };
 		08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */ = {isa = PBXFileReference; path = "fixture-bayer-rich.dng"; sourceTree = "<group>"; };
 		22090ACB7AD85BFD3A0A47D1 /* CameraScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScreen.swift; sourceTree = "<group>"; };
 		2C88932EC78A432C7F0167F3 /* WalkSmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkSmokeUITests.swift; sourceTree = "<group>"; };
 		35DD3B3E04FF2F30821162B4 /* pikicam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicam.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		44A0DB1F83FE22CE5A81780B /* pikicamDeviceTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamDeviceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		49586EBAA8ADA22E7056F48B /* BNWDeveloperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNWDeveloperTests.swift; sourceTree = "<group>"; };
-		6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeUITests.swift; sourceTree = "<group>"; };
-		625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
-		6908144C28D3970A79127E41 /* LinearRenderProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearRenderProbes.swift; sourceTree = "<group>"; };
 		6CF9A0660C9DEBB114750C83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		70C27BCE63799CBDCBDA315B /* WalkMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkMark.swift; sourceTree = "<group>"; };
-		71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
-		7235874492D75C7625C45C39 /* VideoProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoProbes.swift; sourceTree = "<group>"; };
-		78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoKitProbes.swift; sourceTree = "<group>"; };
-		8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraProbes.swift; sourceTree = "<group>"; };
 		859C963E83EC62CCE59D41F7 /* BNWDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNWDeveloper.swift; sourceTree = "<group>"; };
 		887529D123CA8228FAD6A638 /* PikicamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PikicamApp.swift; sourceTree = "<group>"; };
-		8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamProbesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B3374C413622E12D6607E8 /* IMG_1361.DNG */ = {isa = PBXFileReference; path = IMG_1361.DNG; sourceTree = "<group>"; };
-		A1DEEC6C66660AC9680CF8B9 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
 		A76B9A346F804B0BB91E8939 /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
-		B19A85566866AEDF721E8144 /* ProbeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeApp.swift; sourceTree = "<group>"; };
-		C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = pikicamProbes.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureAgent.swift; sourceTree = "<group>"; };
-		DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompileProbes.swift; sourceTree = "<group>"; };
 		E07EF371F48A630494030106 /* pikicamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = pikicamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195A82E1E7FF353BE752E82 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E3DF8520E8215BD26FECECFA /* ArchiveScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveScreen.swift; sourceTree = "<group>"; };
-		E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRAWProbes.swift; sourceTree = "<group>"; };
-		E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDelegateBox.swift; sourceTree = "<group>"; };
-		EAFE175C489BFB6A82EDB6FA /* ProbesBridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProbesBridgingHeader.h; sourceTree = "<group>"; };
 		F9400A1986D8108D34D521A2 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		FCDBE40BE8358B5CD0BD2DBB /* DeviceProbeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceProbeTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -118,9 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				35DD3B3E04FF2F30821162B4 /* pikicam.app */,
-				44A0DB1F83FE22CE5A81780B /* pikicamDeviceTests.xctest */,
-				C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */,
-				8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */,
 				E07EF371F48A630494030106 /* pikicamTests.xctest */,
 				477DBD5C190D91369C1CBE26 /* pikicamUITests.xctest */,
 			);
@@ -131,21 +81,10 @@
 			isa = PBXGroup;
 			children = (
 				577127E007D104BC27D49682 /* pikicam */,
-				F307F4C593FA0F88A1617279 /* pikicamDeviceTests */,
 				5EF8105C75BC74200C590770 /* pikicamTests */,
 				80C963D35FB8C9802FDC7291 /* pikicamUITests */,
-				18B503B6183B216D06A282D6 /* Probes */,
 				0E7906C069C7D0D19EC12D0B /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		18B503B6183B216D06A282D6 /* Probes */ = {
-			isa = PBXGroup;
-			children = (
-				D072F94358A3940D8B70DB4E /* pikicamProbes */,
-				68A9C5D861631A578C25CC38 /* pikicamProbesUITests */,
-			);
-			path = Probes;
 			sourceTree = "<group>";
 		};
 		577127E007D104BC27D49682 /* pikicam */ = {
@@ -167,14 +106,6 @@
 				D2A1959CAA9E50F5A1A3F196 /* Fixtures */,
 			);
 			path = pikicamTests;
-			sourceTree = "<group>";
-		};
-		68A9C5D861631A578C25CC38 /* pikicamProbesUITests */ = {
-			isa = PBXGroup;
-			children = (
-				6017BA0075CA2FB0C2685D71 /* ProbeUITests.swift */,
-			);
-			path = pikicamProbesUITests;
 			sourceTree = "<group>";
 		};
 		7AC2E67896AA72D923E2838D /* Support */ = {
@@ -213,48 +144,11 @@
 			path = Camera;
 			sourceTree = "<group>";
 		};
-		D072F94358A3940D8B70DB4E /* pikicamProbes */ = {
-			isa = PBXGroup;
-			children = (
-				8592EDD41BEFDDEB19BE8878 /* CameraProbes.swift */,
-				CA3FAB2E3CB7A47740D6091E /* CaptureAgent.swift */,
-				E4FB696D891543CEF25ECE7D /* CIRAWProbes.swift */,
-				DF7311D4AAC24B948573E5A2 /* CompileProbes.swift */,
-				A1DEEC6C66660AC9680CF8B9 /* ExceptionCatcher.h */,
-				71CF181038F872BA8AF76B2A /* ExceptionCatcher.m */,
-				6908144C28D3970A79127E41 /* LinearRenderProbes.swift */,
-				E916799D583275FFDE85C67D /* PhotoDelegateBox.swift */,
-				78928FD3D2E2127326AA9961 /* PhotoKitProbes.swift */,
-				B19A85566866AEDF721E8144 /* ProbeApp.swift */,
-				EAFE175C489BFB6A82EDB6FA /* ProbesBridgingHeader.h */,
-				04EAD63E61AFBFEA706D7245 /* ProbeSupport.swift */,
-				7235874492D75C7625C45C39 /* VideoProbes.swift */,
-				FAB7A71B122210E14DF82BFD /* Fixtures */,
-			);
-			path = pikicamProbes;
-			sourceTree = "<group>";
-		};
 		D2A1959CAA9E50F5A1A3F196 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
 				08D2AE100CAE7A2BAFBE7FDB /* fixture-bayer-rich.dng */,
 				98B3374C413622E12D6607E8 /* IMG_1361.DNG */,
-			);
-			path = Fixtures;
-			sourceTree = "<group>";
-		};
-		F307F4C593FA0F88A1617279 /* pikicamDeviceTests */ = {
-			isa = PBXGroup;
-			children = (
-				FCDBE40BE8358B5CD0BD2DBB /* DeviceProbeTests.swift */,
-			);
-			path = pikicamDeviceTests;
-			sourceTree = "<group>";
-		};
-		FAB7A71B122210E14DF82BFD /* Fixtures */ = {
-			isa = PBXGroup;
-			children = (
-				625FDC2DC1B0A3E3C63A6EDE /* IMG_1361.DNG */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -298,42 +192,6 @@
 			productReference = 35DD3B3E04FF2F30821162B4 /* pikicam.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5A5B546C7EDACAE5DDDCCD85 /* pikicamProbes */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D62F58A4D5D5F1726CDB050D /* Build configuration list for PBXNativeTarget "pikicamProbes" */;
-			buildPhases = (
-				B75316379AB5D3C472135DE1 /* Sources */,
-				D70C2C8BD2322D0575C3FA53 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = pikicamProbes;
-			packageProductDependencies = (
-			);
-			productName = pikicamProbes;
-			productReference = C95EF9DF11F530FC2686F6EE /* pikicamProbes.app */;
-			productType = "com.apple.product-type.application";
-		};
-		63B97B7DC81536EC458513DF /* pikicamProbesUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DB0BA58EE2E69A8A52AA8AAE /* Build configuration list for PBXNativeTarget "pikicamProbesUITests" */;
-			buildPhases = (
-				09D56C0A8A6D79540F4C0A24 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8C17E39C460FFBFC63AB2A58 /* PBXTargetDependency */,
-			);
-			name = pikicamProbesUITests;
-			packageProductDependencies = (
-			);
-			productName = pikicamProbesUITests;
-			productReference = 8896122C06EB40D31C38D0FA /* pikicamProbesUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		7378676BAA3C6C9569A26882 /* pikicamTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 86DA1961FBBA57AEDD55715F /* Build configuration list for PBXNativeTarget "pikicamTests" */;
@@ -351,24 +209,6 @@
 			);
 			productName = pikicamTests;
 			productReference = E07EF371F48A630494030106 /* pikicamTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		EDA167FB75A1E1001330E786 /* pikicamDeviceTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E8F2348DE45490DBD4E7432A /* Build configuration list for PBXNativeTarget "pikicamDeviceTests" */;
-			buildPhases = (
-				229C13441BE03E942B5E664F /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				59860000525BD88B5B8C1E40 /* PBXTargetDependency */,
-			);
-			name = pikicamDeviceTests;
-			packageProductDependencies = (
-			);
-			productName = pikicamDeviceTests;
-			productReference = 44A0DB1F83FE22CE5A81780B /* pikicamDeviceTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -389,20 +229,7 @@
 						DevelopmentTeam = V7BF8622ZR;
 						ProvisioningStyle = Automatic;
 					};
-					5A5B546C7EDACAE5DDDCCD85 = {
-						DevelopmentTeam = V7BF8622ZR;
-						ProvisioningStyle = Automatic;
-					};
-					63B97B7DC81536EC458513DF = {
-						DevelopmentTeam = V7BF8622ZR;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 5A5B546C7EDACAE5DDDCCD85;
-					};
 					7378676BAA3C6C9569A26882 = {
-						DevelopmentTeam = V7BF8622ZR;
-						ProvisioningStyle = Automatic;
-					};
-					EDA167FB75A1E1001330E786 = {
 						DevelopmentTeam = V7BF8622ZR;
 						ProvisioningStyle = Automatic;
 					};
@@ -425,9 +252,6 @@
 				1A8385446D59EF8FBD83D345 /* pikicam */,
 				7378676BAA3C6C9569A26882 /* pikicamTests */,
 				118AA81D1E832CEA7BC60F21 /* pikicamUITests */,
-				EDA167FB75A1E1001330E786 /* pikicamDeviceTests */,
-				5A5B546C7EDACAE5DDDCCD85 /* pikicamProbes */,
-				63B97B7DC81536EC458513DF /* pikicamProbesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -451,38 +275,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D70C2C8BD2322D0575C3FA53 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				938BDEC7C044D0F646B6497E /* IMG_1361.DNG in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		09D56C0A8A6D79540F4C0A24 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C1BA02DD60AB40D8D3F97E8D /* ProbeUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1B63EEE29DDEFAF4C9163BE3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				69E3DD46349D8EA6B9EB4423 /* WalkSmokeUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		229C13441BE03E942B5E664F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2CCB98A192D6BAAFBD06D8C5 /* DeviceProbeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,24 +300,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B75316379AB5D3C472135DE1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DC96402AB338CAA139C2F1F /* CIRAWProbes.swift in Sources */,
-				9319638C03690CBFE6FE3A0C /* CameraProbes.swift in Sources */,
-				1B6370A173577BEC1A14FAC3 /* CaptureAgent.swift in Sources */,
-				8A5B8B55E31FF7B2E1F23219 /* CompileProbes.swift in Sources */,
-				CAD68F1664BE24935F1FE457 /* ExceptionCatcher.m in Sources */,
-				1A161F979B61F3E52999863C /* LinearRenderProbes.swift in Sources */,
-				EAFEFA50A3D2939A439CC1BE /* PhotoDelegateBox.swift in Sources */,
-				50CDB03EA96802020A32899C /* PhotoKitProbes.swift in Sources */,
-				FE5EAD67229E1969D29138BF /* ProbeApp.swift in Sources */,
-				8CC168732F5D8E4CA64BD8BD /* ProbeSupport.swift in Sources */,
-				3926848F210E951B51521934 /* VideoProbes.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FC56AFEC75D201DAD7C4F481 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -529,16 +311,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		59860000525BD88B5B8C1E40 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1A8385446D59EF8FBD83D345 /* pikicam */;
-			targetProxy = B8F3E89B4C974A71707C601F /* PBXContainerItemProxy */;
-		};
-		8C17E39C460FFBFC63AB2A58 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5A5B546C7EDACAE5DDDCCD85 /* pikicamProbes */;
-			targetProxy = 64F0D7D4D8AF47FB4A965DC4 /* PBXContainerItemProxy */;
-		};
 		BEFFC53E84A69942B60D8622 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1A8385446D59EF8FBD83D345 /* pikicam */;
@@ -683,38 +455,6 @@
 			};
 			name = Debug;
 		};
-		348E05DF2904B82F1476F259 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamDeviceTests;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pikicam.app/pikicam";
-			};
-			name = Debug;
-		};
-		5BD95ACD6F6A9E8EBF808C13 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamDeviceTests;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/pikicam.app/pikicam";
-			};
-			name = Release;
-		};
 		7CD85B0A0797881190155581 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -740,92 +480,6 @@
 				MTL_COMPILER_FLAGS = "-fcikernel";
 				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicam;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		8C2A198FEB0EDA9C64A50F74 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Probe app captures Bayer RAW photos on the connected device to verify capture claims.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Probe app saves its own probe assets to verify PhotoKit behaviour.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Probe app verifies PhotoKit resource shapes by creating and deleting its own assets.";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbes;
-				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = Probes/pikicamProbes/ProbesBridgingHeader.h;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		96907FFC940C4C4FECF5A396 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbesUITests;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = pikicamProbes;
-			};
-			name = Release;
-		};
-		A7696E650B24E784A48989BF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbesUITests;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = pikicamProbes;
-			};
-			name = Debug;
-		};
-		B5C5EC291900597EBA93AAAA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Probe app captures Bayer RAW photos on the connected device to verify capture claims.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Probe app saves its own probe assets to verify PhotoKit behaviour.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Probe app verifies PhotoKit resource shapes by creating and deleting its own assets.";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = piki.pikicamProbes;
-				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = Probes/pikicamProbes/ProbesBridgingHeader.h;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
-				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -955,38 +609,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D62F58A4D5D5F1726CDB050D /* Build configuration list for PBXNativeTarget "pikicamProbes" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B5C5EC291900597EBA93AAAA /* Debug */,
-				8C2A198FEB0EDA9C64A50F74 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		DB0BA58EE2E69A8A52AA8AAE /* Build configuration list for PBXNativeTarget "pikicamProbesUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A7696E650B24E784A48989BF /* Debug */,
-				96907FFC940C4C4FECF5A396 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		E739D11414E092C17EA2BFEE /* Build configuration list for PBXProject "pikicam" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				25B2678E2004D9FF64736193 /* Debug */,
 				CD049D3BA49259F512E7B688 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		E8F2348DE45490DBD4E7432A /* Build configuration list for PBXNativeTarget "pikicamDeviceTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				348E05DF2904B82F1476F259 /* Debug */,
-				5BD95ACD6F6A9E8EBF808C13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

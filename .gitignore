@@ -14,8 +14,6 @@
 # Why: strict lint is a gate; the config must not drift per machine.
 !/.swift-format
 # Why: same for formatting.
-!/.periphery.yml
-# Why: dead-code scope is a reviewed decision, not local taste.
 
 !/pikicam
 # Why: the app is the product — the whole subtree is source.
