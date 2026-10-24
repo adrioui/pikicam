@@ -165,12 +165,17 @@ struct SettingsScreen: View {
             .padding(.vertical, UGrid.nano)
     }
 
+    static let aboutText = """
+        pikicam captures one untouched Bayer RAW exposure — no fusion, no noise reduction, no Apple tone mapping.
+        The DNG is stored exactly as the sensor wrote it. The developed rendition is pikicam's own code:
+        exposure, monochrome, filmic tone curve, gamut compression.
+        Video frames are always ISP output; the look is applied by pikicam to every frame.
+        """
+
     private var aboutSection: some View {
         Section("WHAT PIKICAM DOES TO YOUR PHOTO") {
-            Text(
-                "pikicam captures one untouched Bayer RAW exposure — no fusion, no noise reduction, no Apple tone mapping. The DNG is stored exactly as the sensor wrote it. The developed rendition is pikicam's own code: exposure, monochrome, filmic tone curve, gamut compression. Video frames are always ISP output; the look is applied by pikicam to every frame."
-            )
-            .pikicamType(.micro)
+            Text(Self.aboutText)
+                .pikicamType(.micro)
             .foregroundStyle(InkColor.calico)
         }
     }

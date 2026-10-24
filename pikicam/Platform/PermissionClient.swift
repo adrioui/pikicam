@@ -74,10 +74,11 @@ struct DiskThumbnailStore: ThumbnailStore {
         if let cached = cache.object(forKey: key) {
             return cached as Data
         }
-        let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Thumbs")
+        let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let url = caches.appendingPathComponent("Thumbs")
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-        let fileURL = url.appendingPathComponent("\(item.id.localIdentifier.replacingOccurrences(of: "/", with: "-")).heic")
+        let name = item.id.localIdentifier.replacingOccurrences(of: "/", with: "-")
+        let fileURL = url.appendingPathComponent("\(name).heic")
         if let data = try? Data(contentsOf: fileURL) {
             cache.set(data as NSData, forKey: key)
             return data

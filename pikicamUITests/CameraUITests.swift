@@ -29,7 +29,7 @@ final class CameraUITests: XCTestCase {
         shutter.tap()
         let thumbnail = app.images["camera.thumbnail"].firstMatch
         let appeared = thumbnail.waitForExistence(timeout: 15)
-        XCTAssertTrue(appeared, "thumbnail should appear after a fake capture")
+        XCTAssertTrue(appeared, "thumbnail after capture")
     }
 
     @MainActor
@@ -75,7 +75,7 @@ final class LibraryUITests: XCTestCase {
         let developed = app.staticTexts["[ DEVELOPING ]"].firstMatch
         let image = app.images["Developed capture"].firstMatch
         let failed = app.staticTexts["[ DEVELOP FAILED ]"].firstMatch
-        let anyOutcome = developed.waitForExistence(timeout: 2) || image.waitForExistence(timeout: 10) || failed.waitForExistence(timeout: 1)
+        let anyOutcome = developed.exists || image.waitForExistence(timeout: 10) || failed.exists
         XCTAssertTrue(anyOutcome, "viewer should show a develop outcome")
     }
 }
