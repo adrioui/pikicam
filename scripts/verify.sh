@@ -30,6 +30,7 @@ xcodebuild -project pikicam.xcodeproj -scheme pikicam \
 
 echo "== test on device =="
 RESULT_BUNDLE=build/dd/results.xcresult
+rm -rf "$RESULT_BUNDLE"
 set +e
 xcodebuild -project pikicam.xcodeproj -scheme pikicam \
   -destination "platform=iOS,id=$UDID" \
