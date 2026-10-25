@@ -38,6 +38,9 @@ struct RootView: View {
                     frameTimeProbe = probe
                     await probe.run(duration: 65)
                 }
+                if ProcessInfo.processInfo.arguments.contains("-pikicam.seedlibrary") {
+                    await SeedLibrary.run()
+                }
                 if ProcessInfo.processInfo.arguments.contains("-pikicam.parity") {
                     await ParityCapture.run()
                 }

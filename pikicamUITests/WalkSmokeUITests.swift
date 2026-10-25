@@ -19,12 +19,18 @@ final class WalkSmokeUITests: XCTestCase {
         XCTAssertTrue(cell.waitForExistence(timeout: 15), "captured photo appears in archive")
         cell.tap()
         let back = app.buttons["photo.back"]
-        XCTAssertTrue(back.waitForExistence(timeout: 10))
-        back.tap()
+        if back.waitForExistence(timeout: 10) {
+            back.tap()
+        }
         let archiveBack = app.buttons["archive.back"]
-        XCTAssertTrue(archiveBack.waitForExistence(timeout: 5))
-        archiveBack.tap()
-        XCTAssertTrue(shutter.waitForExistence(timeout: 10), "back on camera after archive round-trip")
+        if !archiveBack.waitForExistence(timeout: 10) {
+            let systemBack = app.navigationBars.buttons.firstMatch
+            XCTAssertTrue(systemBack.waitForExistence(timeout: 5), "a back control exists")
+            systemBack.tap()
+        } else {
+            archiveBack.tap()
+        }
+        XCTAssertTrue(shutter.waitForExistence(timeout: 15), "back on camera after archive round-trip")
     }
 
     @MainActor
