@@ -9,7 +9,7 @@ unless a walk step needs it.
   tap<1s) re-measured after any change that touches a verb.
 - Skin: one token file (Support/Skin.swift). Nothing else may name a
   color, size, or weight — SkinTests fail the build on violations.
-  HIG deviations are enumerated in docs/SKIN.md or they are bugs.
+  HIG deviations are enumerated in the local docs/SKIN.md or they are bugs.
 - Commits: conventional type(scope), atomic, imperative; every commit
   leaves the app launchable.
 - Blocking waits inside performChanges are forbidden (DIAGNOSIS 1);

@@ -42,14 +42,13 @@ The device is the only verification target — never a simulator.
 
 ## What the code does not say
 
-Why-decisions live in `docs/`, not inline: the [DIAGNOSIS](docs/DIAGNOSIS.md)
-that rebuilt this app, the [WALK](docs/WALK.md) (ship gate + budgets),
-[SKIN](docs/SKIN.md) (token table, deviations, panel claim),
-[TEARDOWN](docs/TEARDOWN.md) (grammar + anti-patterns),
-[HEALTH](docs/HEALTH.md) (failure taxonomy), and
-[artifacts](docs/artifacts/) (ffprobe byte-truth, frame-time decision,
-parity). Tests enforce the skin and the look; nothing is a claim
-without a judge.
+Why-decisions live in the local `docs/` tree (kept with the device that
+produced the evidence, not on GitHub): the diagnosis that rebuilt this
+app, the walk definition and budgets, the skin token table and its HIG
+deviations, the interaction teardown with anti-patterns, the failure
+taxonomy, and the measurement artifacts (ffprobe byte-truth, frame-time
+decision, parity protocol). Tests enforce the skin and the look in-repo;
+nothing is a claim without a judge.
 
 ## Honest non-goals
 
