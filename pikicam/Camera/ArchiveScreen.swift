@@ -16,7 +16,7 @@ struct ArchiveScreen: View {
                     VStack(spacing: 12) {
                         Text("NO CAPTURES")
                             .skin(.body)
-                        Text("SHOTS YOU TAKE APPEAR HERE.")
+                        Text("CAPTURES SHOW HERE AFTER YOU SHOOT.")
                             .skin(.caption, Skin.Ink.rule)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

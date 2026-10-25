@@ -13,7 +13,7 @@ struct CameraScreen: View {
                 CameraPreviewView(session: engine.session)
                     .accessibilityLabel("Viewfinder")
                 if !engine.isRunning {
-                    Text("STARTING CAMERA…")
+                    Text("CAMERA STARTS. WAIT.")
                         .skin(.body)
                 }
             }
@@ -124,7 +124,7 @@ struct CameraScreen: View {
     private var messages: some View {
         if engine.photosDenied {
             VStack(spacing: 8) {
-                Text("PHOTOS ACCESS IS OFF — CAPTURES CAN'T BE SAVED.")
+                Text("PHOTOS ACCESS IS OFF. CAPTURES DO NOT SAVE. TURN ON ACCESS IN SETTINGS.")
                     .skin(.caption)
                 SkinChip(title: "OPEN SETTINGS", size: .caption, selected: true) {
                     if let url = URL(string: UIApplication.openSettingsURLString) {

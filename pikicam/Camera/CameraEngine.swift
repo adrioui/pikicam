@@ -68,14 +68,14 @@ final class CameraEngine {
 
     func start() async {
         guard AVCaptureDevice.authorizationStatus(for: .video) != .denied else {
-            lastMessage = "Camera access denied. Enable it in Settings to shoot."
+            lastMessage = "CAMERA ACCESS IS OFF. TURN ON ACCESS IN SETTINGS."
             return
         }
         if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
             _ = await AVCaptureDevice.requestAccess(for: .video)
         }
         guard AVCaptureDevice.authorizationStatus(for: .video) == .authorized else {
-            lastMessage = "Camera access denied. Enable it in Settings to shoot."
+            lastMessage = "CAMERA ACCESS IS OFF. TURN ON ACCESS IN SETTINGS."
             return
         }
         guard !isConfigured else {
@@ -201,7 +201,7 @@ final class CameraEngine {
             return nil
         case .success(let photo):
             guard let data = photo.fileDataRepresentation() else {
-                lastMessage = "Capture failed: no file data"
+                lastMessage = "CAPTURE FAILED. TRY AGAIN."
                 return nil
             }
             let result = CaptureResult(data: data, isDNG: photo.isRawPhoto, timestamp: Date())
@@ -212,7 +212,7 @@ final class CameraEngine {
 
     func saveToPhotos(_ result: CaptureResult) async {
         guard let createdID = await persist(result) else {
-            lastMessage = "Saving to Photos failed. Try again."
+            lastMessage = "SAVE FAILED. TRY AGAIN."
             return
         }
         savedCount += 1
@@ -238,7 +238,7 @@ final class CameraEngine {
         }
         guard granted == .authorized || granted == .limited else {
             photosDenied = true
-            lastMessage = "Photos access denied — captures can't be saved. Allow access in Settings."
+            lastMessage = "PHOTOS ACCESS IS OFF. CAPTURES DO NOT SAVE. TURN ON ACCESS IN SETTINGS."
             return nil
         }
         photosDenied = false

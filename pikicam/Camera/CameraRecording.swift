@@ -69,7 +69,7 @@ extension CameraEngine {
                     try? FileManager.default.removeItem(at: url)
                     return
                 }
-                clipMessage = "Mono export failed; saved the untouched clip."
+                clipMessage = "MONO EXPORT FAILED. THE CLIP SAVED WITHOUT MONO."
             }
             if ProcessInfo.processInfo.arguments.contains("-pikicam.dumpclip") {
                 let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -79,7 +79,7 @@ extension CameraEngine {
             }
             await saveClip(url)
         } else {
-            clipMessage = "Recording failed."
+            clipMessage = "RECORD FAILED. START AGAIN."
         }
         isRecording = false
         recordingStarted = nil
@@ -98,7 +98,7 @@ extension CameraEngine {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
         guard status == .authorized || status == .limited else {
             photosDenied = true
-            clipMessage = "Photos access denied — clip can't be saved. Allow access in Settings."
+            clipMessage = "PHOTOS ACCESS IS OFF. THE CLIP DID NOT SAVE. TURN ON ACCESS IN SETTINGS."
             return
         }
         WalkMark.mark("clip-save-begin")
@@ -106,12 +106,12 @@ extension CameraEngine {
         WalkMark.mark(createdID != nil ? "clip-save-done" : "clip-save-failed")
         if let createdID {
             savedCount += 1
-            clipMessage = "Clip saved."
+            clipMessage = "CLIP SAVED."
             if let album = try? await Archive.ensureAlbum() {
                 try? await Archive.add(createdID, to: album)
             }
         } else {
-            clipMessage = "Saving the clip failed."
+            clipMessage = "SAVE FAILED. RECORD AGAIN."
         }
         try? FileManager.default.removeItem(at: url)
     }
