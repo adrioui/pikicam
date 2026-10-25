@@ -1,4 +1,5 @@
 @preconcurrency import AVFoundation
+import CryptoKit
 import Photos
 import UIKit
 import SwiftUI
@@ -121,8 +122,29 @@ final class CameraEngine {
         isRunning = nowRunning
     }
 
+    struct ManifestEntry: Codable {
+        let assetID: String
+        let sha256: String
+        let bytes: Int
+        let recordedAt: Date
+    }
+
     final class CreationBox: @unchecked Sendable {
         var created: String?
+    }
+
+    nonisolated private static func appendManifest(assetID: String, data: Data) {
+        let digest = SHA256.hash(data: data)
+        let hex = digest.map { String(format: "%02x", $0) }.joined()
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let url = docs.appendingPathComponent("integrity-manifest.json")
+        var entries = (try? JSONDecoder().decode([ManifestEntry].self, from: Data(contentsOf: url))) ?? []
+        entries.append(ManifestEntry(
+            assetID: assetID, sha256: hex, bytes: data.count, recordedAt: Date()
+        ))
+        if let encoded = try? JSONEncoder().encode(entries) {
+            try? encoded.write(to: url, options: [.atomic])
+        }
     }
 
     nonisolated private static func performPhotoWrite(
@@ -234,6 +256,9 @@ final class CameraEngine {
             request.addResource(with: .photo, data: data, options: options)
         }
         WalkMark.mark(createdID != nil ? "save-done" : "save-failed")
+        if let createdID {
+            Self.appendManifest(assetID: createdID, data: data)
+        }
         return createdID
     }
 }

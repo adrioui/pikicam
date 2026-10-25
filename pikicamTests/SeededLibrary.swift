@@ -25,9 +25,12 @@ enum SeededLibrary {
     static func build(test: XCTestCase) async throws -> [Seeded] {
         teardown()
         var made: [Seeded] = []
-        for spec in [("foreign-1", Seeded.Kind.foreignHEIC), ("foreign-2", Seeded.Kind.foreignVideo),
-                     ("legacy-1", Seeded.Kind.legacyPIKIDNG), ("legacy-2", Seeded.Kind.legacyPIKIDNG),
-                     ("fresh-1", Seeded.Kind.freshPIKI)] {
+        let specs: [(String, Seeded.Kind)] = [
+            ("foreign-1", .foreignHEIC), ("foreign-2", .foreignVideo),
+            ("legacy-1", .legacyPIKIDNG), ("legacy-2", .legacyPIKIDNG),
+            ("fresh-1", .freshPIKI),
+        ]
+        for spec in specs {
             let id = try await create(filename: spec.0, kind: spec.1)
             made.append(Seeded(localID: id, kind: spec.1, filename: spec.0))
         }
@@ -35,9 +38,9 @@ enum SeededLibrary {
         return made
     }
 
-    private static func create(filename: String, kind: Kind) async throws -> String {
+    private static func create(filename: String, kind: Seeded.Kind) async throws -> String {
         let box = IDBox()
-        try await PHPhotoLibrary.shared().performChanges {
+        PHPhotoLibrary.shared().performChanges {
             let request = PHAssetCreationRequest.forAsset()
             request.creationDate = Date()
             let options = PHAssetResourceCreationOptions()

@@ -3,7 +3,7 @@ import XCTest
 
 @testable import pikicam
 
-final class ArchiveIdentityTests: XCTestCase {
+final class ArchiveIdentityTests: XCTestCase, @unchecked Sendable {
     override func tearDown() async throws {
         await SeededLibrary.teardown()
     }
@@ -64,7 +64,7 @@ final class ArchiveIdentityTests: XCTestCase {
             request.addResource(with: .photo, data: data, options: options)
             box.created = request.placeholderForCreatedAsset?.localIdentifier ?? ""
         } completionHandler: { _, _ in }
-        Thread.sleep(forTimeInterval: 2)
+        try await Task.sleep(nanoseconds: 2_000_000_000)
         let album = try XCTUnwrap(Archive.album())
         let fetch = PHAsset.fetchAssets(in: album, options: nil)
         XCTAssertGreaterThanOrEqual(fetch.count, 1, "saved asset is album member")
