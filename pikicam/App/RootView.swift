@@ -12,10 +12,19 @@ struct RootView: View {
         ProcessInfo.processInfo.arguments.contains("-pikicam.energy")
     }
 
+    private var isDiagCapture: Bool {
+        ProcessInfo.processInfo.arguments.contains("-pikicam.diagcapture")
+    }
+
     var body: some View {
         Group {
             if isEnergy {
                 Text("ENERGY PROBE RUNNING")
+                    .skin(.body)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Skin.Ink.black.ignoresSafeArea())
+            } else if isDiagCapture {
+                Text("DIAG CAPTURE RUNNING")
                     .skin(.body)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Skin.Ink.black.ignoresSafeArea())
@@ -33,6 +42,10 @@ struct RootView: View {
         .task { WalkMark.reset() }
             .onAppear { WalkMark.mark("root-appeared") }
             .task {
+                if ProcessInfo.processInfo.arguments.contains("-pikicam.reset-migration") {
+                    Archive.markMigrationUndone()
+                    Archive.markConsolidationUndone()
+                }
                 if ProcessInfo.processInfo.arguments.contains("-pikicam.frametime") {
                     let probe = FrameTimeProbe()
                     frameTimeProbe = probe
@@ -47,6 +60,9 @@ struct RootView: View {
                 panelMode = ProcessInfo.processInfo.arguments.contains("-pikicam.panel")
                 if isEnergy {
                     await EnergyProbe.run()
+                }
+                if isDiagCapture {
+                    await DiagCapture.run()
                 }
             }
     }

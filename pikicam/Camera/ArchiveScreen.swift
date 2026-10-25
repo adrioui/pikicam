@@ -7,6 +7,7 @@ import UIKit
 struct ArchiveScreen: View {
     @Environment(\.dismiss) private var dismiss
     @State private var assets: [PHAsset] = []
+    @State private var verdict: String?
     private let imageManager = PHCachingImageManager()
 
     var body: some View {
@@ -35,6 +36,16 @@ struct ArchiveScreen: View {
                     }
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                if let verdict {
+                    Text(verdict)
+                        .skin(.caption, Skin.Ink.rule)
+                        .frame(maxWidth: .infinity)
+                        .padding(8)
+                        .background(Skin.Ink.black)
+                        .accessibilityIdentifier("archive.verdict")
+                }
+            }
             .navigationTitle("ARCHIVE")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Skin.Ink.black, for: .navigationBar)
@@ -60,15 +71,46 @@ struct ArchiveScreen: View {
 
     private func reload() {
         assets = Archive.fetchArchiveAssets()
+        ArchiveDiag.dumpFetch(reason: "sheet-open")
+        verdict = Self.readPathVerdict()
         Task.detached(priority: .utility) {
             let dry = await MainActor.run { Archive.dryRun() }
-            guard !dry.alreadyDone else { return }
-            guard let report = try? await Archive.migrate() else { return }
-            WalkMark.mark("migration-moved-\(report.moved)-foreign-\(report.foreignTouched)")
+            if !dry.alreadyDone, let report = try? await Archive.migrate() {
+                WalkMark.mark("migration-moved-\(report.moved)-foreign-\(report.foreignTouched)")
+            }
+            if let consolidation = await Archive.consolidateIfNeeded() {
+                WalkMark.mark(
+                    "consolidation-duplicates-\(consolidation.duplicatesBefore)"
+                    + "-moved-\(consolidation.moved)-deleted-\(consolidation.deleted)"
+                    + "-complete-\(consolidation.complete)"
+                )
+            }
+            if ProcessInfo.processInfo.arguments.contains("-pikicam.archive-diag") {
+                var waited = 0
+                while ArchiveDiag.lastCreatedID == nil, waited < 30 {
+                    try? await Task.sleep(nanoseconds: 500_000_000)
+                    waited += 1
+                }
+            }
             await MainActor.run {
                 assets = Archive.fetchArchiveAssets()
+                verdict = Self.readPathVerdict()
             }
         }
+    }
+
+    static func readPathVerdict() -> String? {
+        guard ProcessInfo.processInfo.arguments.contains("-pikicam.archive-diag") else { return nil }
+        guard let id = ArchiveDiag.lastCreatedID else { return "READ-PATH: NO SAVE THIS SESSION" }
+        guard PHAsset.fetchAssets(withLocalIdentifiers: [id], options: nil).count > 0 else {
+            return "READ-PATH BROKEN: NOT CREATED"
+        }
+        let memberAlbums = Archive.allAlbums().filter { Archive.holds($0, id) }
+        guard !memberAlbums.isEmpty else { return "READ-PATH BROKEN: NOT MEMBER" }
+        guard let reader = Archive.album(), Archive.holds(reader, id) else {
+            return "READ-PATH BROKEN: STRANDED \(memberAlbums.count) OF \(Archive.allAlbums().count)"
+        }
+        return "READ-PATH OK"
     }
 }
 

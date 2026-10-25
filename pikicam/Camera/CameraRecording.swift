@@ -102,6 +102,7 @@ extension CameraEngine {
             return
         }
         WalkMark.mark("clip-save-begin")
+        ArchiveDiag.beginWitness(verb: "video")
         let createdID = await Self.performVideoWrite(fileURL: url)
         WalkMark.mark(createdID != nil ? "clip-save-done" : "clip-save-failed")
         if let createdID {
@@ -113,16 +114,22 @@ extension CameraEngine {
         } else {
             clipMessage = "SAVE FAILED. RECORD AGAIN."
         }
+        let savedID = createdID
+        Task.detached(priority: .utility) {
+            await ArchiveDiag.endWitness(verb: "video", createdID: savedID)
+        }
         try? FileManager.default.removeItem(at: url)
     }
 
     nonisolated private static func performVideoWrite(fileURL: URL) async -> String? {
         let box = CameraEngine.CreationBox()
-        return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
+        return await withCheckedContinuation { continuation in
             PHPhotoLibrary.shared().performChanges {
                 let request = PHAssetCreationRequest.forAsset()
                 let options = PHAssetResourceCreationOptions()
-                options.originalFilename = fileURL.lastPathComponent
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyyMMdd_HHmmss"
+                options.originalFilename = "PIKI_\(formatter.string(from: Date())).mov"
                 request.addResource(with: .video, fileURL: fileURL, options: options)
                 box.created = request.placeholderForCreatedAsset?.localIdentifier
             } completionHandler: { success, _ in

@@ -211,14 +211,19 @@ final class CameraEngine {
     }
 
     func saveToPhotos(_ result: CaptureResult) async {
+        ArchiveDiag.beginWitness(verb: "photo")
         guard let createdID = await persist(result) else {
             lastMessage = "SAVE FAILED. TRY AGAIN."
+            await ArchiveDiag.endWitness(verb: "photo", createdID: nil)
             return
         }
         savedCount += 1
         lastMessage = nil
         if let album = try? await Archive.ensureAlbum() {
             try? await Archive.add(createdID, to: album)
+        }
+        Task.detached(priority: .utility) {
+            await ArchiveDiag.endWitness(verb: "photo", createdID: createdID)
         }
     }
 
