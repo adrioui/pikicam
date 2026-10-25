@@ -22,7 +22,7 @@ for cycle in $(seq 1 "$CYCLES"); do
     test-without-building > build/dd/cycle.log 2>&1
   if grep -q "TEST EXECUTE SUCCEEDED" build/dd/cycle.log; then
     GREEN=$((GREEN+1)); echo "cycle $cycle: GREEN ($GREEN/$cycle)"
-  elif grep -qE "Timed out while enabling automation|Failed to establish communication|Lost pending connection|not trusted" build/dd/cycle.log; then
+  elif grep -qE "Timed out while enabling automation|Failed to establish communication|Lost pending connection|not trusted|Failure collecting diagnostics|Device error" build/dd/cycle.log; then
     FLAKE=$((FLAKE+1)); echo "cycle $cycle: RUNNER-FLAKE ($FLAKE flakes)"
     sleep 45
   else

@@ -37,7 +37,7 @@ run_suite() {
 
 run_suite
 if [ "$STATUS" -ne 0 ]; then
-  if grep -qE "Timed out while enabling automation|failed to initialize for UI testing|not trusted|Failed to create a bundle instance" build/dd/test.log; then
+  if grep -qE "Timed out while enabling automation|failed to initialize for UI testing|not trusted|Failed to create a bundle instance|Failure collecting diagnostics|Lost pending connection|Device error" build/dd/test.log; then
     echo "RUNNER FLAKE detected (automation init) — one labeled retry"
     sleep 45
     run_suite
