@@ -1,10 +1,5 @@
 import UIKit
 
-/// Energy budget protocol: samples battery % around a fixed shooting
-/// script and writes Documents/energy.json. Provenance caveat: devicectl
-/// runs need the cable, so deltas are USB-connected deltas — comparable
-/// run-to-run as a regression signal, understating unplugged drain. The
-/// owner's unplugged re-run is the true budget (docs/HEALTH.md).
 @MainActor
 final class EnergyProbe {
     struct Phase: Codable {

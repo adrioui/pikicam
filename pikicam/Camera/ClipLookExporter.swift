@@ -2,8 +2,6 @@ import AVFoundation
 import CoreImage
 import Foundation
 
-/// The composition look path: exports a recorded master through the SAME
-/// Look handler the stills path uses, leaving audio untouched.
 enum ClipLookExporter {
     static func monochromeVersion(of source: URL) async -> URL? {
         let asset = AVURLAsset(url: source)

@@ -1,7 +1,4 @@
 #!/bin/bash
-# Reliability streak: run the device smoke suite N consecutive cycles and
-# report the green count. Each failure is labeled app-failure or
-# runner-flake (automation init / connection). The streak is the claim.
 set -u
 cd "$(dirname "$0")/.."
 CYCLES="${1:-10}"

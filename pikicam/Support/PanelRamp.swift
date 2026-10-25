@@ -1,8 +1,5 @@
 import SwiftUI
 
-/// 17-step grey ramp, 0..255 in 16-code steps, full-screen on the exact
-/// delivery path (no color space conversion beyond the display's). The
-/// owner measures this with a colorimeter; docs/SKIN.md holds the claim.
 struct PanelRamp: View {
     var body: some View {
         GeometryReader { proxy in

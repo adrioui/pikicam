@@ -1,15 +1,9 @@
 import CoreImage
 import Foundation
 
-/// One look for both domains. The mono row is DERIVED (CIE P3 primaries,
-/// D65 — scripts/p3-luminance.py prints these constants); a unit test
-/// recomputes the derivation and fails if this row drifts.
 enum Look {
     static let luminanceRow = (r: 0.22897, g: 0.69174, b: 0.07929)
 
-    /// The tone definition: display-native. No additional grading is
-    /// applied in either domain — the delivered transfer is the display's.
-    /// Stated so there is exactly one tone definition, and it is this one.
     static func apply(to image: CIImage, mono: Bool) -> CIImage {
         guard mono else { return image }
         return image.applyingFilter("CIColorMatrix", parameters: [

@@ -1,11 +1,7 @@
 import SwiftUI
 import UIKit
 
-/// The entire token table. If a value is not here, it does not exist.
-/// Hierarchy is carried by type size, weight of case, and 1px rules —
-/// never by color, shadow, radius, blur, or motion.
 enum Skin {
-    /// Type scale: exactly four sizes, nothing between.
     enum Size {
         case display
         case title
@@ -22,25 +18,20 @@ enum Skin {
         }
     }
 
-    /// Color: pure black, pure white, one mid-grey for rules. No fourth value.
     enum Ink {
         static let black = Color.black
         static let white = Color.white
         static let rule = Color(white: 0.5)
     }
 
-    /// Rules are 1px hairlines only.
     static let hairline: CGFloat = 1
 
-    /// Targets are at least 44pt; visible marks may be smaller.
     static let targetMinimum: CGFloat = 44
 
-    /// The system monospace at production weight. No brand font files.
     static func mono(_ size: Size) -> Font {
         .system(size: size.points, weight: .regular, design: .monospaced)
     }
 
-    /// Radius 0 everywhere, including system chrome where overridable.
     @MainActor
     static func applyGlobalChrome() {
         let bar = UINavigationBarAppearance()
@@ -63,7 +54,6 @@ extension Image {
 }
 
 extension Text {
-    /// Every label is uppercase text at one of the four sizes.
     func skin(_ size: Skin.Size, _ ink: Color = Skin.Ink.white) -> some View {
         font(Skin.mono(size))
             .foregroundColor(ink)
@@ -71,7 +61,6 @@ extension Text {
     }
 }
 
-/// A 1px-ruled, zero-radius control chip. Fill is pure black or pure white.
 struct SkinChip: View {
     let title: String
     let size: Skin.Size

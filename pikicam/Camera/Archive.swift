@@ -1,12 +1,6 @@
 import Foundation
 import Photos
 
-/// Archive identity: album membership is the identity; the PIKI_ filename
-/// is the legacy fallback. The one-time migration is a hazardous op with a
-/// dry-run-first contract. The legacy scan is BOUNDED (assets created
-/// after first launch, fetchLimit 200) and runs OFF the main actor — the
-/// archive never blocks or crashes on library size (regression: the
-/// whole-library main-thread scan crashed the archive, three crash logs).
 enum Archive {
     static let albumTitle = "pikicam"
     private static let migrationKey = "pikicam.migration.done"
@@ -106,9 +100,6 @@ enum Archive {
         }
     }
 
-    /// Bounded legacy scan: assets created after pikicam's first launch on
-    /// this device, newest first, hard fetch limit, called from a
-    /// non-main context only.
     nonisolated static func legacyPIKIAssets() -> [PHAsset] {
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -188,11 +179,6 @@ enum Archive {
         UserDefaults.standard.removeObject(forKey: migrationKey)
     }
 
-    /// Repair op for the duplicate-album regression: every member of a
-    /// non-canonical pikicam album moves into the canonical (oldest) one,
-    /// then emptied duplicates are deleted. Album deletion never touches
-    /// assets. The one-way flag sets only when no album holds residue, so
-    /// a failed pass retries at the next archive open.
     nonisolated static func consolidateIfNeeded() async -> ConsolidationReport? {
         guard !UserDefaults.standard.bool(forKey: consolidationKey) else { return nil }
         guard let canonical = canonicalAlbum() else { return nil }
@@ -263,7 +249,6 @@ enum Archive {
         }
     }
 
-    /// The archive listing: album-scoped, fast, main-thread safe.
     static func fetchArchiveAssets() -> [PHAsset] {        guard let collection = album() else { return [] }
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]

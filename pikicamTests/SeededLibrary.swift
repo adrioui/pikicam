@@ -4,10 +4,6 @@ import Photos
 import UIKit
 import XCTest
 
-/// A test-only Photos fixture that looks like a real library: foreign
-/// assets (JPEG images, a video clip), legacy PIKI_ assets, and fresh
-/// ones. Every archive/migration/save test runs against this. All bytes
-/// are real media — PhotoKit rejects invalid resource data at commit.
 @MainActor
 enum SeededLibrary {
     struct Seeded {

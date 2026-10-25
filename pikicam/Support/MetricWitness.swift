@@ -1,9 +1,6 @@
 import Foundation
 import MetricKit
 
-/// The standing witness: MetricKit payloads from real usage land in
-/// Documents/metrickit/ for pulling after the owner carries the app.
-/// The device reports; we don't self-report.
 final class MetricWitness: NSObject, MXMetricManagerSubscriber, @unchecked Sendable {
     static let shared = MetricWitness()
 

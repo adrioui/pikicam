@@ -1,10 +1,6 @@
 @preconcurrency import AVFoundation
 import Foundation
 
-/// The controlled parity pair: one event — a still and a short video in
-/// the same second — written to Documents for scripts/parity.py. The
-/// owner runs this on a tripod facing a grey card; agent runs it as a
-/// provisional pair (environment recorded by the script output).
 enum ParityCapture {
     @MainActor
     static func run() async {
