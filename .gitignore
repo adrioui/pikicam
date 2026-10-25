@@ -35,33 +35,9 @@ pikicamTests/Fixtures/*.DNG
 
 !/docs
 /docs/*
-# Why: the docs directory holds working material that stays local; each
-# shipped doc is allowed individually below.
-!/docs/DIAGNOSIS.md
-# Why: the recorded failures the rebuild fixes; evidence for every cut.
-!/docs/WALK.md
-# Why: the acceptance walk definition and the measured budget numbers.
-!/docs/SKIN.md
-# Why: the token table and every deliberate HIG deviation.
-!/docs/HEALTH.md
-# Why: the failure taxonomy and measured health evidence.
-!/docs/TEARDOWN.md
-# Why: the grammar spec the UX is built against; the amendment source.
-!/docs/artifacts
-/docs/artifacts/*
-# Why: every artifact states who measured it and how; allowed per-file.
-!/docs/artifacts/frametime
-!/docs/artifacts/frametime/*.json
-!/docs/artifacts/frametime/DECISION.md
-!/docs/artifacts/export
-!/docs/artifacts/export/*.txt
-!/docs/artifacts/export/REPORT.md
-!/docs/artifacts/parity
-!/docs/artifacts/parity/REPORT.md
-!/docs/artifacts/soak
-!/docs/artifacts/soak/REPORT.md
-!/docs/artifacts/reliability
-!/docs/artifacts/reliability/streak.log
+# Why: the docs directory holds working material, measured artifacts and
+# failure records that stay LOCAL; nothing under docs/ is re-allowed, so
+# the repo never ships it.
 
 !/README.md
 # Why: front door + inversion documentation.
