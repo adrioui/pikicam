@@ -11,17 +11,45 @@ enum Archive {
     static let albumTitle = "pikicam"
     private static let migrationKey = "pikicam.migration.done"
     private static let firstLaunchKey = "pikicam.first-launch"
+    private static let consolidationKey = "pikicam.album-consolidation.done"
 
     static func album() -> PHAssetCollection? {
+        canonicalAlbum()
+    }
+
+    static func canonicalAlbum() -> PHAssetCollection? {
+        allAlbums().first
+    }
+
+    static func allAlbums() -> [PHAssetCollection] {
         let fetch = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
-        var found: PHAssetCollection?
-        fetch.enumerateObjects { collection, _, stop in
+        var found: [PHAssetCollection] = []
+        fetch.enumerateObjects { collection, _, _ in
             if collection.localizedTitle == albumTitle {
-                found = collection
-                stop.pointee = true
+                found.append(collection)
             }
         }
         return found
+    }
+
+    static func memberCount(_ album: PHAssetCollection) -> Int {
+        PHAsset.fetchAssets(in: album, options: nil).count
+    }
+
+    static func memberIDs(_ album: PHAssetCollection, limit: Int) -> [String] {
+        let options = PHFetchOptions()
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        options.fetchLimit = limit
+        let fetch = PHAsset.fetchAssets(in: album, options: options)
+        var ids: [String] = []
+        fetch.enumerateObjects { asset, _, _ in ids.append(asset.localIdentifier) }
+        return ids
+    }
+
+    static func holds(_ album: PHAssetCollection, _ assetID: String) -> Bool {
+        let options = PHFetchOptions()
+        options.predicate = NSPredicate(format: "localIdentifier = %@", assetID)
+        return PHAsset.fetchAssets(in: album, options: options).count > 0
     }
 
     static func firstLaunchDate() -> Date {
@@ -34,6 +62,9 @@ enum Archive {
     }
 
     nonisolated static func ensureAlbum() async throws -> PHAssetCollection? {
+        if let existing = album() {
+            return existing
+        }
         return try await withCheckedThrowingContinuation { continuation in
             let box = AlbumBox()
             PHPhotoLibrary.shared().performChanges {
@@ -141,9 +172,99 @@ enum Archive {
         )
     }
 
+    struct ConsolidationReport: Codable {
+        let duplicatesBefore: Int
+        let moved: Int
+        let deleted: Int
+        let canonicalID: String
+        let complete: Bool
+    }
+
+    static func markConsolidationUndone() {
+        UserDefaults.standard.removeObject(forKey: consolidationKey)
+    }
+
+    static func markMigrationUndone() {
+        UserDefaults.standard.removeObject(forKey: migrationKey)
+    }
+
+    /// Repair op for the duplicate-album regression: every member of a
+    /// non-canonical pikicam album moves into the canonical (oldest) one,
+    /// then emptied duplicates are deleted. Album deletion never touches
+    /// assets. The one-way flag sets only when no album holds residue, so
+    /// a failed pass retries at the next archive open.
+    nonisolated static func consolidateIfNeeded() async -> ConsolidationReport? {
+        guard !UserDefaults.standard.bool(forKey: consolidationKey) else { return nil }
+        guard let canonical = canonicalAlbum() else { return nil }
+        var duplicates = allAlbums().filter { $0.localIdentifier != canonical.localIdentifier }
+        var moved = 0
+        for album in duplicates {
+            let members = PHAsset.fetchAssets(in: album, options: nil)
+            guard members.count > 0 else { continue }
+            let assets = members.objects(at: IndexSet(integersIn: 0..<members.count))
+            do {
+                try await move(assets, to: canonical)
+                moved += assets.count
+            } catch {
+                WalkMark.mark("consolidation-move-failed")
+            }
+        }
+        duplicates = allAlbums().filter { $0.localIdentifier != canonical.localIdentifier }
+        var deleted = 0
+        if !duplicates.isEmpty {
+            do {
+                try await deleteCollections(duplicates)
+                deleted = duplicates.count
+            } catch {
+                WalkMark.mark("consolidation-delete-failed")
+            }
+        }
+        let residue = allAlbums().contains {
+            $0.localIdentifier != canonical.localIdentifier
+        }
+        let complete = !residue
+        if complete {
+            UserDefaults.standard.set(true, forKey: consolidationKey)
+        }
+        return ConsolidationReport(
+            duplicatesBefore: duplicates.count + deleted,
+            moved: moved,
+            deleted: deleted,
+            canonicalID: canonical.localIdentifier,
+            complete: complete
+        )
+    }
+
+    private nonisolated static func move(_ assets: [PHAsset], to album: PHAssetCollection) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            PHPhotoLibrary.shared().performChanges {
+                PHAssetCollectionChangeRequest(for: album)?.addAssets(assets as NSArray)
+            } completionHandler: { _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    private nonisolated static func deleteCollections(_ collections: [PHAssetCollection]) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            PHPhotoLibrary.shared().performChanges {
+                PHAssetCollectionChangeRequest.deleteAssetCollections(collections as NSArray)
+            } completionHandler: { _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
     /// The archive listing: album-scoped, fast, main-thread safe.
-    static func fetchArchiveAssets() -> [PHAsset] {
-        guard let collection = album() else { return [] }
+    static func fetchArchiveAssets() -> [PHAsset] {        guard let collection = album() else { return [] }
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         options.fetchLimit = 500
