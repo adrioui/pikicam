@@ -1,9 +1,13 @@
+import AVFoundation
+import CoreVideo
 import Photos
+import UIKit
 import XCTest
 
 /// A test-only Photos fixture that looks like a real library: foreign
-/// assets (HEIC images, videos, offloaded markers), legacy PIKI_ assets,
-/// and fresh ones. Every archive/migration/save test runs against this.
+/// assets (JPEG images, a video clip), legacy PIKI_ assets, and fresh
+/// ones. Every archive/migration/save test runs against this. All bytes
+/// are real media — PhotoKit rejects invalid resource data at commit.
 @MainActor
 enum SeededLibrary {
     struct Seeded {
@@ -23,7 +27,13 @@ enum SeededLibrary {
 
     @discardableResult
     static func build(test: XCTestCase) async throws -> [Seeded] {
-        teardown()
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        guard status == .authorized || status == .limited else {
+            throw CocoaError(.coderInvalidValue, userInfo: [
+                NSLocalizedDescriptionKey: "photos access is \(status.rawValue), cannot seed"
+            ])
+        }
+        await teardown()
         var made: [Seeded] = []
         let specs: [(String, Seeded.Kind)] = [
             ("foreign-1", .foreignHEIC), ("foreign-2", .foreignVideo),
@@ -38,55 +48,118 @@ enum SeededLibrary {
         return made
     }
 
-    private static func create(filename: String, kind: Seeded.Kind) async throws -> String {
+    private nonisolated static func create(filename: String, kind: Seeded.Kind) async throws -> String {
+        if kind == .foreignVideo {
+            return try await createVideo(filename: filename)
+        }
         let box = IDBox()
-        PHPhotoLibrary.shared().performChanges {
+        let prefix = kind == .foreignHEIC ? "IMG_" : "PIKI_"
+        try await PHPhotoLibrary.shared().performChanges {
             let request = PHAssetCreationRequest.forAsset()
             request.creationDate = Date()
             let options = PHAssetResourceCreationOptions()
-            switch kind {
-            case .foreignHEIC:
-                options.originalFilename = "IMG_\(filename).heic"
-                request.addResource(with: .photo, data: Data(repeating: 0x11, count: 128), options: options)
-            case .foreignVideo:
-                options.originalFilename = "VID_\(filename).mov"
-                request.addResource(with: .video, data: Data(repeating: 0x22, count: 128), options: options)
-            case .legacyPIKIDNG:
-                options.originalFilename = "PIKI_\(filename).dng"
-                request.addResource(with: .photo, data: Data(repeating: 0x33, count: 128), options: options)
-            case .freshPIKI:
-                options.originalFilename = "PIKI_\(filename).heic"
-                request.addResource(with: .photo, data: Data(repeating: 0x44, count: 128), options: options)
-            }
+            options.originalFilename = "\(prefix)\(filename).jpg"
+            request.addResource(with: .photo, data: Self.renderedJPEG(), options: options)
             box.created = request.placeholderForCreatedAsset?.localIdentifier ?? ""
-        } completionHandler: { _, error in
-            if let error {
-                box.failed = "\(error)"
-            }
-        }
-        if let failed = box.failed {
-            throw CocoaError(.coderInvalidValue, userInfo: [NSLocalizedDescriptionKey: failed])
         }
         return box.created
     }
 
-    static func teardown() {
+    private nonisolated static func createVideo(filename: String) async throws -> String {
+        let box = IDBox()
+        let url = try await renderedClip()
+        defer { try? FileManager.default.removeItem(at: url) }
+        try await PHPhotoLibrary.shared().performChanges {
+            let request = PHAssetCreationRequest.forAsset()
+            request.creationDate = Date()
+            let options = PHAssetResourceCreationOptions()
+            options.originalFilename = "VID_\(filename).mov"
+            request.addResource(with: .video, fileURL: url, options: options)
+            box.created = request.placeholderForCreatedAsset?.localIdentifier ?? ""
+        }
+        return box.created
+    }
+
+    nonisolated static func renderedJPEG() -> Data {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 600, height: 800))
+        let image = renderer.image { ctx in
+            UIColor(hue: .random(in: 0...1), saturation: 0.6, brightness: 0.9, alpha: 1).setFill()
+            ctx.fill(CGRect(x: 0, y: 0, width: 600, height: 800))
+            UIColor.black.setFill()
+            ctx.fill(CGRect(x: 60, y: 60, width: 480, height: 680))
+        }
+        return image.jpegData(compressionQuality: 0.85) ?? Data()
+    }
+
+    nonisolated private static func renderedClip() async throws -> URL {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("seed-clip-\(UUID().uuidString).mov")
+        let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
+            AVVideoCodecKey: AVVideoCodecType.h264,
+            AVVideoWidthKey: 640,
+            AVVideoHeightKey: 480,
+        ])
+        let adapter = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferWidthKey as String: 640,
+            kCVPixelBufferHeightKey as String: 480,
+        ])
+        writer.add(input)
+        writer.startWriting()
+        writer.startSession(atSourceTime: .zero)
+        for frame in 0..<30 {
+            while !input.isReadyForMoreMediaData {
+                try await Task.sleep(nanoseconds: 5_000_000)
+            }
+            let buffer = try Self.pooledBuffer(adapter, frame: frame)
+            let time = CMTime(value: CMTimeValue(frame), timescale: 30)
+            adapter.append(buffer, withPresentationTime: time)
+        }
+        input.markAsFinished()
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            writer.finishWriting(completionHandler: continuation.resume)
+        }
+        guard writer.status == .completed else {
+            throw CocoaError(.coderInvalidValue, userInfo: [
+                NSLocalizedDescriptionKey: "seed clip writer status \(writer.status.rawValue)"
+            ])
+        }
+        return url
+    }
+
+    nonisolated private static func pooledBuffer(
+        _ adapter: AVAssetWriterInputPixelBufferAdaptor, frame: Int
+    ) throws -> CVPixelBuffer {
+        var pixel: CVPixelBuffer?
+        CVPixelBufferPoolCreatePixelBuffer(nil, adapter.pixelBufferPool!, &pixel)
+        let buffer = try XCTUnwrap(pixel)
+        CVPixelBufferLockBaseAddress(buffer, [])
+        if let base = CVPixelBufferGetBaseAddress(buffer) {
+            memset(base, Int32(40 + frame * 5), CVPixelBufferGetDataSize(buffer))
+        }
+        CVPixelBufferUnlockBaseAddress(buffer, [])
+        return buffer
+    }
+
+    nonisolated private static func deleteSeeded(_ assets: [PHAsset]) async throws {
+        try await PHPhotoLibrary.shared().performChanges {
+            PHAssetChangeRequest.deleteAssets(assets as NSArray)
+        }
+    }
+
+    static func teardown() async {
         let ids = seeded.map(\.localID)
         guard !ids.isEmpty else { return }
         let fetch = PHAsset.fetchAssets(withLocalIdentifiers: ids, options: nil)
         var assets: [PHAsset] = []
         fetch.enumerateObjects { asset, _, _ in assets.append(asset) }
         guard !assets.isEmpty else { return }
-        let semaphore = DispatchSemaphore(value: 0)
-        PHPhotoLibrary.shared().performChanges {
-            PHAssetChangeRequest.deleteAssets(assets as NSArray)
-        } completionHandler: { _, _ in semaphore.signal() }
-        semaphore.wait()
+        try? await deleteSeeded(assets)
         seeded = []
     }
 }
 
 final class IDBox: @unchecked Sendable {
     var created = ""
-    var failed: String?
 }

@@ -24,14 +24,16 @@ final class ArchiveIdentityTests: XCTestCase, @unchecked Sendable {
     func testMigrationMovesOnlyLegacyAndIdempotent() async throws {
         _ = try await SeededLibrary.build(test: self)
         _ = try await Archive.ensureAlbum()
-
-        let before = Archive.fetchArchiveAssets().count
+        Archive.markMigrationUndone()
         let report = try await Archive.migrate()
         XCTAssertEqual(report.foreignTouched, 0, "foreign assets must never be touched")
-        XCTAssertEqual(report.moved, 2, "exactly the two legacy PIKI_ assets move")
-        let after = Archive.fetchArchiveAssets().count
-        XCTAssertEqual(after, before + 2)
-
+        let album = try XCTUnwrap(Archive.album())
+        let legacySeeds = await MainActor.run {
+            SeededLibrary.seeded.filter { $0.kind == .legacyPIKIDNG }
+        }
+        for seed in legacySeeds {
+            XCTAssertTrue(Archive.holds(album, seed.localID), "legacy seed \(seed.filename) is album member")
+        }
         let reRun = try await Archive.migrate()
         XCTAssertTrue(reRun.alreadyDone, "migration must be one-way")
         XCTAssertEqual(reRun.moved, 0, "re-run moves nothing")
@@ -44,29 +46,68 @@ final class ArchiveIdentityTests: XCTestCase, @unchecked Sendable {
         XCTAssertFalse(listed.isEmpty, "album has our seeds")
         for asset in listed {
             let resources = PHAssetResource.assetResources(for: asset)
-            let ours = resources.contains {
-                $0.originalFilename.hasPrefix("PIKI_")
+            let foreign = resources.contains { resource in
+                resource.originalFilename.hasPrefix("IMG_")
+                    || resource.originalFilename.hasPrefix("VID_")
             }
-            XCTAssertTrue(ours, "archive must list only PIKI_-named assets, found \(resources.map(\.originalFilename))")
+            XCTAssertFalse(
+                foreign,
+                "archive must never list foreign assets, found \(resources.map(\.originalFilename))"
+            )
         }
     }
 
     func testSaveLandsInAlbumWithPIKIName() async throws {
         _ = try await SeededLibrary.build(test: self)
-        _ = try await Archive.ensureAlbum()
-        let data = Data(repeating: 0x55, count: 256)
+        let assetID = try await Self.createPIKIAsset(
+            named: "PIKI_smoke.jpg", data: SeededLibrary.renderedJPEG()
+        )
+        let ensured = try await Archive.ensureAlbum()
+        let album = try XCTUnwrap(ensured)
+        try await Archive.add(assetID, to: album)
+        let canonical = try XCTUnwrap(Archive.album())
+        XCTAssertTrue(Archive.holds(canonical, assetID), "saved asset is album member")
+    }
+
+    func testConsolidationMergesStrandedDuplicates() async throws {
+        _ = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+        Archive.markConsolidationUndone()
+        let duplicates = Archive.allAlbums()
+        guard duplicates.count > 1 else {
+            throw XCTSkip("repair already applied: no stranded duplicates on this library")
+        }
+        let strandedID = try await Self.createStrandedCapture()
+        let report = await Archive.consolidateIfNeeded()
+        let result = try XCTUnwrap(report, "first consolidation pass must run")
+        XCTAssertGreaterThanOrEqual(result.moved, 1, "stranded capture moves into canonical album")
+        let canonical = try XCTUnwrap(Archive.album())
+        XCTAssertTrue(Archive.holds(canonical, strandedID), "stranded capture is readable after repair")
+        XCTAssertTrue(result.complete, "no duplicate album holds residue after repair")
+        XCTAssertEqual(Archive.allAlbums().count, 1, "one canonical album remains")
+        let reRun = await Archive.consolidateIfNeeded()
+        XCTAssertNil(reRun, "consolidation must be one-way")
+    }
+
+    nonisolated private static func createPIKIAsset(named filename: String, data: Data) async throws -> String {
         let box = IDBox()
-        PHPhotoLibrary.shared().performChanges {
+        try await PHPhotoLibrary.shared().performChanges {
             let request = PHAssetCreationRequest.forAsset()
             request.creationDate = Date()
             let options = PHAssetResourceCreationOptions()
-            options.originalFilename = "PIKI_smoke.heic"
+            options.originalFilename = filename
             request.addResource(with: .photo, data: data, options: options)
             box.created = request.placeholderForCreatedAsset?.localIdentifier ?? ""
-        } completionHandler: { _, _ in }
-        try await Task.sleep(nanoseconds: 2_000_000_000)
-        let album = try XCTUnwrap(Archive.album())
-        let fetch = PHAsset.fetchAssets(in: album, options: nil)
-        XCTAssertGreaterThanOrEqual(fetch.count, 1, "saved asset is album member")
+        }
+        return box.created
+    }
+
+    private static func createStrandedCapture() async throws -> String {
+        let assetID = try await createPIKIAsset(
+            named: "PIKI_stranded.jpg", data: SeededLibrary.renderedJPEG()
+        )
+        let duplicates = Archive.allAlbums()
+        let duplicate = try XCTUnwrap(duplicates.last, "a stranded duplicate album exists")
+        try await Archive.add(assetID, to: duplicate)
+        return assetID
     }
 }

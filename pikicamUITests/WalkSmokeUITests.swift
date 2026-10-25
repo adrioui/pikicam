@@ -117,7 +117,7 @@ extension WalkSmokeUITests {
         Thread.sleep(forTimeInterval: 6)
         Self.dismissSystemAlerts(springboard)
         app.buttons["camera.shutter"].tap()
-        let saved = app.staticTexts["Clip saved."]
+        let saved = app.staticTexts["CLIP SAVED."]
         XCTAssertTrue(saved.waitForExistence(timeout: 45), "mono export + save completes")
     }
 }
@@ -153,6 +153,53 @@ final class ArchiveHealthUITests: XCTestCase {
             "archive must stay responsive (regression: whole-library legacy scan froze main thread)"
         )
         XCTAssertTrue(app.state == .runningForeground)
+    }
+
+    @MainActor
+    func testSaveReachesArchiveGridThroughReadPath() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-pikicam.archive-diag"]
+        app.launch()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for label in ["Allow While Using App", "Allow Full Access", "Allow", "OK"] {
+            let button = springboard.buttons[label]
+            if button.waitForExistence(timeout: 2) {
+                button.tap()
+            }
+        }
+        let shutter = app.buttons["camera.shutter"]
+        XCTAssertTrue(shutter.waitForExistence(timeout: 15), "shutter visible")
+        shutter.tap()
+        for label in ["Allow Full Access", "Allow", "OK"] {
+            let button = springboard.buttons[label]
+            if button.waitForExistence(timeout: 4) {
+                button.tap()
+            }
+        }
+        Thread.sleep(forTimeInterval: 3)
+        let archive = app.buttons["Open archive"]
+        XCTAssertTrue(archive.waitForExistence(timeout: 5))
+        archive.tap()
+        let verdict = app.staticTexts["archive.verdict"]
+        XCTAssertTrue(verdict.waitForExistence(timeout: 10), "read-path verdict visible")
+        let label = Self.verdictText(verdict)
+        XCTAssertTrue(label.contains("READ-PATH OK"), "read path serves the fresh capture, got: \(label)")
+        let cell = app.buttons.matching(
+            NSPredicate(format: "label BEGINSWITH 'Photo'")
+        ).firstMatch
+        XCTAssertTrue(cell.waitForExistence(timeout: 10), "capture cell appears in the grid")
+    }
+
+    @MainActor
+    private static func verdictText(_ element: XCUIElement) -> String {
+        for _ in 0..<10 {
+            let label = element.label
+            if !label.isEmpty && label != "READ-PATH: NO SAVE THIS SESSION" {
+                return label
+            }
+            Thread.sleep(forTimeInterval: 1)
+        }
+        return element.label
     }
 }
 
