@@ -8,9 +8,18 @@ struct RootView: View {
         ProcessInfo.processInfo.arguments.contains("-pikicam.parity")
     }
 
+    private var isEnergy: Bool {
+        ProcessInfo.processInfo.arguments.contains("-pikicam.energy")
+    }
+
     var body: some View {
         Group {
-            if panelMode {
+            if isEnergy {
+                Text("ENERGY PROBE RUNNING")
+                    .skin(.body)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Skin.Ink.black.ignoresSafeArea())
+            } else if panelMode {
                 PanelRamp()
             } else if isParity {
                 Text("PARITY RUN IN PROGRESS")
@@ -33,6 +42,9 @@ struct RootView: View {
                     await ParityCapture.run()
                 }
                 panelMode = ProcessInfo.processInfo.arguments.contains("-pikicam.panel")
+                if isEnergy {
+                    await EnergyProbe.run()
+                }
             }
     }
 }

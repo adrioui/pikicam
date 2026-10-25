@@ -4,6 +4,7 @@ import SwiftUI
 struct PikicamApp: App {
     init() {
         Skin.applyGlobalChrome()
+        MetricWitness.shared.start()
     }
 
     var body: some Scene {
